@@ -1,8 +1,8 @@
 import { Sphere } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useEffect, useRef } from 'react'
-import { BackSide, DoubleSide, Vector2, Vector3 } from 'three'
-
+import { BackSide, Color, DoubleSide, Vector2, Vector3 } from 'three'
+import Pal from 'nice-color-palettes'
 export function Sky() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   let shaders = {
@@ -101,6 +101,9 @@ export function Sky() {
 
       // varying vec3 vPos;
       uniform float time;
+      uniform vec3 color1;
+      uniform vec3 color2;
+      uniform vec3 color3;
       // varying vec3 vUv3;
 
       void main() {
@@ -116,12 +119,12 @@ export function Sky() {
         starNoise1 = clamp(starNoise1, 0.0, 1.0);
         starNoise2 = clamp(starNoise2, 0.0, 1.0);
 
-        vec4 backgroundColor = vec4(0.0, 0.0, 0.02, 1.0);
+        vec4 backgroundColor = vec4(color1 * 0.0035, 1.0);
         gl_FragColor = backgroundColor;
-        gl_FragColor.rgb += vec3(pow(starNoise1, 1.3) * vec3(10.0, 20.0, 155.0) / 255.0) * 1.0;
-        gl_FragColor.rgb += vec3(pow(starNoise2, 1.3) * vec3(30.0, 140.0, 155.0) / 255.0) * 1.0;
+        gl_FragColor.rgb += vec3(pow(starNoise1, 1.3) * color2) * 1.0;
+        gl_FragColor.rgb += vec3(pow(starNoise2, 1.3) * color3) * 1.0;
       
-        gl_FragColor.rgb *= 0.45\;
+        gl_FragColor.rgb *= 1.0;
       
       }
       `,
@@ -137,6 +140,9 @@ export function Sky() {
   }, [shaders, shaders.fragmentShader, shaders.vertexShader, text])
 
   let uniforms = useRef({
+    color1: { value: new Color(Pal[5][0]) },
+    color2: { value: new Color(Pal[5][2]) },
+    color3: { value: new Color(Pal[5][5]) },
     time: { value: 0 },
     point: { value: new Vector3() },
     resolution: { value: new Vector2() },

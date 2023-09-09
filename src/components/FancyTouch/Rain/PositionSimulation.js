@@ -211,7 +211,7 @@ export class PhysicsInfluences {
           }
 
           if (len <= radius * 1.5) {
-            velocity += normalize(dif) * 300.0;
+            velocity += normalize(dif) * -1000.0;
           }
 
       

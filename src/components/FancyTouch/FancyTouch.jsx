@@ -32,7 +32,7 @@ function Content() {
       <OrbitControls maxDistance={1500} makeDefault></OrbitControls>
 
       <EffectComposer disableNormalPass multisampling={0}>
-        <Bloom luminanceThreshold={0.5} intensity={1} mipmapBlur={true}></Bloom>
+        <Bloom luminanceThreshold={0.99} intensity={1} mipmapBlur={true}></Bloom>
         {/* <Vignette></Vignette> */}
       </EffectComposer>
       <Sky></Sky>
