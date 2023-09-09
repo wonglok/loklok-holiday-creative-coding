@@ -28,11 +28,13 @@ import {
   NormalBlending,
   FrontSide,
   EquirectangularReflectionMapping,
+  Color,
 } from 'three'
 import { Geometry } from './Geo.js'
 import { PositionSimulation } from './PositionSimulation'
 import { TextureLoader } from 'three'
 import { generateUUID } from 'three/src/math/MathUtils'
+import Pal from 'nice-color-palettes'
 
 export class LokLokWiggleSimulation {
   constructor({ node, renderer, howManyTracker = 10, howLongTail = 32, influences }) {
@@ -212,16 +214,15 @@ export class LokLokWiggleDisplay {
       subdivisions: this.sim.WIDTH,
       openEnded: false,
     })
-
     geometry.instanceCount = count
 
-    let galaxy = new TextureLoader().load(`/discover/000001__StarSky/image.png`)
-    galaxy.mapping = EquirectangularReflectionMapping
+    // let galaxy = new TextureLoader().load(`/discover/000001__StarSky/image.png`)
+    // galaxy.mapping = EquirectangularReflectionMapping
     let matLine0 = new ShaderMaterial({
       uniforms: {
         time: { value: 0 },
         map: {
-          value: galaxy,
+          value: null,
         },
         posTexture: {
           value: null,
@@ -334,6 +335,9 @@ export class LokLokWiggleDisplay {
         varying vec2 vUv;
         varying vec3 vViewPosition;
 
+        attribute vec4 colorEach;
+        varying vec4 vEachColor;
+
         varying vec3 vTColor;
         varying float vLineCycle;
         vec2 rotate(vec2 v, float a) {
@@ -346,6 +350,8 @@ export class LokLokWiggleDisplay {
         void main (void) {
           vec3 transformed;
           vec3 objectNormal;
+
+          vEachColor = colorEach;
 
           float t = tubeInfo + 0.5;
 
@@ -385,6 +391,7 @@ export class LokLokWiggleDisplay {
         varying vec3 vTColor;
         varying vec2 vUv;
 
+        varying vec4 vEachColor;
         varying float vLineCycle;
 
 
@@ -409,9 +416,9 @@ export class LokLokWiggleDisplay {
 
           float tt = (1.0 - vT);
 
-          gl_FragColor = vec4(matcapColor.rgb * 8.0, tt * vLineCycle);
+          gl_FragColor = vec4(matcapColor.rgb * 0.0 + vEachColor.rgb * 8.0, tt * vLineCycle);
 
-          gl_FragColor.a = tt;
+          // gl_FragColor.a *= tt;
 
           if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
             gl_FragColor.x *= 1.0 * tt;
@@ -558,7 +565,17 @@ class NoodleGeo {
     //   }
     // }
 
+    let colors = []
+    let palet = Pal[50]
+    let color = new Color('#ffffff')
+    for (let i = 0; i < count; i++) {
+      let hex = palet[Math.floor(palet.length * Math.random())]
+      color.set(hex)
+      colors.push(color.r, color.g, color.b, Math.random())
+    }
+
     lineGeo.setAttribute('offset', new InstancedBufferAttribute(new Float32Array(offset), 4))
+    lineGeo.setAttribute('colorEach', new InstancedBufferAttribute(new Float32Array(colors), 4))
 
     let eachLineIdx = []
     for (let c = 0; c < count; c++) {

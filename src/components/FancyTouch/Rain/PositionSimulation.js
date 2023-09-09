@@ -250,6 +250,8 @@ export class PhysicsInfluences {
           velocity.y += 50.0 * cos(position.x * 0.01);
           velocity.z += 50.0 * sin(position.x * 0.02);
 
+
+
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
           // }
@@ -413,8 +415,8 @@ export class PositionSimulation {
         uniform vec3 cursorPointer;
         #include <common>
 
-        bool detectReset (vec3 position) {
-          return length(position) >= 600.0;
+        bool detectReset (vec3 position, vec4 pos, vec4 vel) {
+          return length(position) >= 1500.0 || pos.w >= 0.99;
         }
       `
     }
@@ -422,13 +424,13 @@ export class PositionSimulation {
     this.markToReset = (type) => {
       if (type === 'velocity') {
         return `
-          if (detectReset(position)) {
+          if (detectReset(position, tmpPos, tmpVel)) {
             phaseVel = 0.0;
           }
         `
       } else if (type === 'position') {
         return `
-          if (detectReset(position)) {
+          if (detectReset(position, tmpPos, tmpVel)) {
             phasePos = 0.0;
           }
         `
@@ -448,11 +450,13 @@ export class PositionSimulation {
           if (phasePos == 0.0) {
 
 
-            position = 300.0 * vec3(
+            position = 500.0 * vec3(
               -0.5 + rand(uv + 0.1 + position.x),
               -0.5 + rand(uv + 0.2 + position.y),
               -0.5 + rand(uv + 0.3 + position.z)
             );
+
+            position.z *= 0.05;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;
@@ -469,7 +473,7 @@ export class PositionSimulation {
             // }
 
 
-            phasePos = 1.0;
+            phasePos = rand(uv + time);
           }
           `
       }
@@ -480,9 +484,8 @@ export class PositionSimulation {
         return `
           ${this.birthPlace('velocity')}
 
-          // velocity = getDiff(position + velocity, cursorPointer) * 3.0;
-
           ${this.markToReset('velocity')}
+
           gl_FragColor = vec4(velocity.xyz, phaseVel);
         `
       } else if (type === 'position') {
@@ -492,6 +495,8 @@ export class PositionSimulation {
           ${this.influ.callerCode}
 
           ${this.markToReset('position')}
+
+          phasePos += delta * 0.05 * rand(uv + time);
           gl_FragColor = vec4(position + velocity * delta, phasePos);
         `
       }
@@ -518,12 +523,25 @@ export class PositionSimulation {
         ${this.commonProvision}
         ${this.finalOutput('position')}
       }
-
     `
 
     // Create initial state float textures
     let pos0 = gpu.createTexture()
     let vel0 = gpu.createTexture()
+
+    let array = pos0.image.data
+
+    let ii = 0
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        array[ii + 0] = 1000000000000000.0 * (Math.random() * 2.0 - 1.0)
+        array[ii + 1] = 1000000000000000.0 * (Math.random() * 2.0 - 1.0)
+        array[ii + 2] = 1000000000000000.0 * (Math.random() * 2.0 - 1.0)
+        array[ii + 3] = Math.random()
+        ii += 4.0
+      }
+    }
+    pos0.needsUpdate = true
 
     // and fill in here the texture data...
     // Add texture variables
