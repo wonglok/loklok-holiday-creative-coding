@@ -495,7 +495,7 @@ export class PositionSimulation {
 
           ${this.markToReset('position')}
 
-          phasePos += 0.005 * rand(uv + time);
+          phasePos += delta * 0.1 * rand(uv + time);
           gl_FragColor = vec4(position + velocity * delta, phasePos);
         `
       }
