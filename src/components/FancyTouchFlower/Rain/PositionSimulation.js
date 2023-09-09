@@ -1,7 +1,6 @@
 import { GPUComputationRenderer } from 'three-stdlib'
 // import { InteractionUI } from './InteractionUI'
 import {
-  HalfFloatType,
   Vector3,
   Clock,
   Mesh,
@@ -13,9 +12,11 @@ import {
   RGBAFormat,
   UVMapping,
   ClampToEdgeWrapping,
+  FloatType,
 } from 'three'
 import { generateUUID } from 'three/src/math/MathUtils'
 
+let keepSame = (r) => r
 export class PhysicsInfluences {
   nearestPow2(aSize) {
     return Math.pow(2, Math.ceil(Math.log(aSize) / Math.log(2)))
@@ -28,8 +29,8 @@ export class PhysicsInfluences {
     let influencerCount = this.nearestPow2(array.length) // this.howManyTrackers
 
     /** @type {Array} */
-    let raw = new Uint16Array(influencerCount * vec4Count * 4)
-    let texture = new DataTexture(raw, vec4Count, influencerCount, RGBAFormat, HalfFloatType)
+    let raw = new Float32Array(influencerCount * vec4Count * 4)
+    let texture = new DataTexture(raw, vec4Count, influencerCount, RGBAFormat, FloatType)
 
     // 4 data (rgba), * vec4Count
     let ww = 4 * vec4Count
@@ -40,83 +41,83 @@ export class PhysicsInfluences {
         let { position, radius, force, noise } = data
 
         // influence type
-        raw[idx * ww + 0] = DataUtils.toHalfFloat(data.enabled ? 1 : 0)
-        raw[idx * ww + 1] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 2] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 3] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 0] = keepSame(data.enabled ? 1 : 0)
+        raw[idx * ww + 1] = keepSame(0)
+        raw[idx * ww + 2] = keepSame(0)
+        raw[idx * ww + 3] = keepSame(0)
 
         // position
-        raw[idx * ww + 4] = DataUtils.toHalfFloat(position.x)
-        raw[idx * ww + 5] = DataUtils.toHalfFloat(position.y)
-        raw[idx * ww + 6] = DataUtils.toHalfFloat(position.z)
-        raw[idx * ww + 7] = DataUtils.toHalfFloat(1)
+        raw[idx * ww + 4] = keepSame(position.x)
+        raw[idx * ww + 5] = keepSame(position.y)
+        raw[idx * ww + 6] = keepSame(position.z)
+        raw[idx * ww + 7] = keepSame(1)
 
         // radius, force
-        raw[idx * ww + 8] = DataUtils.toHalfFloat(radius)
-        raw[idx * ww + 9] = DataUtils.toHalfFloat(force)
-        raw[idx * ww + 10] = DataUtils.toHalfFloat(noise)
-        raw[idx * ww + 11] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 8] = keepSame(radius)
+        raw[idx * ww + 9] = keepSame(force)
+        raw[idx * ww + 10] = keepSame(noise)
+        raw[idx * ww + 11] = keepSame(0)
 
         // others
-        raw[idx * ww + 12] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 13] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 14] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 15] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 12] = keepSame(0)
+        raw[idx * ww + 13] = keepSame(0)
+        raw[idx * ww + 14] = keepSame(0)
+        raw[idx * ww + 15] = keepSame(0)
       }
 
       if (data.type === 'computeGravity') {
         let { direction, force } = data
         // influence type
-        raw[idx * ww + 0] = DataUtils.toHalfFloat(data.enabled ? 2 : 0)
-        raw[idx * ww + 1] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 2] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 3] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 0] = keepSame(data.enabled ? 2 : 0)
+        raw[idx * ww + 1] = keepSame(0)
+        raw[idx * ww + 2] = keepSame(0)
+        raw[idx * ww + 3] = keepSame(0)
 
         // direction
-        raw[idx * ww + 4] = DataUtils.toHalfFloat(direction.x)
-        raw[idx * ww + 5] = DataUtils.toHalfFloat(direction.y)
-        raw[idx * ww + 6] = DataUtils.toHalfFloat(direction.z)
-        raw[idx * ww + 7] = DataUtils.toHalfFloat(1)
+        raw[idx * ww + 4] = keepSame(direction.x)
+        raw[idx * ww + 5] = keepSame(direction.y)
+        raw[idx * ww + 6] = keepSame(direction.z)
+        raw[idx * ww + 7] = keepSame(1)
 
         // influeMeta
-        raw[idx * ww + 8] = DataUtils.toHalfFloat(force)
-        raw[idx * ww + 9] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 10] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 11] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 8] = keepSame(force)
+        raw[idx * ww + 9] = keepSame(0)
+        raw[idx * ww + 10] = keepSame(0)
+        raw[idx * ww + 11] = keepSame(0)
 
         // others
-        raw[idx * ww + 12] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 13] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 14] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 15] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 12] = keepSame(0)
+        raw[idx * ww + 13] = keepSame(0)
+        raw[idx * ww + 14] = keepSame(0)
+        raw[idx * ww + 15] = keepSame(0)
       }
 
       if (data.type === 'computeVortex') {
         let { position, min, max, force, radius } = data
 
         // influence type
-        raw[idx * ww + 0] = DataUtils.toHalfFloat(data.enabled ? 3 : 0)
-        raw[idx * ww + 1] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 2] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 3] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 0] = keepSame(data.enabled ? 3 : 0)
+        raw[idx * ww + 1] = keepSame(0)
+        raw[idx * ww + 2] = keepSame(0)
+        raw[idx * ww + 3] = keepSame(0)
 
         // position
-        raw[idx * ww + 4] = DataUtils.toHalfFloat(position.x)
-        raw[idx * ww + 5] = DataUtils.toHalfFloat(position.y)
-        raw[idx * ww + 6] = DataUtils.toHalfFloat(position.z)
-        raw[idx * ww + 7] = DataUtils.toHalfFloat(1)
+        raw[idx * ww + 4] = keepSame(position.x)
+        raw[idx * ww + 5] = keepSame(position.y)
+        raw[idx * ww + 6] = keepSame(position.z)
+        raw[idx * ww + 7] = keepSame(1)
 
         // radius, force
-        raw[idx * ww + 8] = DataUtils.toHalfFloat(force)
-        raw[idx * ww + 9] = DataUtils.toHalfFloat(min)
-        raw[idx * ww + 10] = DataUtils.toHalfFloat(max)
-        raw[idx * ww + 11] = DataUtils.toHalfFloat(radius)
+        raw[idx * ww + 8] = keepSame(force)
+        raw[idx * ww + 9] = keepSame(min)
+        raw[idx * ww + 10] = keepSame(max)
+        raw[idx * ww + 11] = keepSame(radius)
 
         // others
-        raw[idx * ww + 12] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 13] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 14] = DataUtils.toHalfFloat(0)
-        raw[idx * ww + 15] = DataUtils.toHalfFloat(0)
+        raw[idx * ww + 12] = keepSame(0)
+        raw[idx * ww + 13] = keepSame(0)
+        raw[idx * ww + 14] = keepSame(0)
+        raw[idx * ww + 15] = keepSame(0)
       }
 
       texture.needsUpdate = true
@@ -394,8 +395,6 @@ export class PositionSimulation {
     this.gpu = new GPUComputationRenderer(this.width, this.height, this.renderer)
 
     let gpu = this.gpu
-
-    gpu.setDataType(HalfFloatType)
 
     this.commonProvision = `
       vec2 uv = gl_FragCoord.xy / resolution.xy;
