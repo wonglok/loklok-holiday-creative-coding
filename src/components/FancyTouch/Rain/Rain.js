@@ -30,31 +30,31 @@ export function Rain() {
       cursorPointer: cursorPointer,
       node: mini,
       influences: [
-        {
-          name: 'center',
-          type: `computeSphere`,
-          enabled: true,
-          mouse: true,
-          needsUpdate: true,
-          position: { x: 0, y: 0, z: 0 },
-          radius: 500,
-          force: 500,
-          noise: 0,
-        },
+        // {
+        //   name: 'center',
+        //   type: `computeSphere`,
+        //   enabled: true,
+        //   mouse: true,
+        //   needsUpdate: true,
+        //   position: { x: 0, y: 0, z: 0 },
+        //   radius: 500,
+        //   force: 500,
+        //   noise: 0,
+        // },
 
-        //
-        {
-          name: 'vortexA',
-          type: `computeVortex`,
-          enabled: true,
-          needsUpdate: true,
-          mouse: true,
-          position: { x: 0, y: 0, z: 0 },
-          force: 5000,
-          radius: 250,
-          // min: -4.0,
-          // max: 4.0,
-        },
+        // //
+        // {
+        //   name: 'vortexA',
+        //   type: `computeVortex`,
+        //   enabled: true,
+        //   needsUpdate: true,
+        //   mouse: true,
+        //   position: { x: 0, y: 0, z: 0 },
+        //   force: 5000,
+        //   radius: 250,
+        //   // min: -4.0,
+        //   // max: 4.0,
+        // },
 
         // {
         //   type: `computeSphere`,
@@ -81,8 +81,8 @@ export function Rain() {
           enabled: true,
           mouse: true,
           needsUpdate: true,
-          position: { x: 0, y: 0, z: 0 },
-          radius: 250,
+          position: { x: 1000, y: 1000, z: 1000 },
+          radius: 150,
           force: 50000,
           noise: 0,
         },
@@ -94,57 +94,57 @@ export function Rain() {
 
   //
 
-  let mouse = useTweaks('mouse', {
-    // enabled: true,
-    mouse: true,
-    needsUpdate: true,
-    position: { x: 0, y: 0, z: 0 },
-    radius: 60,
-    force: -50000,
-    noise: 0,
-  })
+  // let mouse = useTweaks('mouse', {
+  //   // enabled: true,
+  //   mouse: true,
+  //   needsUpdate: true,
+  //   position: { x: 0, y: 0, z: 0 },
+  //   radius: 60,
+  //   force: -50000,
+  //   noise: 0,
+  // })
 
-  let centerGravity = useTweaks('center gravity', {
-    // enabled: true,
-    mouse: true,
-    needsUpdate: true,
-    position: { x: 0, y: 0, z: 0 },
-    radius: 500,
-    force: 500,
-    noise: 0,
-  })
+  // let centerGravity = useTweaks('center gravity', {
+  //   // enabled: true,
+  //   mouse: true,
+  //   needsUpdate: true,
+  //   position: { x: 0, y: 0, z: 0 },
+  //   radius: 500,
+  //   force: 500,
+  //   noise: 0,
+  // })
 
-  let vortex = useTweaks('vortex', {
-    // enabled: true,
-    needsUpdate: true,
-    mouse: true,
-    position: { x: 0, y: 0, z: 0 },
-    force: 500,
-    radius: 250,
-  })
+  // let vortex = useTweaks('vortex', {
+  //   // enabled: true,
+  //   needsUpdate: true,
+  //   mouse: true,
+  //   position: { x: 0, y: 0, z: 0 },
+  //   force: 500,
+  //   radius: 250,
+  // })
 
   useFrame(({ camera }) => {
     sim?.track()
 
-    //
-    {
-      let target = sim.influences.find((e) => e.name === 'mouse3d')
-      for (let kn in mouse) {
-        target[kn] = mouse[kn]
-      }
-    }
-    {
-      let target = sim.influences.find((e) => e.name === 'vortexA')
-      for (let kn in vortex) {
-        target[kn] = vortex[kn]
-      }
-    }
-    {
-      let target = sim.influences.find((e) => e.name === 'center')
-      for (let kn in centerGravity) {
-        target[kn] = centerGravity[kn]
-      }
-    }
+    // //
+    // {
+    //   let target = sim.influences.find((e) => e.name === 'mouse3d')
+    //   for (let kn in mouse) {
+    //     target[kn] = mouse[kn]
+    //   }
+    // }
+    // {
+    //   let target = sim.influences.find((e) => e.name === 'vortexA')
+    //   for (let kn in vortex) {
+    //     target[kn] = vortex[kn]
+    //   }
+    // }
+    // {
+    //   let target = sim.influences.find((e) => e.name === 'center')
+    //   for (let kn in centerGravity) {
+    //     target[kn] = centerGravity[kn]
+    //   }
+    // }
     // radius
   })
 
