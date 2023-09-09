@@ -249,7 +249,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += boxedSwirl(position / 500.0) * 50.0;
+          velocity += boxedSwirl(position / 500.0) * 100.0;
 
 
           // if (forceFilter >= maxV) {
