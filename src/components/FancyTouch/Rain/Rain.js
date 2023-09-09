@@ -82,7 +82,7 @@ export function Rain() {
           mouse: true,
           needsUpdate: true,
           position: { x: 1000, y: 1000, z: 1000 },
-          radius: 150,
+          radius: 250,
           force: 50000,
           noise: 0,
         },
