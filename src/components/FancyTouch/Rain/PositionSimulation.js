@@ -537,9 +537,9 @@ export class PositionSimulation {
     let ii = 0
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        array[ii + 0] = 1000000000000000.0 * (Math.random() * 2.0 - 1.0)
-        array[ii + 1] = 1000000000000000.0 * (Math.random() * 2.0 - 1.0)
-        array[ii + 2] = 1000000000000000.0 * (Math.random() * 2.0 - 1.0)
+        array[ii + 0] = 0.0 * (Math.random() * 2.0 - 1.0)
+        array[ii + 1] = 0.0 * (Math.random() * 2.0 - 1.0)
+        array[ii + 2] = 0.0 * (Math.random() * 2.0 - 1.0)
         array[ii + 3] = Math.random()
         ii += 4.0
       }
