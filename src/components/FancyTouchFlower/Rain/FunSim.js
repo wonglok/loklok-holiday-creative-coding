@@ -1,6 +1,5 @@
 import { GPUComputationRenderer } from 'three-stdlib'
 import {
-  HalfFloatType,
   Vector3,
   BufferAttribute,
   CylinderGeometry,
@@ -29,10 +28,11 @@ import {
   FrontSide,
   EquirectangularReflectionMapping,
   Color,
+  FloatType,
 } from 'three'
 import { Geometry } from './Geo.js'
 import { PositionSimulation } from './PositionSimulation'
-import { TextureLoader } from 'three'
+// import { TextureLoader } from 'three'
 import { generateUUID } from 'three/src/math/MathUtils'
 import Pal from 'nice-color-palettes'
 
@@ -56,7 +56,7 @@ export class LokLokWiggleSimulation {
 
     let gpu = (this.gpu = new GPUComputationRenderer(this.WIDTH, this.HEIGHT, renderer))
 
-    gpu.setDataType(HalfFloatType)
+    gpu.setDataType(FloatType)
 
     this.simPos = new PositionSimulation({
       mini: node,
