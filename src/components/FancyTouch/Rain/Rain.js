@@ -160,7 +160,7 @@ export function Rain() {
     <group position={[0, 0, 0]}>
       <Box
         ref={refToucher}
-        args={[10000, 10000, 0.1]}
+        args={[100000, 100000, 0.01]}
         visible={false}
         onPointerMove={(ev) => {
           //
