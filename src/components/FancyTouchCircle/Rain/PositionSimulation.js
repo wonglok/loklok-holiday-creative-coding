@@ -253,10 +253,9 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += circle(position / 800.0) * 800.0;
-
-          velocity += boxedSwirl(position / 800.0) * 800.0;
-
+          velocity += -circle(position / 500.0) * 500.0;
+          velocity += boxedSwirl(position / 500.0) * 500.0;
+          velocity += galaxy(position / 500.0) * 500.0;
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -419,7 +418,7 @@ export class PositionSimulation {
         #include <common>
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 1500.0 || pos.w >= 0.99;
+          return length(position) >= 1000.0 || pos.w >= 0.99;
         }
       `
     }
@@ -453,7 +452,7 @@ export class PositionSimulation {
           if (phasePos == 0.0) {
 
 
-            position = 500.0 * vec3(
+            position = 250.0 * vec3(
               -0.5 + rand(uv + 0.1 + position.x),
               -0.5 + rand(uv + 0.2 + position.y),
               -0.5 + rand(uv + 0.3 + position.z)
