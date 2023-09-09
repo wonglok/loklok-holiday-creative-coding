@@ -366,7 +366,7 @@ export class LokLokWiggleDisplay {
 
 
           float snip =  pow(t * (1.0 - t), 0.35);
-          vec2 volume = vec2(2.5 * snip) * 0.3;
+          vec2 volume = vec2(2.5 * snip) * 0.35;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
 
