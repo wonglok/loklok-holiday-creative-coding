@@ -210,10 +210,9 @@ export class PhysicsInfluences {
           }
 
           if (len <= radius * 1.5) {
-            velocity += normalize(dif) * 800.0;
+            velocity += normalize(dif) * -1000.0;
           }
 
-      
           // if (len <= radius) {
           //   if (noiseV != 0.0) {
           //     velocity += cnoise(velocity.xyz) * noiseV;
@@ -252,8 +251,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += boxedSwirl(position / 800.0) * 500.0;
-
+          velocity += galaxy(position / 1800.0) * 1500.0;
 
 
           // if (forceFilter >= maxV) {
