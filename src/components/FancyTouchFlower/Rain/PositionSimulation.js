@@ -252,7 +252,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += galaxy(position / 1800.0) * 1500.0;
+          velocity += galaxy(position / 100.0) * 100.0;
 
 
           // if (forceFilter >= maxV) {
@@ -451,9 +451,9 @@ export class PositionSimulation {
 
 
             position = 500.0 * vec3(
-              -0.5 + rand(uv + 0.1 + position.x),
-              -0.5 + rand(uv + 0.2 + position.y),
-              -0.5 + rand(uv + 0.3 + position.z)
+              -0.5 + rand(uv + 0.1 + time + position.x),
+              -0.5 + rand(uv + 0.2 + time + position.y),
+              -0.5 + rand(uv + 0.3 + time + position.z)
             );
 
             position.z *= 0.15;
