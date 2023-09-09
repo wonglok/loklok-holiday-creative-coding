@@ -17,6 +17,7 @@ let io = new socket.Server(http, {
   },
 })
 
+let moment = require('moment')
 app.use(cors({}))
 
 app.use(
@@ -73,6 +74,7 @@ app.post('/file', async (req, res) => {
 
     let res = await fs.promises.readdir(`./public/discover/`)
     let count = (res.length + '').padStart(6, '0')
+    let dateStr = moment().format('YYYY-MM-DD')
     let data = await fs.promises.readFile(file.filepath)
     let userInputTitle =
       slugify(fields.title[0], {
@@ -90,18 +92,18 @@ app.post('/file', async (req, res) => {
         size: file.size,
         origin: fields.origin[0],
         pathname: fields.pathname[0],
-        thumbURL: `/discover/${count}__${userInputTitle}/${name}`,
+        thumbURL: `/discover/${dateStr}__${userInputTitle}/${name}`,
       },
       null,
       '\t',
     )
     await fs.promises
-      .mkdir(`./public/discover/${count}__${userInputTitle}`, {
+      .mkdir(`./public/discover/${dateStr}__${userInputTitle}`, {
         recursive: true,
       })
       .catch(console.error)
-    await fs.promises.writeFile(`./public/discover/${count}__${userInputTitle}/${name}`, data)
-    await fs.promises.writeFile(`./public/discover/${count}__${userInputTitle}/meta.json`, metadata)
+    await fs.promises.writeFile(`./public/discover/${dateStr}__${userInputTitle}/${name}`, data)
+    await fs.promises.writeFile(`./public/discover/${dateStr}__${userInputTitle}/meta.json`, metadata)
 
     metas.push(JSON.parse(metadata))
   })

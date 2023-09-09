@@ -1,7 +1,7 @@
 import { Sphere } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useEffect, useRef } from 'react'
-import { DoubleSide, Vector2, Vector3 } from 'three'
+import { BackSide, DoubleSide, Vector2, Vector3 } from 'three'
 
 export function Sky() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,6 +120,9 @@ export function Sky() {
         gl_FragColor = backgroundColor;
         gl_FragColor.rgb += vec3(pow(starNoise1, 1.3) * vec3(10.0, 20.0, 155.0) / 255.0) * 1.0;
         gl_FragColor.rgb += vec3(pow(starNoise2, 1.3) * vec3(30.0, 140.0, 155.0) / 255.0) * 1.0;
+      
+        gl_FragColor.rgb *= 0.45\;
+      
       }
       `,
   }
@@ -173,31 +176,31 @@ export function Sky() {
       userData={{
         enableBloom: true,
       }}
-      onPointerDown={() => {
-        controls.enabled = false
-        ts.current.isDown = true
-      }}
-      onPointerMove={(ev) => {
-        //
-        if (ts.current.isDown) {
-          if (uniforms.current && uniforms.current.point) {
-            uniforms.current.point.value.copy(ev.point)
-          }
-        }
-      }}
-      onPointerUp={() => {
-        controls.enabled = true
-        ts.current.isDown = false
-      }}
+      // onPointerDown={() => {
+      //   controls.enabled = false
+      //   ts.current.isDown = true
+      // }}
+      // onPointerMove={(ev) => {
+      //   //
+      //   if (ts.current.isDown) {
+      //     if (uniforms.current && uniforms.current.point) {
+      //       uniforms.current.point.value.copy(ev.point)
+      //     }
+      //   }
+      // }}
+      // onPointerUp={() => {
+      //   controls.enabled = true
+      //   ts.current.isDown = false
+      // }}
       scale={1}
-      args={[350, 15, 15]}
+      args={[1500, 15, 15]}
     >
       <shaderMaterial
         ref={ref}
         uniforms={uniforms.current}
         fragmentShader={shaders.fragmentShader}
         vertexShader={shaders.vertexShader}
-        side={DoubleSide}
+        side={BackSide}
         transparent={true}
       >
         {/*  */}
