@@ -31,7 +31,7 @@ export default function Page({ Component, pageProps: { session, ...pageProps } }
   return (
     <>
       <Head>
-        <title>SWAN</title>
+        <title>Hi dear</title>
       </Head>
       <Component {...pageProps}></Component>
       {ui}

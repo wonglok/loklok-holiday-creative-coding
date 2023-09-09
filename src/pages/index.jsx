@@ -47,9 +47,9 @@ function getFiles() {
     })
 
     files = files.slice().sort((a, b) => {
-      if (b.createdAt > a.createdAt) {
+      if (b.ts > a.ts) {
         return 1
-      } else if (b.createdAt < a.createdAt) {
+      } else if (b.ts < a.ts) {
         return -1
       }
       return 0
