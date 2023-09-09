@@ -22,6 +22,7 @@
     "@ducanh2912/next-pwa": "^9.4.0",
     "@react-three/drei": "^9.80.2",
     "@react-three/fiber": "^8.13.6",
+    "@react-three/postprocessing": "^2.15.1",
     "cors": "^2.8.5",
     "formidable": "^3.5.1",
     "glsl-random": "^0.0.5",

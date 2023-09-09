@@ -10,7 +10,6 @@ export function Sky() {
     // varying vec3 vPos;
     // varying vec3 vUv3;
     varying vec3 vWorldDirection;
-    varying vec3 vWP;
     vec3 transformDirection( in vec3 dir, in mat4 matrix ) {
       return normalize( ( matrix * vec4( dir, 0.0 ) ).xyz );
     }
@@ -22,7 +21,6 @@ export function Sky() {
       // vUv3 = uv.xyx;
       vWorldDirection = transformDirection( position, modelMatrix );
 
-      vWP = (modelMatrix * vec4(position, 1.0)).xyz;
     }
     `,
     fragmentShader: /* glsl */ `
@@ -103,12 +101,6 @@ export function Sky() {
 
       // varying vec3 vPos;
       uniform float time;
-      uniform vec3 point;
-      uniform vec2 mouse;
-      varying vec3 vWP;
-      uniform vec2 viewport;
-      uniform vec2 resolution;
-      uniform vec2 point2d;
       // varying vec3 vUv3;
 
       void main() {
@@ -118,30 +110,16 @@ export function Sky() {
         // pp += vPos * 0.25 + speed;
         float noise = clamp(cnoise(speed + pp / 250.0 + 0.0 ), 0.0, 1.0);
 
-        vec3 colorA = vec3(81.0, 135.0, 228.0) * 0.35 / 255.0;
-        vec3 colorB = vec3(0.0, 150.0, 136.0) * 0.6 / 255.0;
+        float starNoise1 = (noise) * pow(cnoise(speed + pp * 2.0) * 0.5 + 0.5, 15.5 + sin(time)) * 10.0;
+        float starNoise2 = (noise) * pow(cnoise(speed + pp * 1.3) * 0.5 + 0.5, 15.5 + sin(time)) * 20.0;
 
-        vec3 colorC = mix(colorA, colorB, noise);
-        vec4 backgroundColor = vec4(colorC * colorC, 1.0);
+        starNoise1 = clamp(starNoise1, 0.0, 1.0);
+        starNoise2 = clamp(starNoise2, 0.0, 1.0);
 
+        vec4 backgroundColor = vec4(0.0, 0.0, 0.02, 1.0);
         gl_FragColor = backgroundColor;
-
-        
-        float starNoise1 = (noise) * pow(cnoise(speed + pp * 2.0) * 0.5 + 0.5, 15.5 + sin(time)) * 15.0;
-        float starNoise2 = (noise) * pow(cnoise(speed + pp * 1.3) * 0.5 + 0.5, 15.5 + sin(time)) * 15.0;
-        gl_FragColor.rgb += vec3(pow(starNoise1, 1.3) * vec3(10.0, 20.0, 255.0) / 255.0) * 1.0;
-        gl_FragColor.rgb += vec3(pow(starNoise2, 1.3) * vec3(30.0, 140.0, 255.0) / 255.0) * 1.0;
-
-
-        vec2 uvScreen = (gl_FragCoord.xy / resolution.xy) * 2.0 - 1.0;
-        vec2 mouseMe = mouse;
-
-        mouseMe.x *= resolution.x / resolution.y;
-        uvScreen.x *= resolution.x / resolution.y;
-        
-        if (length(uvScreen - mouseMe) < 0.05) {
-          gl_FragColor.r = 1.0;
-        }
+        gl_FragColor.rgb += vec3(pow(starNoise1, 1.3) * vec3(10.0, 20.0, 155.0) / 255.0) * 1.0;
+        gl_FragColor.rgb += vec3(pow(starNoise2, 1.3) * vec3(30.0, 140.0, 155.0) / 255.0) * 1.0;
       }
       `,
   }
@@ -149,7 +127,6 @@ export function Sky() {
   let ref = useRef()
 
   let text = JSON.stringify(shaders)
-
   useEffect(() => {
     if (ref.current) {
       ref.current.needsUpdate = true
@@ -213,7 +190,7 @@ export function Sky() {
         ts.current.isDown = false
       }}
       scale={1}
-      args={[450, 15, 15]}
+      args={[350, 15, 15]}
     >
       <shaderMaterial
         ref={ref}
@@ -221,6 +198,7 @@ export function Sky() {
         fragmentShader={shaders.fragmentShader}
         vertexShader={shaders.vertexShader}
         side={DoubleSide}
+        transparent={true}
       >
         {/*  */}
         {/*  */}
