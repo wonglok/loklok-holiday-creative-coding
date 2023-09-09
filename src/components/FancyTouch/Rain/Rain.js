@@ -1,6 +1,6 @@
 import { Core } from './Core'
 import { Box } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import { SphereGeometry } from 'three'
 import {
@@ -155,6 +155,7 @@ export function Rain() {
     }
   })
 
+  let controls = useThree((r) => r.controls)
   //
   return (
     <group position={[0, 0, 0]}>
@@ -174,8 +175,12 @@ export function Rain() {
 
           // cursorPointer.copy(ev.point)
         }}
+        onPointerUp={(ev) => {
+          controls.enabled = true
+        }}
         onPointerDown={(ev) => {
           //
+          controls.enabled = false
           let influ = sim.influences.find((e) => e.name === 'mouse3d')
           if (influ) {
             influ.position.x = ev.point.x

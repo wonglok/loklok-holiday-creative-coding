@@ -28,7 +28,7 @@ export function FancyTouch() {
 function Content() {
   return (
     <>
-      <PerspectiveCamera makeDefault fov={75} near={30} far={3000} position={[0, 0, 1000.1]}></PerspectiveCamera>
+      <PerspectiveCamera makeDefault fov={75} near={30} far={3000} position={[0, 0, 1200.1]}></PerspectiveCamera>
       <OrbitControls maxDistance={1500} makeDefault></OrbitControls>
 
       <EffectComposer disableNormalPass multisampling={0}>
