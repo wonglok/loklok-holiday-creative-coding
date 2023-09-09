@@ -239,6 +239,8 @@ export class PhysicsInfluences {
           //
           float forceFilter = force;
 
+
+          //
           // if (len <= radius) {
           //   velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           //   velocity += vec3(rotationY(forceFilter * 100.0) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
@@ -249,7 +251,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += boxedSwirl(position / 500.0) * 100.0;
+          velocity += jade(position / 2000.0) * 100.0;
 
 
           // if (forceFilter >= maxV) {
@@ -456,7 +458,7 @@ export class PositionSimulation {
               -0.5 + rand(uv + 0.3 + position.z)
             );
 
-            position.z *= 0.05;
+            position.z *= 0.15;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;
@@ -471,7 +473,6 @@ export class PositionSimulation {
             //   position.y += -50.0;
             //   position.z += -130.0;
             // }
-
 
             phasePos = rand(uv + time);
           }
@@ -496,7 +497,7 @@ export class PositionSimulation {
 
           ${this.markToReset('position')}
 
-          phasePos += delta * 0.05 * rand(uv + time);
+          phasePos += delta * 0.1 * rand(uv + time);
           gl_FragColor = vec4(position + velocity * delta, phasePos);
         `
       }
