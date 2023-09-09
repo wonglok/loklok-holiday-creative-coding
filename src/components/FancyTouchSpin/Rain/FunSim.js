@@ -210,7 +210,7 @@ export class LokLokWiggleDisplay {
   async setup({ node }) {
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: this.sim.HEIGHT,
-      numSides: 6,
+      numSides: 4,
       subdivisions: this.sim.WIDTH,
       openEnded: false,
     })
