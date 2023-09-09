@@ -176,11 +176,14 @@ export function Rain() {
           // cursorPointer.copy(ev.point)
         }}
         onPointerUp={(ev) => {
-          controls.enabled = true
+          if (controls) {
+            controls.enabled = true
+          }
         }}
         onPointerDown={(ev) => {
-          //
-          controls.enabled = false
+          if (controls) {
+            controls.enabled = false
+          }
           let influ = sim.influences.find((e) => e.name === 'mouse3d')
           if (influ) {
             influ.position.x = ev.point.x
