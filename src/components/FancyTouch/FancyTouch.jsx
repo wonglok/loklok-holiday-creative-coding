@@ -1,4 +1,4 @@
-import { Box, OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { Box, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Sky } from './Sky/Sky'
 import { Bloom, EffectComposer, SSR, Vignette } from '@react-three/postprocessing'
@@ -32,11 +32,12 @@ function Content() {
       <OrbitControls maxDistance={1500} makeDefault></OrbitControls>
 
       <EffectComposer disableNormalPass multisampling={0}>
-        <Bloom luminanceThreshold={0.2} intensity={0.3} mipmapBlur={false}></Bloom>
-        <Vignette></Vignette>
+        <Bloom luminanceThreshold={0.5} intensity={1} mipmapBlur={true}></Bloom>
+        {/* <Vignette></Vignette> */}
       </EffectComposer>
       <Sky></Sky>
       <Rain></Rain>
+      <Stats></Stats>
     </>
   )
 }

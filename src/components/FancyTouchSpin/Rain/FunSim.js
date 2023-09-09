@@ -32,7 +32,7 @@ import {
 } from 'three'
 import { Geometry } from './Geo.js'
 import { PositionSimulation } from './PositionSimulation'
-import { TextureLoader } from 'three'
+// import { TextureLoader } from 'three'
 import { generateUUID } from 'three/src/math/MathUtils'
 import Pal from 'nice-color-palettes'
 
