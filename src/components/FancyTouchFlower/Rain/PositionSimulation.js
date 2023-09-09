@@ -451,12 +451,12 @@ export class PositionSimulation {
 
 
             position = 500.0 * vec3(
-              -0.5 + rand(uv + 0.1 + time + position.x),
-              -0.5 + rand(uv + 0.2 + time + position.y),
-              -0.5 + rand(uv + 0.3 + time + position.z)
+              -0.5 + rand(uv + 0.1 + time * 10.0 + position.xy),
+              -0.5 + rand(uv + 0.2 + time * 10.0 + position.yz),
+              -0.5 + rand(uv + 0.3 + time * 10.0 + position.zx)
             );
 
-            position.z *= 0.15;
+            position.z *= 0.5;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;
@@ -472,7 +472,7 @@ export class PositionSimulation {
             //   position.z += -130.0;
             // }
 
-            phasePos = rand(uv + time);
+            phasePos = rand(uv + time) * 0.3;
           }
           `
       }
@@ -495,7 +495,7 @@ export class PositionSimulation {
 
           ${this.markToReset('position')}
 
-          phasePos += delta * 0.1 * rand(uv + time);
+          phasePos += 0.005 * rand(uv + time);
           gl_FragColor = vec4(position + velocity * delta, phasePos);
         `
       }
