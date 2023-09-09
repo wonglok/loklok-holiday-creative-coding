@@ -43,6 +43,12 @@ export function Paste({ blob, onClose }) {
             type='text'
             className='h-full w-full bg-blue-200 p-2'
             placeholder='Title:'
+            autoFocus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                submitPics({ title: ref.current.value || 'untitled' })
+              }
+            }}
           ></input>
           <button
             className='bg-blue-300 p-2 text-xs'

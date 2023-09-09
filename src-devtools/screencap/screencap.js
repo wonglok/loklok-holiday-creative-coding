@@ -59,47 +59,44 @@ app.post('/file', async (req, res) => {
     res.end(String(err))
     return
   }
-  // res.writeHead(200, { 'Content-Type': 'application/json' })
-
-  // res.end(JSON.stringify({ fields, files }, null, 2))
 
   let metas = []
   let proms = files.file.map(async (file) => {
     let name = `${file.originalFilename}`
 
-    let ts = new Date().getTime()
-
     await fs.promises
-      .mkdir(`./public/disocver`, {
+      .mkdir(`./public/discover`, {
         recursive: true,
       })
       .catch(console.error)
 
-    let res = await fs.promises.readdir(`./public/disocver/`)
-    let count = (res.length + '').padStart(5, '0')
+    let res = await fs.promises.readdir(`./public/discover/`)
+    let count = (res.length + '').padStart(6, '0')
     let data = await fs.promises.readFile(file.filepath)
     let userInputTitle = fields.title[0]
     let metadata = JSON.stringify(
       {
+        uuid: `_${Math.random().toFixed(36).slice(2, 9)}_${Math.random().toFixed(36).slice(2, 9)}`,
         title: userInputTitle,
-        dateTime: new Date(),
+        createdAt: new Date(),
+        ts: new Date().getTime(),
         name: name,
         mimetype: file.mimetype,
         size: file.size,
         origin: fields.origin[0],
         pathname: fields.pathname[0],
-        thumbURL: `/disocver/${count}__${userInputTitle}/${name}`,
+        thumbURL: `/discover/${count}__${userInputTitle}/${name}`,
       },
       null,
       '\t',
     )
     await fs.promises
-      .mkdir(`./public/disocver/${count}__${userInputTitle}`, {
+      .mkdir(`./public/discover/${count}__${userInputTitle}`, {
         recursive: true,
       })
       .catch(console.error)
-    await fs.promises.writeFile(`./public/disocver/${count}__${userInputTitle}/${name}`, data)
-    await fs.promises.writeFile(`./public/disocver/${count}__${userInputTitle}/meta.json`, metadata)
+    await fs.promises.writeFile(`./public/discover/${count}__${userInputTitle}/${name}`, data)
+    await fs.promises.writeFile(`./public/discover/${count}__${userInputTitle}/meta.json`, metadata)
 
     metas.push(JSON.parse(metadata))
   })
