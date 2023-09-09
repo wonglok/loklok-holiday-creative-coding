@@ -394,6 +394,7 @@ export class LokLokWiggleDisplay {
         varying vec4 vEachColor;
         varying float vLineCycle;
 
+        uniform float time;
 
         vec3 catmullRom (vec3 p0, vec3 p1, vec3 p2, vec3 p3, float t) {
             vec3 v0 = (p2 - p0) * 0.5;
@@ -404,8 +405,18 @@ export class LokLokWiggleDisplay {
             return vec3((2.0 * p1 - 2.0 * p2 + v0 + v1) * t3 + (-3.0 * p1 + 3.0 * p2 - 2.0 * v0 - v1) * t2 + v0 * t + p1);
         }
 
-        void main (void) {
 
+        // A simple way to create color variation in a cheap way (yes, trigonometrics ARE cheap
+        // in the GPU, don't try to be smart and use a triangle wave instead).
+
+        // See https://iquilezles.org/articles/palettes for more information
+
+        vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
+        {
+            return a + b*cos( 6.28318*(c*t+d) );
+        }
+
+        void main (void) {
 
           // vec3 viewDir = normalize( vViewPosition );
           // vec3 x = normalize( vec3( viewDir.z, 0.0, - viewDir.x ) );
@@ -416,9 +427,9 @@ export class LokLokWiggleDisplay {
 
           float tt = (1.0 - vT);
 
-          gl_FragColor = vec4(matcapColor.rgb * 0.0 + vEachColor.rgb * 8.0, tt * vLineCycle);
+          vec3 color = pal(tt + time, vec3(tt,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,0.5),vec3(0.8,0.90,0.30));
 
-          // gl_FragColor.a *= tt;
+          gl_FragColor = vec4(matcapColor.rgb * 0.0 + color, tt * vLineCycle);
 
           if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
             gl_FragColor.x *= 1.0 * tt;
