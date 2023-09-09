@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const DEV_TOOL_PORT = 2329
 let fs = require('fs')
-
+let slugify = require('slugify')
 let socket = require('socket.io')
 let Http = require('http')
 // app.use(express.json({ limit: '1GB' })) // for parsing application/json
@@ -67,13 +67,18 @@ app.post('/file', async (req, res) => {
     await fs.promises
       .mkdir(`./public/discover`, {
         recursive: true,
+        replacement: '_',
       })
       .catch(console.error)
 
     let res = await fs.promises.readdir(`./public/discover/`)
     let count = (res.length + '').padStart(6, '0')
     let data = await fs.promises.readFile(file.filepath)
-    let userInputTitle = fields.title[0]
+    let userInputTitle =
+      slugify(fields.title[0], {
+        strict: true,
+      }) || 'untitled'
+
     let metadata = JSON.stringify(
       {
         uuid: `_${Math.random().toFixed(36).slice(2, 9)}_${Math.random().toFixed(36).slice(2, 9)}`,

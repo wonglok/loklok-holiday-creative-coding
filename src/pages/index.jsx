@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -23,9 +24,9 @@ export default function Home({}) {
 function EachThumb({ item }) {
   return (
     <>
-      <div className=''>
+      <div className='rounded-2xl border border-transparent bg-gray-200 p-1 hover:border-blue-500'>
         <Link href={`${item.pathname}`}>
-          <img src={item.thumbURL} className='h-72 w-72 object-cover' alt={item.title} />
+          <img src={item.thumbURL} className='h-72 w-72 rounded-2xl object-cover' alt={item.title} />
         </Link>
         <div className='text-center'>{item.title}</div>
       </div>
