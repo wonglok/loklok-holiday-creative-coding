@@ -241,7 +241,7 @@ export class PhysicsInfluences {
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
           // velocity += circle(position / 800.0) * 500.0;
-          velocity.y += 200.0;
+          velocity.y += 100.0;
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -439,7 +439,7 @@ export class PositionSimulation {
         }
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 500.0 || pos.w >= 0.99;
+          return length(position) >= 250.0 || pos.w >= 0.99;
         }
       `
     }
@@ -541,7 +541,7 @@ export class PositionSimulation {
           ${this.influ.callerCode}
           ${this.markToReset('position')}
 
-          phasePos += delta * 15.1 * rand(uv + time);
+          phasePos += delta * 5.0 * rand(uv + time);
           gl_FragColor = vec4(position + velocity * delta, phasePos);
         `
       }
@@ -579,10 +579,10 @@ export class PositionSimulation {
     let ii = 0
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        array[ii + 0] = 0.0 * (Math.random() * 2.0 - 1.0)
-        array[ii + 1] = 0.0 * (Math.random() * 2.0 - 1.0)
-        array[ii + 2] = 0.0 * (Math.random() * 2.0 - 1.0)
-        array[ii + 3] = 0.0
+        array[ii + 0] = 100 * (Math.random() * 2.0 - 1.0)
+        array[ii + 1] = 100 * (Math.random() * 2.0 - 1.0)
+        array[ii + 2] = 100 * (Math.random() * 2.0 - 1.0)
+        array[ii + 3] = Math.random()
         ii += 4.0
       }
     }
