@@ -427,7 +427,7 @@ export class LokLokWiggleDisplay {
 
           float tt = (1.0 - vT);
 
-          vec3 color = pal(tt + time, vec3(tt,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,0.5),vec3(0.8,0.90,0.30));
+          vec3 color = pal(tt + time, vec3(0.0,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,0.5),vec3(0.8,0.90,0.30));
 
           gl_FragColor = vec4(matcapColor.rgb * 0.0 + color, tt * vLineCycle);
 
