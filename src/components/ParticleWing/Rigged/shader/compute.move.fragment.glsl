@@ -115,7 +115,7 @@ void main (void) {
   vec3 velocity = vec3(o_pos.rgb - o_move.rgb) * delta * 60.0;
 
 
-  velocity += 0.04 * vec3(rotationX(0.1) * vec4(vec3(o_pos.x, o_pos.y, o_pos.z), 1.0));
+  velocity += 0.04 * vec3(rotationX(-0.1) * vec4(vec3(o_pos.x, o_pos.y, o_pos.z), 1.0));
   o_move.a += 0.01;
   
   gl_FragColor = vec4(position + velocity, o_move.a);  
