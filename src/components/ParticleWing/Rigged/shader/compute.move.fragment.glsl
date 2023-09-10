@@ -103,8 +103,8 @@ mat4 rotationMatrix (vec3 axis, float angle) {
                 0.0,                                0.0,                                0.0,                                1.0);
 }
 
-
-
+// thank you JESUS amen
+// https://www.youtube.com/shorts/T-6gTCs-AfU
 
 void main (void) {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
