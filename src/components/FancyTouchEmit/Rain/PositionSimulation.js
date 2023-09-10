@@ -197,8 +197,8 @@ export class PhysicsInfluences {
             len = 0.05;
           }
 
-          if (len <= radius * 1.5) {
-            velocity += normalize(dif) * -800.0;
+          if (len <= radius) {
+            velocity += normalize(dif) * -100.0;
           }
 
       
@@ -239,10 +239,8 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          // velocity += circle(position / 800.0) * 500.0;
-          velocity.y += 50.0;
-          velocity.z += 25.0;
-          velocity += vec3(rotationX(5.0) * vec4(vec3(position.x, position.y, position.z), 1.0));
+          // velocity.z += 25.0;
+          velocity += vec3(rotationX(4.5) * vec4(vec3(position.x, position.y, position.z), 1.0));
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -268,9 +266,9 @@ export class PhysicsInfluences {
             vec4 typeInfo = texture2D(${textureName}, vec2((0.5) / ${lw}, uv_Y));
             float influenceType = typeInfo.x;
 
-            // if (influenceType == 1.0) {
-            //   computeSphere(index, position, velocity);
-            // }
+            if (influenceType == 1.0) {
+              // computeSphere(index, position, velocity);
+            }
 
             // if (influenceType == 2.0) {
             //   computeGravity(index, position, velocity);
