@@ -34,7 +34,9 @@ export function Rain() {
       return
     }
     wingGLB.scene.scale.setScalar(1)
-
+    wingGLB.scene.traverse((it) => {
+      it.frustumCulled = false
+    })
     let arr = wingGLB.scene.getObjectsByProperty('type', 'SkinnedMesh')
     let skms = arr[0]
     let mixer = new AnimationMixer(wingGLB.scene)

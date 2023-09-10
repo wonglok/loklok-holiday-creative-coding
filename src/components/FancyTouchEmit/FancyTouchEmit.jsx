@@ -36,7 +36,10 @@ function Content() {
         <Bloom luminanceThreshold={0.5} intensity={1} mipmapBlur={true}></Bloom>
         {/* <Vignette></Vignette> */}
       </EffectComposer>
-      {/* <Sky></Sky> */}
+      <group position={[0, 0, -800]} scale={1.3}>
+        <Sky></Sky>
+      </group>
+
       <Suspense fallback={null}>
         <Rain></Rain>
       </Suspense>
