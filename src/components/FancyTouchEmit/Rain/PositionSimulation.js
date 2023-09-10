@@ -231,7 +231,6 @@ export class PhysicsInfluences {
 
           //
           // if (len <= radius) {
-          //   velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           //   velocity += vec3(rotationY(forceFilter * 100.0) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           //   velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           // }
@@ -241,7 +240,9 @@ export class PhysicsInfluences {
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
           // velocity += circle(position / 800.0) * 500.0;
-          velocity.y += 100.0;
+          velocity.y += 50.0;
+          velocity += vec3(rotationX(1.0) * vec4(vec3(position.x, position.y, position.z) * 1.0, 1.0));
+
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -473,6 +474,7 @@ export class PositionSimulation {
           if (phasePos == 0.0) {
             // vec4 data_o_layout = texture2D( o_layout, uv );
             vec2 mmUV = vec2(uv.x, uv.y);
+            
             vec4 data_o_position = texture2D( o_position, mmUV );
             vec4 data_o_skinIndex = texture2D( o_skinIndex, mmUV );
             vec4 data_o_skinWeight = texture2D( o_skinWeight, mmUV );
@@ -582,7 +584,7 @@ export class PositionSimulation {
         array[ii + 0] = 100 * (Math.random() * 2.0 - 1.0)
         array[ii + 1] = 100 * (Math.random() * 2.0 - 1.0)
         array[ii + 2] = 100 * (Math.random() * 2.0 - 1.0)
-        array[ii + 3] = Math.random()
+        array[ii + 3] = 0
         ii += 4.0
       }
     }

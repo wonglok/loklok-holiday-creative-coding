@@ -29,7 +29,7 @@ export function FancyTouchEmit() {
 function Content() {
   return (
     <>
-      <PerspectiveCamera makeDefault fov={75} near={0.01} far={3000} position={[0, 0, 1200.1]}></PerspectiveCamera>
+      <PerspectiveCamera makeDefault fov={75} near={0.01} far={3000} position={[0, 0, 150.1]}></PerspectiveCamera>
       <OrbitControls maxDistance={6000} makeDefault></OrbitControls>
       <Environment files={`/hdr/shanghai.hdr`}></Environment>
       <EffectComposer disableNormalPass multisampling={0}>
