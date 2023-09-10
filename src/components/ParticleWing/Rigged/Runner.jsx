@@ -120,6 +120,7 @@ export class Runner extends Object3D {
 
       targetVar.material.uniforms.u_mixerProgress = { value: this.u_mixerProgress || 0 }
     }
+
     this.onLoop(() => {
       sync(this.moveVar, clock1)
       sync(this.posVar, clock2)
