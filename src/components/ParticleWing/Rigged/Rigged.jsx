@@ -10,9 +10,9 @@ export function getSkinData({ ww = 512, hh = 512, skinnedMesh }) {
   // /** @type {PerspectiveCamera} */
   // let camera = await api.ready.camera;
 
-  let nearestPow2 = (aSize) => {
-    return Math.pow(2, Math.ceil(Math.log(aSize) / Math.log(2)))
-  }
+  // let nearestPow2 = (aSize) => {
+  //   return Math.pow(2, Math.ceil(Math.log(aSize) / Math.log(2)))
+  // }
 
   let width = ww
   let height = hh
@@ -104,16 +104,16 @@ export function getSkinData({ ww = 512, hh = 512, skinnedMesh }) {
       if (i > max) {
         let r = Math.floor(i % max)
         if (iSize >= 1) {
-          tex.image.data[i * 4 + 0] = 0
+          tex.image.data[i * 4 + 0] = attrib.getX(r) || 0 + 0.333 * (Math.random() * 2.0 - 1.0)
         }
         if (iSize >= 2) {
-          tex.image.data[i * 4 + 1] = 0
+          tex.image.data[i * 4 + 1] = attrib.getY(r) || 0 + 0.333 * (Math.random() * 2.0 - 1.0)
         }
         if (iSize >= 3) {
-          tex.image.data[i * 4 + 2] = 0
+          tex.image.data[i * 4 + 2] = attrib.getZ(r) || 0 + 0.333 * (Math.random() * 2.0 - 1.0)
         }
         if (iSize >= 4) {
-          tex.image.data[i * 4 + 3] = -1
+          tex.image.data[i * 4 + 3] = 0
         }
       }
 

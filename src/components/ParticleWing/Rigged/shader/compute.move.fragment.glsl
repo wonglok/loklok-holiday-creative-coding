@@ -2,6 +2,7 @@ precision highp float;
 
 uniform float time;
 uniform float delta;
+uniform float u_mixerProgress;
 #include <common>
 
 uniform sampler2D o_position;
@@ -111,14 +112,12 @@ void main (void) {
   vec4 o_pos = texture2D(texturePosition, uv);
   vec4 o_move = texture2D(textureMove, uv);
 
-  vec3 position = o_move.rgb;
-  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) * delta * 60.0;
+  vec3 velocity = vec3(o_pos.rgb - o_move.rgb);
 
-
-  velocity += 0.04 * vec3(rotationX(-0.1) * vec4(vec3(o_pos.x, o_pos.y, o_pos.z), 1.0));
-  o_move.a += 0.01;
+  velocity += sin((u_mixerProgress * 0.5 + 0.5) * 3.1415) * 0.15 *  vec3(rotationX(0.01) * vec4(vec3(o_move.x, o_move.y, o_move.z), 1.0));
+  o_move.a += 0.02;
   
-  gl_FragColor = vec4(position + velocity, o_move.a);  
+  gl_FragColor = vec4(o_move.rgb + velocity, o_move.a);  
   
   if (o_move.a >= 0.99 || o_pos.a >= 0.99 || length(o_pos.rgb) == 0.0 || length(o_move.rgb) == 0.0) {
     // // vec4 data_o_layout = texture2D( o_layout, uv );

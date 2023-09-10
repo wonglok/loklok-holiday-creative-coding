@@ -19,6 +19,7 @@ export function ParticleWing() {
     </Canvas>
   )
 }
+
 function Content() {
   let glb = useGLTF(`/wings/wing1.glb`)
   let gl = useThree((r) => r.gl)
@@ -44,8 +45,6 @@ function Content() {
       {/* <Box position={[1, 0, 0]}>
         <meshBasicMaterial color={'red'}></meshBasicMaterial>
       </Box> */}
-
-      {/*  */}
     </>
   )
 }

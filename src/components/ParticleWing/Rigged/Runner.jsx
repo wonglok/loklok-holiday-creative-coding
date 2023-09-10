@@ -15,11 +15,14 @@ import {
 } from 'three'
 import { getSkinData } from './Rigged'
 import { GPUComputationRenderer } from 'three-stdlib'
+
 export class Runner extends Object3D {
   constructor({ glb, gl }) {
     super()
-    this.ww = 256
+
+    this.ww = 512
     this.hh = 256
+
     let firstSkinnedMesh = glb.scene.getObjectByProperty('type', 'SkinnedMesh')
     this.skinData = getSkinData({ ww: this.ww, hh: this.hh, skinnedMesh: firstSkinnedMesh })
 
@@ -82,8 +85,9 @@ export class Runner extends Object3D {
     this.posVar = this.gpu.addVariable('texturePosition', this.fragmentShaderPos(), this.pos0)
     this.moveVar = this.gpu.addVariable('textureMove', this.fragmentShaderMove(), this.move0)
 
-    let clock = new Clock()
-    let sync = (targetVar) => {
+    let clock1 = new Clock()
+    let clock2 = new Clock()
+    let sync = (targetVar, clock) => {
       /** @type {SkinnedMesh} */
       let sMesh = this.skinData.skinnedMesh
 
@@ -93,7 +97,8 @@ export class Runner extends Object3D {
 
       targetVar.material.uniforms.u_resolution = { value: new Vector2().fromArray([this.ww, this.hh]) }
       targetVar.material.uniforms.time = { value: clock.getElapsedTime() }
-      targetVar.material.uniforms.delta = { value: clock.getDelta() }
+      targetVar.material.uniforms.delta = { value: clock.getDelta() < 0.001 ? 1 / 60 : clock.getDelta() }
+      // console.log(targetVar.material.uniforms.delta.value)
 
       targetVar.material.uniforms.o_layout = { value: this.skinData.o_layout }
       targetVar.material.uniforms.o_position = { value: this.skinData.o_position }
@@ -112,12 +117,12 @@ export class Runner extends Object3D {
       targetVar.material.uniforms.o_bindMatrixInverse = { value: sMesh.bindMatrixInverse }
       targetVar.material.uniforms.o_boneTexture = { value: sMesh.skeleton.boneTexture }
       targetVar.material.uniforms.o_boneTextureSize = { value: sMesh.skeleton.boneTextureSize }
+
+      targetVar.material.uniforms.u_mixerProgress = { value: (this.mixer.time / glb.animations[0].duration) % 1.0 }
     }
-    sync(this.moveVar)
-    sync(this.posVar)
     this.onLoop(() => {
-      sync(this.moveVar)
-      sync(this.posVar)
+      sync(this.moveVar, clock1)
+      sync(this.posVar, clock2)
     })
 
     this.gpu.setVariableDependencies(this.posVar, [this.posVar])
@@ -171,6 +176,7 @@ class Display extends Object3D {
     getColor = () => new Color('#ff0000'),
   }) {
     super()
+
     /** @type {Runner} */
     this.parent = parent
     this.onLoop = (v) => {
