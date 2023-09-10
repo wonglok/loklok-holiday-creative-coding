@@ -35,6 +35,76 @@ mat4 getBoneMatrix( const in float i ) {
   return bone;
 }
 
+ #define M_PI_3_1415 3.1415926535897932384626433832795
+
+float atan2(in float y, in float x) {
+  bool xgty = (abs(x) > abs(y));
+  return mix(M_PI_3_1415 / 2.0 - atan(x,y), atan(y,x), float(xgty));
+}
+
+vec3 fromBall(float r, float az, float el) {
+  return vec3(
+    r * cos(el) * cos(az),
+    r * cos(el) * sin(az),
+    r * sin(el)
+  );
+}
+void toBall(vec3 pos, out float az, out float el) {
+  az = atan2(pos.y, pos.x);
+  el = atan2(pos.z, sqrt(pos.x * pos.x + pos.y * pos.y));
+}
+
+// float az = 0.0;
+// float el = 0.0;
+// vec3 noiser = vec3(lastVel);
+// toBall(noiser, az, el);
+// lastVel.xyz = fromBall(1.0, az, el);
+
+vec3 ballify (vec3 pos, float r) {
+  float az = atan2(pos.y, pos.x);
+  float el = atan2(pos.z, sqrt(pos.x * pos.x + pos.y * pos.y));
+  return vec3(
+    r * cos(el) * cos(az),
+    r * cos(el) * sin(az),
+    r * sin(el)
+  );
+}
+
+mat4 rotationX( in float angle ) {
+  return mat4(	1.0,		0,			0,			0,
+          0, 	cos(angle),	-sin(angle),		0,
+          0, 	sin(angle),	 cos(angle),		0,
+          0, 			0,			  0, 		1);
+}
+
+mat4 rotationY( in float angle ) {
+  return mat4(	cos(angle),		0,		sin(angle),	0,
+              0,		1.0,			 0,	0,
+          -sin(angle),	0,		cos(angle),	0,
+              0, 		0,				0,	1);
+}
+
+mat4 rotationZ( in float angle ) {
+  return mat4(	cos(angle),		-sin(angle),	0,	0,
+          sin(angle),		cos(angle),		0,	0,
+              0,				0,		1,	0,
+              0,				0,		0,	1);
+}
+
+mat4 rotationMatrix (vec3 axis, float angle) {
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+
+    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
+                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
+                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
+                0.0,                                0.0,                                0.0,                                1.0);
+}
+
+
+
 
 void main (void) {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
@@ -42,12 +112,13 @@ void main (void) {
   vec4 o_move = texture2D(textureMove, uv);
 
   vec3 position = o_move.rgb;
-  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) * delta * 30.0;
+  vec3 velocity = vec3(0.0) ;// vec3(o_pos.rgb - o_move.rgb) * delta * 30.0;
 
-  velocity += 2.0;
+  velocity += vec3(rotationX(2.0) * vec4(vec3(position.x, position.y, position.z) * 0.03, 1.0));
+
   gl_FragColor = vec4(position + velocity, o_move.a);  
 
-  if (o_move.a >= 0.99 || o_pos.a >= 0.99 || length(o_pos.rgb) == 0.0) {
+  if (o_move.a >= 0.99 || o_pos.a >= 0.99 || length(o_pos.rgb) == 0.0 || length(o_move.rgb) == 0.0) {
     // vec4 data_o_layout = texture2D( o_layout, uv );
     vec4 data_o_position = texture2D( o_position, uv );
 
@@ -74,6 +145,6 @@ void main (void) {
     transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
     transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
     
-    gl_FragColor = vec4(transformed, -1.0);
+    gl_FragColor = vec4(transformed, 0.0);
   }
 }

@@ -18,8 +18,8 @@ import { GPUComputationRenderer } from 'three-stdlib'
 export class Runner extends Object3D {
   constructor({ glb, gl }) {
     super()
-    this.ww = 512
-    this.hh = 512
+    this.ww = 256
+    this.hh = 256
     let firstSkinnedMesh = glb.scene.getObjectByProperty('type', 'SkinnedMesh')
     this.skinData = getSkinData({ ww: this.ww, hh: this.hh, skinnedMesh: firstSkinnedMesh })
 
@@ -133,17 +133,17 @@ export class Runner extends Object3D {
       this.gpu.compute()
     })
 
-    this.add(
-      new Display({
-        parent: this,
-        getMotionTexture: () => {
-          return this.gpu.getCurrentRenderTarget(this.posVar).texture
-        },
-        getColor: () => {
-          return new Color('#ffff00')
-        },
-      }),
-    )
+    // this.add(
+    //   new Display({
+    //     parent: this,
+    //     getMotionTexture: () => {
+    //       return this.gpu.getCurrentRenderTarget(this.posVar).texture
+    //     },
+    //     getColor: () => {
+    //       return new Color('#ffff00')
+    //     },
+    //   }),
+    // )
 
     this.add(
       new Display({
@@ -152,7 +152,7 @@ export class Runner extends Object3D {
           return this.gpu.getCurrentRenderTarget(this.moveVar).texture
         },
         getColor: () => {
-          return new Color('#ff5600')
+          return new Color('#ffcc00')
         },
       }),
     )
@@ -203,6 +203,7 @@ class Display extends Object3D {
         `void main() {`,
         `
         uniform sampler2D u_pos;
+        varying vec2 vMyUV;
         void main() {`,
       )
 
@@ -220,6 +221,7 @@ class Display extends Object3D {
         `#include <begin_vertex>`,
         `
         vec2 myUV = uv.xy;
+        vMyUV = myUV;
         vec4 tPosData = texture2D( u_pos, uv.xy );
         vec3 transformed = vec3( tPosData.rgb );
 
@@ -234,6 +236,34 @@ class Display extends Object3D {
         `
           gl_PointSize = 1.0;
         }`,
+      )
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        `void main() {`,
+        `
+        // A simple way to create color variation in a cheap way (yes, trigonometrics ARE cheap
+        // in the GPU, don't try to be smart and use a triangle wave instead).
+        // See https://iquilezles.org/articles/palettes for more information
+
+        uniform float time;
+        uniform sampler2D u_pos;
+        varying vec2 vMyUV;
+        vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
+          return a + b*cos( 6.28318*(c*t+d) );
+        }
+        void main() {`,
+      )
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        `#include <dithering_fragment>`,
+        ` 
+          #include <dithering_fragment>
+
+          vec4 tPosData = texture2D( u_pos, vMyUV.xy );
+          
+          vec3 myColor = pal(time + abs(tPosData.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+          gl_FragColor.rgb = myColor;
+        `,
       )
     }
 
