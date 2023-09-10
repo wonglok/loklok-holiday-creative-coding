@@ -240,7 +240,7 @@ export class PhysicsInfluences {
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
           // velocity += circle(position / 800.0) * 500.0;
-          velocity.y += 50.0;
+          velocity.y += 25.0;
           velocity += vec3(rotationX(1.0) * vec4(vec3(position.x, position.y, position.z) * 1.0, 1.0));
 
 
@@ -440,7 +440,7 @@ export class PositionSimulation {
         }
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 250.0 || pos.w >= 0.99;
+          return length(position) >= 500.0 || pos.w >= 0.99;
         }
       `
     }
