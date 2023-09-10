@@ -15,7 +15,7 @@ export function ParticleWing() {
       <EffectComposer disableNormalPass multisampling={0}>
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
-      <Stats> </Stats>
+      <Stats></Stats>
     </Canvas>
   )
 }
