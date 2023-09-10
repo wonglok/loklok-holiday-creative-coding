@@ -171,7 +171,6 @@ export function Rain() {
   })
 
   let controls = useThree((r) => r.controls)
-  //
 
   if (!sim) {
     return null

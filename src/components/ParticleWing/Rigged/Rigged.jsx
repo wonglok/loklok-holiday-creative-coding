@@ -69,13 +69,13 @@ export function getSkinData({ ww = 512, hh = 512, skinnedMesh }) {
     let iSize = attrib.itemSize
     tex.userData.itemSize = iSize
 
-    let getRand = () => {
-      if (name === 'position') {
-        return 0
-      } else {
-        return 0
-      }
-    }
+    // let getRand = () => {
+    //   if (name === 'position') {
+    //     return 0
+    //   } else {
+    //     return 0
+    //   }
+    // }
 
     let max = attrib.array.length / iSize
     for (let px = 0; px < pxAll; px++) {
