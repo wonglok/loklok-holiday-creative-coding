@@ -112,10 +112,9 @@ void main (void) {
   vec4 o_move = texture2D(textureMove, uv);
 
   vec3 position = o_move.rgb;
-  vec3 velocity = vec3(0.0) ;// vec3(o_pos.rgb - o_move.rgb) * delta * 30.0;
+  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) * delta * 30.0;
 
-  velocity += vec3(rotationX(2.0) * vec4(vec3(position.x, position.y, position.z) * 0.03, 1.0));
-
+  velocity += vec3(rotationX(0.05) * vec4(vec3(position.x, position.y, position.z) * 0.3, 1.0));
   gl_FragColor = vec4(position + velocity, o_move.a);  
 
   if (o_move.a >= 0.99 || o_pos.a >= 0.99 || length(o_pos.rgb) == 0.0 || length(o_move.rgb) == 0.0) {

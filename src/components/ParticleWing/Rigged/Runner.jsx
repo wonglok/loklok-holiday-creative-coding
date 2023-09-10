@@ -133,23 +133,14 @@ export class Runner extends Object3D {
       this.gpu.compute()
     })
 
-    // this.add(
-    //   new Display({
-    //     parent: this,
-    //     getMotionTexture: () => {
-    //       return this.gpu.getCurrentRenderTarget(this.posVar).texture
-    //     },
-    //     getColor: () => {
-    //       return new Color('#ffff00')
-    //     },
-    //   }),
-    // )
-
     this.add(
       new Display({
         parent: this,
-        getMotionTexture: () => {
+        getMoveTexture: () => {
           return this.gpu.getCurrentRenderTarget(this.moveVar).texture
+        },
+        getPositonTexture: () => {
+          return this.gpu.getCurrentRenderTarget(this.posVar).texture
         },
         getColor: () => {
           return new Color('#ffcc00')
@@ -173,7 +164,12 @@ export class Runner extends Object3D {
 }
 
 class Display extends Object3D {
-  constructor({ parent, getMotionTexture = () => null, getColor = () => new Color('#ff0000') }) {
+  constructor({
+    parent,
+    getPositonTexture = () => null,
+    getMoveTexture = () => null,
+    getColor = () => new Color('#ff0000'),
+  }) {
     super()
     /** @type {Runner} */
     this.parent = parent
@@ -192,11 +188,13 @@ class Display extends Object3D {
       shader.uniforms.dt = { value: 0 }
       shader.uniforms.time = { value: 0 }
       shader.uniforms.u_pos = { value: null }
+      shader.uniforms.u_move = { value: null }
       let clock = new Clock()
       this.onLoop(() => {
         shader.uniforms.dt = { value: clock.getDelta() }
         shader.uniforms.time = { value: clock.getElapsedTime() }
-        shader.uniforms.u_pos.value = getMotionTexture()
+        shader.uniforms.u_pos.value = getPositonTexture()
+        shader.uniforms.u_move.value = getMoveTexture()
       })
 
       shader.vertexShader = shader.vertexShader.replace(
@@ -261,7 +259,11 @@ class Display extends Object3D {
 
           vec4 tPosData = texture2D( u_pos, vMyUV.xy );
           
-          vec3 myColor = pal(time + abs(tPosData.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+          vec3 myColor = 1.0 * pal(time + abs(tPosData.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+
+          if (rand(vMyUV.xy + time * 0.000001) <= 0.009) {
+            myColor += 50.0 * (1.0 - myColor);
+          }
           gl_FragColor.rgb = myColor;
         `,
       )
