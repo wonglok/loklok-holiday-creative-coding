@@ -262,7 +262,7 @@ class Display extends Object3D {
           vec3 myColor = 1.0 * pal(time + abs(tPosData.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
 
           if (rand(vMyUV.xy + time * 0.000001) <= 0.009) {
-            myColor += 50.0 * (1.0 - myColor);
+            myColor += 25.0 * (myColor);
           }
           gl_FragColor.rgb = myColor;
         `,
