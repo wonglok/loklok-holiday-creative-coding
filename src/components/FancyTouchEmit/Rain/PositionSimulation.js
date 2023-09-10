@@ -243,7 +243,6 @@ export class PhysicsInfluences {
           velocity.y += 15.0;
           velocity += vec3(rotationX(5.0) * vec4(vec3(position.x, position.y, position.z), 1.0));
 
-
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
           // }
