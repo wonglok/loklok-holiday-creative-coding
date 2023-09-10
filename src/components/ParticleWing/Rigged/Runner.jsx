@@ -140,7 +140,7 @@ export class Runner extends Object3D {
           return this.gpu.getCurrentRenderTarget(this.posVar).texture
         },
         getColor: () => {
-          return new Color('#ff5600')
+          return new Color('#ffff00')
         },
       }),
     )
@@ -150,18 +150,6 @@ export class Runner extends Object3D {
         parent: this,
         getMotionTexture: () => {
           return this.gpu.getCurrentRenderTarget(this.moveVar).texture
-        },
-        getColor: () => {
-          return new Color('#ff5600')
-        },
-      }),
-    )
-
-    this.add(
-      new Display({
-        parent: this,
-        getMotionTexture: () => {
-          return this.gpu.getAlternateRenderTarget(this.moveVar).texture
         },
         getColor: () => {
           return new Color('#ff5600')
