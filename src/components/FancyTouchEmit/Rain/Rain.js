@@ -173,9 +173,6 @@ export function Rain() {
   let controls = useThree((r) => r.controls)
   //
 
-  if (!wingGLB) {
-    return null
-  }
   if (!sim) {
     return null
   }
@@ -183,6 +180,7 @@ export function Rain() {
   return (
     <group position={[0, 0, 0]}>
       {compos}
+      <primitive object={wingGLB.scene}></primitive>
       {/* <Box visible={false}></Box> */}
       {/* <Box></Box> */}
       <Box
