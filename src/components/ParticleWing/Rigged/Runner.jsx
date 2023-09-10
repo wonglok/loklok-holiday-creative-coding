@@ -118,7 +118,7 @@ export class Runner extends Object3D {
       targetVar.material.uniforms.o_boneTexture = { value: sMesh.skeleton.boneTexture }
       targetVar.material.uniforms.o_boneTextureSize = { value: sMesh.skeleton.boneTextureSize }
 
-      targetVar.material.uniforms.u_mixerProgress = { value: (this.mixer.time / glb.animations[0].duration) % 1.0 }
+      targetVar.material.uniforms.u_mixerProgress = { value: this.u_mixerProgress || 0 }
     }
     this.onLoop(() => {
       sync(this.moveVar, clock1)
@@ -156,6 +156,9 @@ export class Runner extends Object3D {
     this.mixer = new AnimationMixer(glb.scene)
     this.onLoop((st, dt) => {
       this.mixer.update(dt)
+      //
+
+      this.u_mixerProgress = (this.mixer.time / glb.animations[0].duration) % 1.0
     })
 
     this.mixer.clipAction(glb.animations[0]).reset().play()
