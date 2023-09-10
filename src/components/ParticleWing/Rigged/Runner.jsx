@@ -273,9 +273,6 @@ class Display extends Object3D {
 
           if (rand(vMyUV.xy + time * 0.000001) <= 0.009) {
             myColor += 25.0 * (myColor);
-            myColor.r = pow(myColor.r, 1.05);
-            myColor.g = pow(myColor.g, 1.05);
-            myColor.b = pow(myColor.b, 1.05);
           }
           gl_FragColor.rgb = myColor;
         `,
