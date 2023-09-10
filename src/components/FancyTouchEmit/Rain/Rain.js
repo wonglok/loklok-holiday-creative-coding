@@ -33,6 +33,7 @@ export function Rain() {
     if (!wingGLB) {
       return
     }
+    wingGLB.scene.scale.setScalar(1)
 
     let arr = wingGLB.scene.getObjectsByProperty('type', 'SkinnedMesh')
     let skms = arr[0]
@@ -113,8 +114,8 @@ export function Rain() {
           noise: 0,
         },
       ],
-      tailLength: 16, // 512, 1024
-      howManyTrackers: 4096,
+      tailLength: 64, // 512, 1024
+      howManyTrackers: 2048,
 
       autoReload: txt,
     })

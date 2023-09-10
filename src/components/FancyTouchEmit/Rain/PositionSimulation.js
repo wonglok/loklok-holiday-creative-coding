@@ -472,7 +472,7 @@ export class PositionSimulation {
         return /* glsl */ `
           if (phasePos == 0.0) {
             // vec4 data_o_layout = texture2D( o_layout, uv );
-            vec2 mmUV = vec2(uv.x, 1.0 - uv.y);
+            vec2 mmUV = vec2(uv.x, uv.y);
             vec4 data_o_position = texture2D( o_position, mmUV );
             vec4 data_o_skinIndex = texture2D( o_skinIndex, mmUV );
             vec4 data_o_skinWeight = texture2D( o_skinWeight, mmUV );
@@ -499,7 +499,7 @@ export class PositionSimulation {
             
             // position.z *= 0.15;
 
-            position.xyz = transformed;
+            position.xyz = transformed * 1.0;
 
             // position = 500.0 * vec3(
             //   -0.5 + rand(uv + 0.1 + position.x),
