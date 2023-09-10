@@ -8,7 +8,6 @@ import { Color } from 'three'
 export function ParticleWing() {
   return (
     <Canvas>
-      <Environment files={`/hdr/shanghai.hdr`}></Environment>
       <BG></BG>
       <Content></Content>
       <OrbitControls makeDefault object-position={[0, 0, 100]} target={[0, 0, 0]} />
@@ -16,6 +15,7 @@ export function ParticleWing() {
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
       <Stats></Stats>
+      <Environment files={`/hdr/shanghai.hdr`}></Environment>
     </Canvas>
   )
 }
