@@ -584,7 +584,7 @@ export class PositionSimulation {
         array[ii + 0] = 200 * (Math.random() * 2.0 - 1.0)
         array[ii + 1] = 200 * (Math.random() * 2.0 - 1.0)
         array[ii + 2] = 200 * (Math.random() * 2.0 - 1.0)
-        array[ii + 3] = Math.random()
+        array[ii + 3] = 1
         ii += 4.0
       }
     }
@@ -592,9 +592,9 @@ export class PositionSimulation {
 
     // and fill in here the texture data...
     // Add texture variables
-    let velVar = gpu.addVariable('textureVelocity', this.fragmentShaderVel(), pos0)
+    let velVar = gpu.addVariable('textureVelocity', this.fragmentShaderVel(), vel0)
 
-    let posVar = gpu.addVariable('texturePosition', this.fragmentShaderPos(), vel0)
+    let posVar = gpu.addVariable('texturePosition', this.fragmentShaderPos(), pos0)
 
     // Add variable dependencies
     gpu.setVariableDependencies(velVar, [velVar, posVar])
