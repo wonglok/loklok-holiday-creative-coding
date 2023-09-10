@@ -14,10 +14,8 @@ export function getSkinData({ skinnedMesh }) {
     return Math.pow(2, Math.ceil(Math.log(aSize) / Math.log(2)))
   }
 
-  let size = it.geometry.attributes.position.count
-  let sq = nearestPow2(Math.pow(size, 0.5))
-  let width = sq * 2
-  let height = sq * 2
+  let width = 512
+  let height = 512
 
   // console.log(width, height)
 
