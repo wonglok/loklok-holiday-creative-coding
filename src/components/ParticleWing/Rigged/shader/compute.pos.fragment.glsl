@@ -73,8 +73,7 @@ void main (void) {
     
     gl_FragColor = vec4(transformed, -1.0);
   } else {
-    velocity += vec3(0.0, 9.8, 0.0) * 100.0 * delta;
-
+    velocity += vec3(0.0, 9.8, 0.0) * 0.0 * delta;
     phase += delta * 0.5 + rand(uv + 0.1 + time) * 0.5;
     gl_FragColor = vec4(position + velocity, phase);
   }

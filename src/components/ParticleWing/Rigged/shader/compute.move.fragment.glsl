@@ -35,7 +35,7 @@ mat4 getBoneMatrix( const in float i ) {
   return bone;
 }
 
- #define M_PI_3_1415 3.1415926535897932384626433832795
+#define M_PI_3_1415 3.1415926535897932384626433832795
 
 float atan2(in float y, in float x) {
   bool xgty = (abs(x) > abs(y));
@@ -112,38 +112,41 @@ void main (void) {
   vec4 o_move = texture2D(textureMove, uv);
 
   vec3 position = o_move.rgb;
-  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) * delta * 30.0;
+  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) * delta * 60.0;
 
-  velocity += vec3(rotationX(0.05) * vec4(vec3(position.x, position.y, position.z) * 0.3, 1.0));
+
+  velocity += 0.04 * vec3(rotationX(0.1) * vec4(vec3(o_pos.x, o_pos.y, o_pos.z), 1.0));
+  o_move.a += 0.01;
+  
   gl_FragColor = vec4(position + velocity, o_move.a);  
-
+  
   if (o_move.a >= 0.99 || o_pos.a >= 0.99 || length(o_pos.rgb) == 0.0 || length(o_move.rgb) == 0.0) {
-    // vec4 data_o_layout = texture2D( o_layout, uv );
-    vec4 data_o_position = texture2D( o_position, uv );
+    // // vec4 data_o_layout = texture2D( o_layout, uv );
+    // vec4 data_o_position = texture2D( o_position, uv );
 
-    vec4 data_o_skinIndex = texture2D( o_skinIndex, uv );
-    vec4 data_o_skinWeight = texture2D( o_skinWeight, uv );
+    // vec4 data_o_skinIndex = texture2D( o_skinIndex, uv );
+    // vec4 data_o_skinWeight = texture2D( o_skinWeight, uv );
 
-    vec3 transformed = data_o_position.xyz;
-    // vec3 objectNormal =  vec3(0.0);
-    // vec3 objectTangent =  data_o_normal.xyz;
+    // vec3 transformed = data_o_position.xyz;
+    // // vec3 objectNormal =  vec3(0.0);
+    // // vec3 objectTangent =  data_o_normal.xyz;
 
-    mat4 boneMatX = getBoneMatrix( data_o_skinIndex.x );
-    mat4 boneMatY = getBoneMatrix( data_o_skinIndex.y );
-    mat4 boneMatZ = getBoneMatrix( data_o_skinIndex.z );
-    mat4 boneMatW = getBoneMatrix( data_o_skinIndex.w );
+    // mat4 boneMatX = getBoneMatrix( data_o_skinIndex.x );
+    // mat4 boneMatY = getBoneMatrix( data_o_skinIndex.y );
+    // mat4 boneMatZ = getBoneMatrix( data_o_skinIndex.z );
+    // mat4 boneMatW = getBoneMatrix( data_o_skinIndex.w );
 
-    vec4 skinVertex = o_bindMatrix * vec4( transformed, 1.0 );
-    vec4 skinned = vec4(0.0);
-    skinned += boneMatX * skinVertex * data_o_skinWeight.x;
-    skinned += boneMatY * skinVertex * data_o_skinWeight.y;
-    skinned += boneMatZ * skinVertex * data_o_skinWeight.z;
-    skinned += boneMatW * skinVertex * data_o_skinWeight.w;
-    transformed = vec4( o_bindMatrixInverse * skinned ).xyz;
+    // vec4 skinVertex = o_bindMatrix * vec4( transformed, 1.0 );
+    // vec4 skinned = vec4(0.0);
+    // skinned += boneMatX * skinVertex * data_o_skinWeight.x;
+    // skinned += boneMatY * skinVertex * data_o_skinWeight.y;
+    // skinned += boneMatZ * skinVertex * data_o_skinWeight.z;
+    // skinned += boneMatW * skinVertex * data_o_skinWeight.w;
+    // transformed = vec4( o_bindMatrixInverse * skinned ).xyz;
 
-    transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
-    transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
+    // transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
+    // transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
     
-    gl_FragColor = vec4(transformed, 0.0);
+    gl_FragColor = vec4(o_pos.rgb + velocity, 0.0);
   }
 }

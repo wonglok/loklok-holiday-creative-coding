@@ -121,7 +121,7 @@ export class Runner extends Object3D {
     })
 
     this.gpu.setVariableDependencies(this.posVar, [this.posVar])
-    this.gpu.setVariableDependencies(this.moveVar, [])
+    this.gpu.setVariableDependencies(this.moveVar, [this.moveVar, this.posVar])
 
     let err = this.gpu.init()
     if (err) {
@@ -200,7 +200,7 @@ class Display extends Object3D {
       shader.vertexShader = shader.vertexShader.replace(
         `void main() {`,
         `
-        uniform sampler2D u_pos;
+        uniform sampler2D u_move;
         varying vec2 vMyUV;
         void main() {`,
       )
@@ -220,7 +220,7 @@ class Display extends Object3D {
         `
         vec2 myUV = uv.xy;
         vMyUV = myUV;
-        vec4 tPosData = texture2D( u_pos, uv.xy );
+        vec4 tPosData = texture2D( u_move, uv.xy );
         vec3 transformed = vec3( tPosData.rgb );
 
         #ifdef USE_ALPHAHASH
@@ -244,7 +244,7 @@ class Display extends Object3D {
         // See https://iquilezles.org/articles/palettes for more information
 
         uniform float time;
-        uniform sampler2D u_pos;
+        uniform sampler2D u_move;
         varying vec2 vMyUV;
         vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
           return a + b*cos( 6.28318*(c*t+d) );
@@ -257,7 +257,7 @@ class Display extends Object3D {
         ` 
           #include <dithering_fragment>
 
-          vec4 tPosData = texture2D( u_pos, vMyUV.xy );
+          vec4 tPosData = texture2D( u_move, vMyUV.xy );
           
           vec3 myColor = 1.0 * pal(time + abs(tPosData.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
 
