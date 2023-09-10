@@ -238,9 +238,11 @@ export class PhysicsInfluences {
           // velocity.x += 50.0;
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity.y += 50.0 * cos(position.x * 0.05);
-          velocity.z += 25.0;
-          velocity += vec3(rotationX(4.5) * vec4(vec3(position.x, position.y, position.z), 1.0));
+          velocity.y += 55.0;
+          velocity.z += 55.0 * sin(position.y * 0.02);
+
+          // velocity.z += 25.0;
+          // velocity += vec3(rotationX(4.5) * vec4(vec3(position.x, position.y, position.z), 1.0));
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -437,7 +439,8 @@ export class PositionSimulation {
         }
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 300.0 || pos.w >= 0.99;
+          vec2 uv = gl_FragCoord.xy / resolution.xy;
+          return length(position) >= 300.0 || length(position.y) >= 100.0 || pos.w >= 0.99;
         }
       `
     }
@@ -578,10 +581,10 @@ export class PositionSimulation {
     let ii = 0
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        array[ii + 0] = 100 * (Math.random() * 2.0 - 1.0)
-        array[ii + 1] = 100 * (Math.random() * 2.0 - 1.0)
-        array[ii + 2] = 100 * (Math.random() * 2.0 - 1.0)
-        array[ii + 3] = 0
+        array[ii + 0] = 200 * (Math.random() * 2.0 - 1.0)
+        array[ii + 1] = 200 * (Math.random() * 2.0 - 1.0)
+        array[ii + 2] = 200 * (Math.random() * 2.0 - 1.0)
+        array[ii + 3] = Math.random()
         ii += 4.0
       }
     }

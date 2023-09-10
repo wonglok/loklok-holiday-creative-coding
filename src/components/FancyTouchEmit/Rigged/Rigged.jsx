@@ -104,13 +104,13 @@ export function getSkinData({ skinnedMesh }) {
       if (i > max) {
         let r = Math.floor(i % max)
         if (iSize >= 1) {
-          tex.image.data[i * 4 + 0] = 0.0 * (attrib.getX(r) || 0) + attrib.getX(Math.floor(max * Math.random()))
+          tex.image.data[i * 4 + 0] = attrib.getX(Math.floor(max * Math.random())) + 0.0 * (Math.random() * 2.0 - 1.0)
         }
         if (iSize >= 2) {
-          tex.image.data[i * 4 + 1] = 0.0 * (attrib.getY(r) || 0) + attrib.getY(Math.floor(max * Math.random()))
+          tex.image.data[i * 4 + 1] = attrib.getY(Math.floor(max * Math.random())) + 0.0 * (Math.random() * 2.0 - 1.0)
         }
         if (iSize >= 3) {
-          tex.image.data[i * 4 + 2] = 0.0 * (attrib.getZ(r) || 0) + attrib.getZ(Math.floor(max * Math.random()))
+          tex.image.data[i * 4 + 2] = attrib.getZ(Math.floor(max * Math.random())) + 0.0 * (Math.random() * 2.0 - 1.0)
         }
         if (iSize >= 4) {
           tex.image.data[i * 4 + 3] = 0
