@@ -1,7 +1,7 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo } from 'react'
 import { Runner } from './Rigged/Runner'
-import { Box, Environment, OrbitControls, useGLTF } from '@react-three/drei'
+import { Box, Environment, OrbitControls, Stats, useGLTF } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { Color } from 'three'
 
@@ -12,9 +12,10 @@ export function ParticleWing() {
       <BG></BG>
       <Content></Content>
       <OrbitControls makeDefault object-position={[0, 0, 100]} target={[0, 0, 0]} />
-      <EffectComposer>
-        <Bloom mipmapBlur intensity={5} luminanceThreshold={0.5} />
+      <EffectComposer disableNormalPass multisampling={0}>
+        <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
+      <Stats> </Stats>
     </Canvas>
   )
 }
