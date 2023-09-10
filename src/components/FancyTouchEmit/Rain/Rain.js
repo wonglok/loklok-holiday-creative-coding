@@ -116,7 +116,7 @@ export function Rain() {
           noise: 0,
         },
       ],
-      tailLength: 128, // 512, 1024
+      tailLength: 64, // 512, 1024
       howManyTrackers: 4096,
 
       autoReload: txt,
