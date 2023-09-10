@@ -10,8 +10,16 @@ export function getSkinData({ skinnedMesh }) {
   // /** @type {PerspectiveCamera} */
   // let camera = await api.ready.camera;
 
-  let width = 1024
-  let height = 512
+  let nearestPow2 = (aSize) => {
+    return Math.pow(2, Math.ceil(Math.log(aSize) / Math.log(2)))
+  }
+
+  let size = it.geometry.attributes.position.count
+  let sq = nearestPow2(Math.pow(size, 0.5))
+  let width = sq * 2
+  let height = sq * 2
+
+  // console.log(width, height)
 
   function createTexture() {
     let f32 = new Float32Array(width * height * 4)
@@ -65,7 +73,7 @@ export function getSkinData({ skinnedMesh }) {
 
     let getRand = () => {
       if (name === 'position') {
-        return (Math.random() * 2.0 - 1.0) * 0.05
+        return 0
       } else {
         return 0
       }
@@ -98,16 +106,16 @@ export function getSkinData({ skinnedMesh }) {
       if (i > max) {
         let r = Math.floor(i % max)
         if (iSize >= 1) {
-          tex.image.data[i * 4 + 0] = (attrib.getX(r) || 0) + getRand()
+          tex.image.data[i * 4 + 0] = 0.0 * (attrib.getX(r) || 0) + attrib.getX(Math.floor(max * Math.random()))
         }
         if (iSize >= 2) {
-          tex.image.data[i * 4 + 1] = (attrib.getY(r) || 0) + getRand()
+          tex.image.data[i * 4 + 1] = 0.0 * (attrib.getY(r) || 0) + attrib.getY(Math.floor(max * Math.random()))
         }
         if (iSize >= 3) {
-          tex.image.data[i * 4 + 2] = (attrib.getZ(r) || 0) + getRand()
+          tex.image.data[i * 4 + 2] = 0.0 * (attrib.getZ(r) || 0) + attrib.getZ(Math.floor(max * Math.random()))
         }
         if (iSize >= 4) {
-          tex.image.data[i * 4 + 3] = attrib.getW(r) || 0
+          tex.image.data[i * 4 + 3] = 0
         }
       }
 

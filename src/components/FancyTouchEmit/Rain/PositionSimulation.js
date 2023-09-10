@@ -241,7 +241,7 @@ export class PhysicsInfluences {
 
           // velocity += circle(position / 800.0) * 500.0;
           velocity.y += 25.0;
-          velocity += vec3(rotationX(1.0) * vec4(vec3(position.x, position.y, position.z) * 1.0, 1.0));
+          velocity += vec3(rotationX(5.0) * vec4(vec3(position.x, position.y, position.z), 1.0));
 
 
           // if (forceFilter >= maxV) {
@@ -259,7 +259,6 @@ export class PhysicsInfluences {
           // velocity += vec3(rotationZ(force) * vec4(position, 1.0));
           // velocity += vec3(rotationY(force) * vec4(position, 1.0));
         }
-
 
         void computeAllInfluence (inout vec3 position, inout vec3 velocity) {
           for (int ii = 0; ii < ${influencerCount.toFixed(0)}; ii++) {
