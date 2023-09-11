@@ -10,7 +10,7 @@ import {
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { Suspense, useEffect, useMemo } from 'react'
-import { AnimationMixer, MeshBasicMaterial } from 'three'
+import { AnimationMixer, DoubleSide, MeshBasicMaterial } from 'three'
 
 export function JellyFish() {
   return (
@@ -49,7 +49,9 @@ function JellyYo() {
       let mat = it.material
       cahce.mat = cahce.mat || (
         <MeshTransmissionMaterial
+          reflectivity={1}
           key={mat.uuid}
+          side={DoubleSide}
           transmission={1}
           thickness={2}
           metalness={0.05}
