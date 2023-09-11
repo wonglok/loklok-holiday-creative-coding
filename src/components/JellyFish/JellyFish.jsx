@@ -244,7 +244,7 @@ function JellyYo({ gltf, jellyEnvMap }) {
   }, [glb?.scene, jellyEnvMap])
 
   useFrame((st, dt) => {
-    glb.scene.rotation.y += dt / 2
+    glb.scene.rotation.y += -dt / 2
   })
   return (
     <>
