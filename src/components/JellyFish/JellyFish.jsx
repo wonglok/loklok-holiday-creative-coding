@@ -10,7 +10,7 @@ import {
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { Suspense, useEffect, useMemo } from 'react'
-import { AnimationMixer, DoubleSide, MeshBasicMaterial } from 'three'
+import { AnimationMixer, BackSide, DoubleSide, FrontSide, MeshBasicMaterial } from 'three'
 
 export function JellyFish() {
   return (
@@ -43,49 +43,84 @@ function JellyYo() {
   }, [mixer, glb])
 
   let items = []
-  let cahce = {}
   glb?.scene?.traverse((it) => {
     if (it.material) {
       let mat = it.material
-      cahce.mat = cahce.mat || (
-        <MeshTransmissionMaterial
-          reflectivity={1}
-          key={mat.uuid}
-          side={DoubleSide}
-          transmission={1}
-          thickness={2}
-          metalness={0.05}
-          backside={true}
-          backsideThickness={0.9}
-          backsideResolution={1024}
-          roughness={0.1}
-          chromaticAberration={0.25}
-          map={mat.map}
-          alphaMap={mat.alphaMap}
-          color={'#ffffff'}
-          distortion={0.5}
-          distortionScale={0.15}
-          temporalDistortion={0.15}
-          transparent
-          envMapIntensity={1.6}
-          emissive={mat.emissive}
-          emissiveMap={mat.emissiveMap}
-          emissiveIntensity={20.5}
-          samples={3}
-        ></MeshTransmissionMaterial>
-      )
-      items.push(
-        <primitive key={it.uuid} object={it}>
-          {cahce.mat}
-        </primitive>,
-      )
+      if (it.name === 'JF_skin_in') {
+        items.push(
+          <primitive key={it.uuid} object={it}>
+            <MeshTransmissionMaterial
+              reflectivity={1}
+              key={mat.uuid}
+              side={FrontSide}
+              transmission={1}
+              thickness={2}
+              metalness={0.05}
+              backside={true}
+              backsideThickness={0.9}
+              backsideResolution={1024}
+              roughness={0.1}
+              chromaticAberration={0.25}
+              map={mat.map}
+              alphaMap={mat.alphaMap}
+              color={'#ffffff'}
+              distortion={0.5}
+              distortionScale={0.15}
+              temporalDistortion={0.15}
+              transparent
+              envMapIntensity={1.6}
+              emissive={mat.emissive}
+              emissiveMap={mat.emissiveMap}
+              emissiveIntensity={20.5}
+              samples={3}
+            ></MeshTransmissionMaterial>
+          </primitive>,
+        )
+      }
+      if (it.name === 'JF_skin_tentacles') {
+        items.push(
+          <primitive key={it.uuid} object={it}>
+            <MeshTransmissionMaterial
+              reflectivity={1}
+              key={mat.uuid}
+              side={DoubleSide}
+              transmission={1}
+              thickness={2}
+              metalness={0.05}
+              backside={true}
+              backsideThickness={0.9}
+              backsideResolution={1024}
+              roughness={0.1}
+              chromaticAberration={0.25}
+              map={mat.map}
+              alphaMap={mat.alphaMap}
+              color={'#ffffff'}
+              distortion={0.5}
+              distortionScale={0.15}
+              temporalDistortion={0.15}
+              transparent
+              envMapIntensity={1.6}
+              emissive={mat.emissive}
+              emissiveMap={mat.emissiveMap}
+              emissiveIntensity={20.5}
+              samples={3}
+            ></MeshTransmissionMaterial>
+          </primitive>,
+        )
+      }
     }
   })
 
   return (
     <>
-      {items}
-      <primitive object={glb.scene}></primitive>
+      <group
+        onClick={(ev) => {
+          console.log(ev.object.name)
+        }}
+      >
+        {items}
+        <primitive object={glb.scene}></primitive>
+      </group>
     </>
   )
 }
