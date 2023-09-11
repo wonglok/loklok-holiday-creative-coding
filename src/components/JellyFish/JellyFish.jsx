@@ -204,6 +204,7 @@ function JellyYo() {
           thickness: 2,
           envMap: jellyEnvMap,
           emissiveIntensity: 30,
+          transparent: true,
         })
 
         if (it.name === 'Mesh002_1') {
