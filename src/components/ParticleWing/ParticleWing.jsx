@@ -9,7 +9,7 @@ export function ParticleWing() {
   return (
     <Canvas>
       <BG></BG>
-      <Content></Content>
+      <SkinnedParticles url={`/wings/wing1.glb`}></SkinnedParticles>
       <OrbitControls makeDefault object-position={[0, 0, 100]} target={[0, 0, 0]} />
       <EffectComposer disableNormalPass multisampling={0}>
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
@@ -20,8 +20,8 @@ export function ParticleWing() {
   )
 }
 
-function Content() {
-  let glb = useGLTF(`/wings/wing1.glb`)
+function SkinnedParticles({ url = `/wings/wing1.glb` }) {
+  let glb = useGLTF(url)
   let gl = useThree((r) => r.gl)
   let { compos, runner } = useMemo(() => {
     if (!glb || !gl) {
