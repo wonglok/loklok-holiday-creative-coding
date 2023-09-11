@@ -57,7 +57,7 @@ function JellyYo() {
           backsideThickness={0.9}
           backsideResolution={1024}
           roughness={0.1}
-          chromaticAberration={0.05}
+          chromaticAberration={0.25}
           map={mat.map}
           alphaMap={mat.alphaMap}
           color={'#ffffff'}
