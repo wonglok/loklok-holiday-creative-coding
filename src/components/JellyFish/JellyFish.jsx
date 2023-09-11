@@ -145,10 +145,11 @@ function JellyYo() {
     vec4 hdrV4 = matcapColor;// texture2D(equilRectTex, uv);
 
     vec3 c3 = vec3(
-      pattern(uvMC * 3.0 + 0.05, time * 0.5),
-      pattern(uvMC * 3.0 + 0.0, time * 0.5),
-      pattern(uvMC * 3.0 - 0.05, time * 0.5)
+      0.15 * pattern(time + uv * 5.0 + 0.3, time * 0.5),
+      0.15 * pattern(time + uv * 5.0 + 0.0, time * 0.5),
+      0.15 * pattern(time + uv * 5.0 - 0.3, time * 0.5)
     );
+    
     return vec4(c3, 1.0);
   }
 
@@ -198,8 +199,9 @@ function JellyYo() {
         it.material = new MeshPhysicalMaterial({
           ...mat,
           roughness: 0.1,
-          metalness: 0.75,
+          metalness: 0.5,
           envMap: jellyEnvMap,
+          envMapIntensity: 10,
           transmission: 1.3,
           thickness: 2,
           envMap: jellyEnvMap,
