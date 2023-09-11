@@ -20,11 +20,11 @@ export function JellyFish() {
         </Suspense>
         <color attach={'background'} args={['#000000']}></color>
         <PerspectiveCamera makeDefault></PerspectiveCamera>
-        <OrbitControls makeDefault object-position={[0, 0, 1]} target={[0, 0, 0]}></OrbitControls>
+        <OrbitControls makeDefault object-position={[0, 0.35, 1]} target={[0, 0, 0]}></OrbitControls>
         <EffectComposer>
           <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.5}></Bloom>
         </EffectComposer>
-        <Environment files={`/hdr/kloofendal_48d_partly_cloudy_puresky_1k.hdr`}></Environment>
+        <Environment background files={`/hdr/kloofendal_48d_partly_cloudy_puresky_1k.hdr`}></Environment>
       </Canvas>
     </>
   )
@@ -50,6 +50,8 @@ function JellyYo() {
             key={mat.uuid}
             transmission={1}
             thickness={2}
+            anisotropy={2}
+            metalness={0.05}
             backside={true}
             backsideThickness={2}
             backsideResolution={1024}
@@ -57,6 +59,9 @@ function JellyYo() {
             chromaticAberration={0.05}
             alphaMap={mat.map}
             color={'#ffffff'}
+            distortion={0.5}
+            distortionScale={0.5}
+            temporalDistortion={0.5}
             transparent
             envMapIntensity={1.5}
             emissive={mat.emissive}
