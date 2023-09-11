@@ -41,34 +41,38 @@ function JellyYo() {
   }, [mixer, glb])
 
   let items = []
+  let cahce = {}
   glb?.scene?.traverse((it) => {
     if (it.material) {
       let mat = it.material
+      cahce.mat = cahce.mat || (
+        <MeshTransmissionMaterial
+          key={mat.uuid}
+          transmission={1}
+          thickness={2}
+          anisotropy={2}
+          metalness={0.05}
+          backside={true}
+          backsideThickness={2}
+          backsideResolution={1024}
+          roughness={0.0}
+          chromaticAberration={0.05}
+          alphaMap={mat.map}
+          color={'#ffffff'}
+          distortion={0.5}
+          distortionScale={0.5}
+          temporalDistortion={0.5}
+          transparent
+          envMapIntensity={1.5}
+          emissive={mat.emissive}
+          emissiveMap={mat.emissiveMap}
+          emissiveIntensity={20.5}
+          samples={3}
+        ></MeshTransmissionMaterial>
+      )
       items.push(
         <primitive key={it.uuid} object={it}>
-          <MeshTransmissionMaterial
-            key={mat.uuid}
-            transmission={1}
-            thickness={2}
-            anisotropy={2}
-            metalness={0.05}
-            backside={true}
-            backsideThickness={2}
-            backsideResolution={1024}
-            roughness={0.0}
-            chromaticAberration={0.05}
-            alphaMap={mat.map}
-            color={'#ffffff'}
-            distortion={0.5}
-            distortionScale={0.5}
-            temporalDistortion={0.5}
-            transparent
-            envMapIntensity={1.5}
-            emissive={mat.emissive}
-            emissiveMap={mat.emissiveMap}
-            emissiveIntensity={20.5}
-            samples={3}
-          ></MeshTransmissionMaterial>
+          {cahce.mat}
         </primitive>,
       )
     }
