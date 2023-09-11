@@ -23,18 +23,18 @@ import {
   MeshPhysicalMaterial,
 } from 'three'
 import { useComputeEnvMap } from './useComputeEnvMap'
-
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils'
 export function JellyFish() {
   return (
     <>
       <Canvas>
         <Suspense fallback={null}>
-          <JellyYo></JellyYo>
+          <EnvMapGen></EnvMapGen>
         </Suspense>
         <PerspectiveCamera makeDefault></PerspectiveCamera>
-        <OrbitControls makeDefault object-position={[0, 0.35, 1]} target={[0, 0, 0]}></OrbitControls>
+        <OrbitControls makeDefault object-position={[0, 0.5, 1]} target={[0, 0, 0]}></OrbitControls>
         <EffectComposer disableNormalPass multisampling={2}>
-          <Bloom mipmapBlur intensity={50.5} luminanceThreshold={0.99}></Bloom>
+          <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.5}></Bloom>
         </EffectComposer>
         <StatsGl></StatsGl>
         {/* <Environment files={`/hdr/shanghai.hdr`}></Environment> */}
@@ -43,8 +43,7 @@ export function JellyFish() {
   )
 }
 
-function JellyYo() {
-  let scene = useThree((r) => r.scene)
+function EnvMapGen() {
   let { envMap: jellyEnvMap } = useComputeEnvMap(
     `
 
@@ -170,14 +169,37 @@ function JellyYo() {
     128,
     true,
   )
+  let env = useEnvironment({ files: `/hdr/shanghai.hdr` })
+  let scene = useThree((r) => r.scene)
 
   jellyEnvMap.mapping = CubeReflectionMapping
-  let env = useEnvironment({ files: `/hdr/shanghai.hdr` })
 
   scene.background = env
   scene.environment = jellyEnvMap
-
   let glb = useGLTF(`/jellyfish/jellyfish1.glb`)
+
+  return (
+    <group>
+      <group>
+        <Suspense fallback={null}>
+          <JellyYo gltf={glb} jellyEnvMap={jellyEnvMap} env={env}></JellyYo>
+        </Suspense>
+      </group>
+      <group position={[0.5, 0, 0]}>
+        <Suspense fallback={null}>
+          <JellyYo gltf={glb} jellyEnvMap={jellyEnvMap} env={env}></JellyYo>
+        </Suspense>
+      </group>
+    </group>
+  )
+}
+function JellyYo({ gltf, jellyEnvMap }) {
+  let glb = useMemo(() => {
+    return {
+      animations: [...gltf.animations],
+      scene: clone(gltf.scene),
+    }
+  }, [gltf])
 
   let mixer = useMemo(() => new AnimationMixer(glb.scene), [glb])
   useFrame((_, dt) => {
@@ -205,9 +227,12 @@ function JellyYo() {
           transmission: 1.3,
           thickness: 2,
           envMap: jellyEnvMap,
-          emissiveIntensity: 30,
+          emissiveIntensity: 20,
           transparent: true,
+          side: DoubleSide,
         })
+
+        it.frustumCulled = false
 
         if (it.name === 'Mesh002_1') {
           it.visible = true
@@ -218,9 +243,13 @@ function JellyYo() {
     return { items }
   }, [glb?.scene, jellyEnvMap])
 
+  useFrame((st, dt) => {
+    glb.scene.rotation.y += dt / 2
+  })
   return (
     <>
       <group
+        rotation={[0.15 * Math.PI, 0, Math.PI * -0.15]}
         onClick={(ev) => {
           console.log(ev.object.name)
         }}
