@@ -21,7 +21,7 @@ export function JellyFish() {
         <color attach={'background'} args={['#000000']}></color>
         <PerspectiveCamera makeDefault></PerspectiveCamera>
         <OrbitControls makeDefault object-position={[0, 0.35, 1]} target={[0, 0, 0]}></OrbitControls>
-        <EffectComposer>
+        <EffectComposer disableNormalPass multisampling={2}>
           <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.5}></Bloom>
         </EffectComposer>
         <Environment background files={`/hdr/kloofendal_48d_partly_cloudy_puresky_1k.hdr`}></Environment>
