@@ -23,7 +23,7 @@ export function JellyFish() {
         <PerspectiveCamera makeDefault></PerspectiveCamera>
         <OrbitControls makeDefault object-position={[0, 0.35, 1]} target={[0, 0, 0]}></OrbitControls>
         <EffectComposer disableNormalPass multisampling={2}>
-          <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.5}></Bloom>
+          <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.3}></Bloom>
         </EffectComposer>
         <StatsGl></StatsGl>
         <Environment background files={`/hdr/kloofendal_48d_partly_cloudy_puresky_1k.hdr`}></Environment>
@@ -52,20 +52,20 @@ function JellyYo() {
           key={mat.uuid}
           transmission={1}
           thickness={2}
-          anisotropy={2}
           metalness={0.05}
           backside={true}
-          backsideThickness={2}
+          backsideThickness={0.9}
           backsideResolution={1024}
-          roughness={0.0}
+          roughness={0.1}
           chromaticAberration={0.05}
-          alphaMap={mat.map}
+          map={mat.map}
+          alphaMap={mat.alphaMap}
           color={'#ffffff'}
           distortion={0.5}
-          distortionScale={0.5}
-          temporalDistortion={0.5}
+          distortionScale={0.15}
+          temporalDistortion={0.15}
           transparent
-          envMapIntensity={1.5}
+          envMapIntensity={1.6}
           emissive={mat.emissive}
           emissiveMap={mat.emissiveMap}
           emissiveIntensity={20.5}
