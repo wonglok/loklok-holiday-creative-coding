@@ -5,6 +5,7 @@ import {
   OrbitControls,
   PerspectiveCamera,
   StatsGl,
+  useEnvironment,
   useGLTF,
 } from '@react-three/drei'
 import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
@@ -30,7 +31,6 @@ export function JellyFish() {
         <Suspense fallback={null}>
           <JellyYo></JellyYo>
         </Suspense>
-        {/* <color attach={'background'} args={['#000000']}></color> */}
         <PerspectiveCamera makeDefault></PerspectiveCamera>
         <OrbitControls makeDefault object-position={[0, 0.35, 1]} target={[0, 0, 0]}></OrbitControls>
         <EffectComposer disableNormalPass multisampling={2}>
@@ -171,8 +171,9 @@ function JellyYo() {
   )
 
   jellyEnvMap.mapping = CubeReflectionMapping
+  let env = useEnvironment({ files: `/hdr/shanghai.hdr` })
 
-  scene.background = new Color('#000000')
+  scene.background = env
   scene.environment = jellyEnvMap
 
   let glb = useGLTF(`/jellyfish/jellyfish1.glb`)
@@ -197,7 +198,8 @@ function JellyYo() {
         it.material = new MeshPhysicalMaterial({
           ...mat,
           roughness: 0.1,
-          metalness: 0.5,
+          metalness: 0.75,
+          envMap: jellyEnvMap,
           transmission: 1.3,
           thickness: 2,
           envMap: jellyEnvMap,
