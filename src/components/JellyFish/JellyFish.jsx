@@ -4,6 +4,7 @@ import {
   MeshTransmissionMaterial,
   OrbitControls,
   PerspectiveCamera,
+  StatsGl,
   useGLTF,
 } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -24,6 +25,7 @@ export function JellyFish() {
         <EffectComposer disableNormalPass multisampling={2}>
           <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.5}></Bloom>
         </EffectComposer>
+        <StatsGl></StatsGl>
         <Environment background files={`/hdr/kloofendal_48d_partly_cloudy_puresky_1k.hdr`}></Environment>
       </Canvas>
     </>
