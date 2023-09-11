@@ -36,15 +36,11 @@ function Content() {
   useFrame((st, dt) => {
     runner?.work(st, dt)
   }, [])
-  //
   return (
     <>
       {/*  */}
       {compos}
-
-      {/* <Box position={[1, 0, 0]}>
-        <meshBasicMaterial color={'red'}></meshBasicMaterial>
-      </Box> */}
+      {/*  */}
     </>
   )
 }
