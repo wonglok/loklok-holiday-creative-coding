@@ -42,74 +42,78 @@ function JellyYo() {
     mixer.clipAction(glb.animations[2], glb.scene).play()
   }, [mixer, glb])
 
-  let items = []
-  glb?.scene?.traverse((it) => {
-    if (it.material) {
-      let mat = it.material
-      if (it.name === 'JF_skin_in') {
-        items.push(
-          <primitive key={it.uuid} object={it}>
-            <MeshTransmissionMaterial
-              reflectivity={1}
-              key={mat.uuid}
-              side={FrontSide}
-              transmission={1}
-              thickness={2}
-              metalness={0.05}
-              backside={true}
-              backsideThickness={0.9}
-              backsideResolution={1024}
-              roughness={0.1}
-              chromaticAberration={0.25}
-              map={mat.map}
-              alphaMap={mat.alphaMap}
-              color={'#ffffff'}
-              distortion={0.5}
-              distortionScale={0.15}
-              temporalDistortion={0.15}
-              transparent
-              envMapIntensity={1.6}
-              emissive={mat.emissive}
-              emissiveMap={mat.emissiveMap}
-              emissiveIntensity={20.5}
-              samples={3}
-            ></MeshTransmissionMaterial>
-          </primitive>,
-        )
+  let { items } = useMemo(() => {
+    let items = []
+    glb?.scene?.traverse((it) => {
+      if (it.material) {
+        let mat = it.material
+        if (it.name === 'JF_skin_in') {
+          items.push(
+            <primitive key={it.uuid} object={it}>
+              <MeshTransmissionMaterial
+                reflectivity={1}
+                key={mat.uuid}
+                side={FrontSide}
+                transmission={1}
+                thickness={2}
+                metalness={0.05}
+                backside={true}
+                backsideThickness={0.9}
+                backsideResolution={1024}
+                roughness={0.0}
+                chromaticAberration={0.25}
+                map={mat.map}
+                alphaMap={mat.alphaMap}
+                color={'#ffffff'}
+                distortion={0.5}
+                distortionScale={0.15}
+                temporalDistortion={0.15}
+                transparent
+                envMapIntensity={1.6}
+                emissive={mat.emissive}
+                emissiveMap={mat.emissiveMap}
+                emissiveIntensity={20.5}
+                samples={3}
+              ></MeshTransmissionMaterial>
+            </primitive>,
+          )
+        }
+        if (it.name === 'JF_skin_tentacles') {
+          items.push(
+            <primitive key={it.uuid} object={it}>
+              <MeshTransmissionMaterial
+                reflectivity={1}
+                key={mat.uuid}
+                side={DoubleSide}
+                transmission={1}
+                thickness={2}
+                metalness={0.05}
+                backside={true}
+                backsideThickness={0.9}
+                backsideResolution={1024}
+                roughness={0.2}
+                chromaticAberration={0.25}
+                map={mat.map}
+                alphaMap={mat.alphaMap}
+                color={'#ffffff'}
+                distortion={0.5}
+                distortionScale={0.15}
+                temporalDistortion={0.15}
+                transparent
+                envMapIntensity={1.6}
+                emissive={mat.emissive}
+                emissiveMap={mat.emissiveMap}
+                emissiveIntensity={20.5}
+                samples={3}
+              ></MeshTransmissionMaterial>
+            </primitive>,
+          )
+        }
       }
-      if (it.name === 'JF_skin_tentacles') {
-        items.push(
-          <primitive key={it.uuid} object={it}>
-            <MeshTransmissionMaterial
-              reflectivity={1}
-              key={mat.uuid}
-              side={DoubleSide}
-              transmission={1}
-              thickness={2}
-              metalness={0.05}
-              backside={true}
-              backsideThickness={0.9}
-              backsideResolution={1024}
-              roughness={0.1}
-              chromaticAberration={0.25}
-              map={mat.map}
-              alphaMap={mat.alphaMap}
-              color={'#ffffff'}
-              distortion={0.5}
-              distortionScale={0.15}
-              temporalDistortion={0.15}
-              transparent
-              envMapIntensity={1.6}
-              emissive={mat.emissive}
-              emissiveMap={mat.emissiveMap}
-              emissiveIntensity={20.5}
-              samples={3}
-            ></MeshTransmissionMaterial>
-          </primitive>,
-        )
-      }
-    }
-  })
+    })
+
+    return { items }
+  }, [glb?.scene])
 
   return (
     <>
