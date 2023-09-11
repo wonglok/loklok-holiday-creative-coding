@@ -7,7 +7,7 @@ import {
   StatsGl,
   useGLTF,
 } from '@react-three/drei'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { Suspense, useEffect, useMemo } from 'react'
 import { AnimationMixer, BackSide, DoubleSide, FrontSide, MeshBasicMaterial } from 'three'
@@ -26,14 +26,14 @@ export function JellyFish() {
           <Bloom mipmapBlur intensity={0.5} luminanceThreshold={0.3}></Bloom>
         </EffectComposer>
         <StatsGl></StatsGl>
-        <Environment background files={`/hdr/kloofendal_48d_partly_cloudy_puresky_1k.hdr`}></Environment>
+        <Environment background files={`/hdr/shanghai.hdr`}></Environment>
       </Canvas>
     </>
   )
 }
 
 function JellyYo() {
-  let glb = useGLTF(`/jellyfish/jellyfish.glb`)
+  let glb = useGLTF(`/jellyfish/jellyfish1.glb`)
   let mixer = useMemo(() => new AnimationMixer(glb.scene), [glb])
   useFrame((_, dt) => {
     mixer.update(dt)
@@ -47,20 +47,22 @@ function JellyYo() {
     glb?.scene?.traverse((it) => {
       if (it.material) {
         let mat = it.material
-        if (it.name === 'JF_skin_in') {
+
+        if (it.name === 'Mesh002_1') {
+          it.visible = true
           items.push(
-            <primitive key={it.uuid} object={it}>
-              <MeshTransmissionMaterial
-                reflectivity={1}
+            createPortal(
+              <meshPhysicalMaterial
+                reflectivity={0.6}
                 key={mat.uuid}
-                side={FrontSide}
+                side={DoubleSide}
                 transmission={1}
-                thickness={2}
+                thickness={0.1}
                 metalness={0.05}
                 backside={true}
                 backsideThickness={0.9}
                 backsideResolution={1024}
-                roughness={0.0}
+                roughness={0.1}
                 chromaticAberration={0.25}
                 map={mat.map}
                 alphaMap={mat.alphaMap}
@@ -72,17 +74,18 @@ function JellyYo() {
                 envMapIntensity={1.6}
                 emissive={mat.emissive}
                 emissiveMap={mat.emissiveMap}
-                emissiveIntensity={20.5}
+                emissiveIntensity={10.5}
                 samples={3}
-              ></MeshTransmissionMaterial>
-            </primitive>,
+              ></meshPhysicalMaterial>,
+              it,
+            ),
           )
         }
-        if (it.name === 'JF_skin_tentacles') {
+        if (it.name === 'Mesh002') {
           items.push(
-            <primitive key={it.uuid} object={it}>
-              <MeshTransmissionMaterial
-                reflectivity={1}
+            createPortal(
+              <meshPhysicalMaterial
+                reflectivity={0.6}
                 key={mat.uuid}
                 side={DoubleSide}
                 transmission={1}
@@ -91,7 +94,73 @@ function JellyYo() {
                 backside={true}
                 backsideThickness={0.9}
                 backsideResolution={1024}
-                roughness={0.2}
+                roughness={0.1}
+                chromaticAberration={0.25}
+                map={mat.map}
+                alphaMap={mat.alphaMap}
+                color={'#ffffff'}
+                distortion={0.5}
+                distortionScale={0.15}
+                temporalDistortion={0.15}
+                transparent
+                envMapIntensity={1.6}
+                emissive={mat.emissive}
+                emissiveMap={mat.emissiveMap}
+                emissiveIntensity={10.5}
+                samples={3}
+              ></meshPhysicalMaterial>,
+              it,
+            ),
+          )
+        }
+        if (it.name === 'JF_skin_in') {
+          it.visible = true
+
+          items.push(
+            createPortal(
+              <meshPhysicalMaterial
+                reflectivity={0.5}
+                key={mat.uuid}
+                side={FrontSide}
+                transmission={1}
+                thickness={2}
+                metalness={0.05}
+                backside={true}
+                backsideThickness={0.9}
+                backsideResolution={1024}
+                roughness={0.1}
+                chromaticAberration={0.25}
+                map={mat.map}
+                alphaMap={mat.alphaMap}
+                color={'#ffffff'}
+                distortion={0.5}
+                distortionScale={0.15}
+                temporalDistortion={0.15}
+                transparent
+                envMapIntensity={1.6}
+                emissive={mat.emissive}
+                emissiveMap={mat.emissiveMap}
+                emissiveIntensity={10.5}
+                samples={3}
+              ></meshPhysicalMaterial>,
+              it,
+            ),
+          )
+        }
+        if (it.name === 'JF_skin_tentacles') {
+          items.push(
+            createPortal(
+              <meshPhysicalMaterial
+                reflectivity={0.5}
+                key={mat.uuid}
+                side={FrontSide}
+                transmission={1}
+                thickness={2}
+                metalness={0.05}
+                backside={true}
+                backsideThickness={0.9}
+                backsideResolution={1024}
+                roughness={0.1}
                 chromaticAberration={0.25}
                 map={mat.map}
                 alphaMap={mat.alphaMap}
@@ -105,8 +174,9 @@ function JellyYo() {
                 emissiveMap={mat.emissiveMap}
                 emissiveIntensity={20.5}
                 samples={3}
-              ></MeshTransmissionMaterial>
-            </primitive>,
+              ></meshPhysicalMaterial>,
+              it,
+            ),
           )
         }
       }
