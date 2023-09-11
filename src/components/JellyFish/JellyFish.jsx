@@ -37,7 +37,7 @@ export function JellyFish() {
           <Bloom mipmapBlur intensity={50.5} luminanceThreshold={0.99}></Bloom>
         </EffectComposer>
         <StatsGl></StatsGl>
-        {/* <Environment background files={`/hdr/shanghai.hdr`}></Environment> */}
+        {/* <Environment files={`/hdr/shanghai.hdr`}></Environment> */}
       </Canvas>
     </>
   )
