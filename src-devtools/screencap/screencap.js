@@ -76,7 +76,7 @@ app.post('/file', async (req, res) => {
     let count = (res.length + '').padStart(6, '0')
     let dateStr = moment().format('YYYY-MM-DD')
     let data = await fs.promises.readFile(file.filepath)
-    let userInputTitle =
+    let slugFileName =
       slugify(fields.title[0], {
         strict: true,
       }) || 'untitled'
@@ -84,7 +84,7 @@ app.post('/file', async (req, res) => {
     let metadata = JSON.stringify(
       {
         uuid: `_${Math.random().toFixed(36).slice(2, 9)}_${Math.random().toFixed(36).slice(2, 9)}`,
-        title: userInputTitle,
+        title: fields.title[0],
         createdAt: new Date(),
         ts: new Date().getTime(),
         name: name,
@@ -92,18 +92,18 @@ app.post('/file', async (req, res) => {
         size: file.size,
         origin: fields.origin[0],
         pathname: fields.pathname[0],
-        thumbURL: `/discover/${dateStr}__${userInputTitle}/${name}`,
+        thumbURL: `/discover/${dateStr}__${slugFileName}/${name}`,
       },
       null,
       '\t',
     )
     await fs.promises
-      .mkdir(`./public/discover/${dateStr}__${userInputTitle}`, {
+      .mkdir(`./public/discover/${dateStr}__${slugFileName}`, {
         recursive: true,
       })
       .catch(console.error)
-    await fs.promises.writeFile(`./public/discover/${dateStr}__${userInputTitle}/${name}`, data)
-    await fs.promises.writeFile(`./public/discover/${dateStr}__${userInputTitle}/meta.json`, metadata)
+    await fs.promises.writeFile(`./public/discover/${dateStr}__${slugFileName}/${name}`, data)
+    await fs.promises.writeFile(`./public/discover/${dateStr}__${slugFileName}/meta.json`, metadata)
 
     metas.push(JSON.parse(metadata))
   })
