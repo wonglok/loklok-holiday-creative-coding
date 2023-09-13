@@ -10,7 +10,7 @@ export function SparklingCake() {
     <Canvas>
       <BG></BG>
       <SkinnedParticles url={`/susaye/cake.glb`}></SkinnedParticles>
-      <OrbitControls makeDefault object-position={[0, 0, 100]} target={[0, 0, 0]} />
+      <OrbitControls makeDefault object-position={[0, 30, 150]} target={[0, 30, 0]} />
       <EffectComposer disableNormalPass multisampling={0}>
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
