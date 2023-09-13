@@ -1,7 +1,17 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo } from 'react'
 import { Runner } from './Rigged/Runner'
-import { Box, Environment, OrbitControls, Stats, useGLTF } from '@react-three/drei'
+import {
+  Box,
+  Center,
+  Environment,
+  MeshTransmissionMaterial,
+  OrbitControls,
+  Stats,
+  Text,
+  Text3D,
+  useGLTF,
+} from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { Color } from 'three'
 
@@ -15,6 +25,22 @@ export function SparklingCake() {
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
       <Stats></Stats>
+      <group position={[0, 8 + 75, 0]}>
+        <Center>
+          <Text size={25} fontSize={25} font={`/susaye/Cronos-Pro-Light.ttf`}>
+            Dear Susaye
+            <MeshTransmissionMaterial emissive={'#ffaaaa'}></MeshTransmissionMaterial>
+          </Text>
+        </Center>
+      </group>
+      <group position={[0, 8 + 100, 0]}>
+        <Center>
+          <Text size={25} fontSize={25} font={`/susaye/Cronos-Pro-Light.ttf`}>
+            Happy Birthday
+            <MeshTransmissionMaterial emissive={'#ffaaaa'}></MeshTransmissionMaterial>
+          </Text>
+        </Center>
+      </group>
       <Environment files={`/hdr/shanghai.hdr`}></Environment>
     </Canvas>
   )
