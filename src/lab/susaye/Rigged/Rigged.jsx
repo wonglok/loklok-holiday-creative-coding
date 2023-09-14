@@ -69,13 +69,13 @@ export function getSkinData({ ww = 512, hh = 512, skinnedMesh }) {
     let iSize = attrib.itemSize
     tex.userData.itemSize = iSize
 
-    let getRand = () => {
-      if (name === 'position') {
-        return Math.random() * 2.0 - 1.0
-      } else {
-        return 0
-      }
-    }
+    // let getRand = () => {
+    //   if (name === 'position') {
+    //     return Math.random() * 2.0 - 1.0
+    //   } else {
+    //     return 0
+    //   }
+    // }
 
     let max = attrib.array.length / iSize
     for (let px = 0; px < pxAll; px++) {
@@ -101,16 +101,25 @@ export function getSkinData({ ww = 512, hh = 512, skinnedMesh }) {
         tex.image.data[i * 4 + 3] = 0
       }
 
+      //
       if (i > max) {
         let r = Math.floor(i % max)
+
+        let r3 = Math.floor((i + 15 * Math.random()) % max)
+
+        let randVal = (valA, valB) => {
+          let ratio = Math.random()
+          return Math.floor(valA * (1.0 - ratio) + valB * ratio)
+        }
+
         if (iSize >= 1) {
-          tex.image.data[i * 4 + 0] = attrib.getX(r) + 0.3 * getRand() * 5.0
+          tex.image.data[i * 4 + 0] = randVal(attrib.getX(r), attrib.getX(r3))
         }
         if (iSize >= 2) {
-          tex.image.data[i * 4 + 1] = attrib.getY(r) + 0.3 * getRand() * 5.0
+          tex.image.data[i * 4 + 1] = randVal(attrib.getY(r), attrib.getY(r3))
         }
         if (iSize >= 3) {
-          tex.image.data[i * 4 + 2] = attrib.getZ(r) + 0.3 * getRand() * 5.0
+          tex.image.data[i * 4 + 2] = randVal(attrib.getZ(r), attrib.getZ(r3))
         }
         if (iSize >= 4) {
           tex.image.data[i * 4 + 3] = 0

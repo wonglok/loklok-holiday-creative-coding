@@ -19,12 +19,17 @@ export function SparklingCake() {
   return (
     <Canvas>
       <BG></BG>
+
       <SkinnedParticles url={`/susaye/cake.glb`}></SkinnedParticles>
+
       <OrbitControls makeDefault object-position={[0, 30, 150]} target={[0, 30, 0]} />
+
       <EffectComposer disableNormalPass multisampling={0}>
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
+
       <Stats></Stats>
+
       <group position={[0, 8 + 75, 0]}>
         <Center>
           <Text size={25} fontSize={25} font={`/susaye/Cronos-Pro-Light.ttf`}>
@@ -41,6 +46,7 @@ export function SparklingCake() {
           </Text>
         </Center>
       </group>
+
       <Environment files={`/hdr/shanghai.hdr`}></Environment>
     </Canvas>
   )
