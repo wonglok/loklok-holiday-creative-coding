@@ -126,7 +126,7 @@ export class Runner extends Object3D {
       sync(this.posVar, clock2)
     })
 
-    this.gpu.setVariableDependencies(this.posVar, [this.posVar])
+    this.gpu.setVariableDependencies(this.posVar, [this.posVar, this.moveVar])
     this.gpu.setVariableDependencies(this.moveVar, [this.moveVar, this.posVar])
 
     let err = this.gpu.init()

@@ -35,14 +35,16 @@ mat4 getBoneMatrix( const in float i ) {
   return bone;
 }
 
-
 void main (void) {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
   vec4 o_pos = texture2D(texturePosition, uv);
+  vec4 o_move = texture2D(textureMove, uv);
 
   vec3 position = o_pos.xyz;
   vec3 velocity = vec3(0.0);
   float phase = o_pos.a;
+
+  velocity += vec3(o_pos.rgb - o_move.rgb) * 1.0 / 60.0;
 
   if (phase >= 0.99 || length(o_pos.rgb) == 0.0) {
     // vec4 data_o_layout = texture2D( o_layout, uv );
@@ -71,10 +73,11 @@ void main (void) {
     transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
     transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
     
-    gl_FragColor = vec4(transformed, -1.0);
+    gl_FragColor = vec4(transformed, 0.0);
   } else {
-    velocity += vec3(0.0, 9.8, 0.0) * 0.0 * delta;
-    phase += delta * 0.5 + rand(uv + 0.1 + time) * 0.5;
+
+    
+    phase += delta * 0.5 + rand(uv + 0.1 + time) * 0.25;
     gl_FragColor = vec4(position + velocity, phase);
   }
   
