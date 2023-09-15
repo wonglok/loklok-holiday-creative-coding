@@ -1,7 +1,7 @@
 import { Environment, OrbitControls, Plane, useFBO } from '@react-three/drei'
 import { useEffect, useMemo, useRef } from 'react'
 import { Camera, Color, FloatType, MeshPhysicalMaterial, RGBAFormat, ShaderMaterial, Vector3 } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { FullScreenQuad } from 'three-stdlib'
 
 export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
@@ -19,9 +19,9 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
   let tick = useRef(0)
 
-  let READ2 = 0
-  let WRITE = 1
-  let READ1 = 2
+  let WRITE = 0
+  let READ1 = 1
+  let READ2 = 2
 
   let quad = useMemo(() => {
     return new FullScreenQuad(
@@ -44,7 +44,16 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
           uniform float dt;
           uniform highp sampler2D read1;
           uniform highp sampler2D read2;
+          uniform vec3 mouse;
+          uniform vec3 force;
+
           #include <common>
+
+          float sdSphere( vec3 p, float s )
+          {
+            return length(p)-s;
+          }
+
           
           void main (void) {
             vec2 uv = gl_FragCoord.xy / vec2(WIDTH, HEIGHT);
@@ -59,7 +68,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               mode = 1.0;
             } if (length(last1) >= 25.0) {
               mode = 1.0;
-            } if (length(diff) >= 5.0) {
+            } if (length(diff) >= 2.0) {
               mode = 1.0;
             }
 
@@ -74,11 +83,21 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             } else {
               vec3 velocity;
 
-              velocity.x += (last1.w) * 0.1 * sin(time * 0.5);
+              float radius = 1.5;
+
+              vec3 dir = normalize(last1.rgb - mouse.rgb);
+              float dist = length(last1.rgb - mouse.rgb);
+
+              float dd = radius - dist;
+              velocity += dir * 15.0 * dt * dd;
+
               velocity.y += -1.0 * dt * 5.0 * rand(uv + time);
 
+
               last1.a += rand(uv + time) * dt * 0.5;
-              gl_FragColor = vec4(last1.rgb + velocity, last1.a);
+              last1.rgb += velocity;
+
+              gl_FragColor = vec4(last1.rgb, last1.a);
             }
           }
         `,
@@ -89,10 +108,13 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
   let displayShader = useMemo(() => {
     let mat = new MeshPhysicalMaterial({
-      roughness: 0,
-      metalness: 0.3,
+      roughness: 0.3,
+      metalness: 1,
       color: new Color('#ffffff'),
+      transparent: true,
+      opacity: 0.5,
     })
+
     mat.onBeforeCompile = (shader) => {
       // console.log(shader.vertexShader)
       shader.uniforms.posTex = { value: null }
@@ -138,7 +160,9 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
     }
   }, [quad])
 
-  useFrame(({ gl }, dt) => {
+  let hover = useRef()
+
+  useFrame(({ gl, raycaster, camera }, dt) => {
     gl.setRenderTarget(layout[tick.current][WRITE])
 
     quad.material.uniforms.time.value = performance.now() / 1000
@@ -146,6 +170,10 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
     quad.material.uniforms.read1.value = layout[tick.current][READ1].texture
     quad.material.uniforms.read2.value = layout[tick.current][READ2].texture
+
+    if (hover.current) {
+      hover.current.lookAt(camera.position)
+    }
 
     quad.render(gl)
 
@@ -160,6 +188,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
     tick.current += 1
     tick.current %= layout.length
   })
+
   //
 
   let posCount = WIDTH * HEIGHT
@@ -217,9 +246,47 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
     return f32Arr
   }, [posCount, WIDTH, HEIGHT])
 
+  let ptLightRef = useRef()
+  let pt = useMemo(() => {
+    return new Vector3()
+  }, [])
+  let last = useMemo(() => {
+    return new Vector3()
+  }, [])
+  let diff = useMemo(() => {
+    return new Vector3()
+  }, [])
+
+  useFrame(() => {
+    if (last.length() === 0) {
+      last.copy(pt)
+    }
+    diff.copy(pt).sub(last)
+    last.copy(pt)
+    quad.material.uniforms.force.value.add(diff)
+    quad.material.uniforms.force.value.multiplyScalar(0.99)
+    quad.material.uniforms.mouse.value.copy(pt)
+  })
+
+  useFrame((st, dt) => {
+    if (ptLightRef.current) {
+      ptLightRef.current.position.copy(quad.material.uniforms.mouse.value)
+    }
+  })
+
   return (
     <group>
       {/*  */}
+
+      <pointLight ref={ptLightRef}></pointLight>
+      <Plane
+        visible={false}
+        onPointerMove={({ point }) => {
+          pt.copy(point)
+        }}
+        args={[1000, 1000]}
+        ref={hover}
+      ></Plane>
 
       <Environment files={`/hdr/shanghai.hdr`} />
       <OrbitControls></OrbitControls>
