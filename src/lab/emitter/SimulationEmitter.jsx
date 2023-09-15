@@ -226,7 +226,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
               gl_FragColor = vec4(initCube, rand(uv + time) * -2.0);
             } else {
-              vec3 velocity = vec3(last1 - last2);
+              vec3 velocity = vec3(last1.rgb - last2.rgb) / dt;
 
               float radius = 1.5;
 
@@ -235,7 +235,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               float dist = length(last1.rgb - mouse.rgb);
 
               if (dist <= radius) {
-                velocity += dir * radius * 5.0;
+                velocity += dir * radius * 2.0;
               } else {
                 // velocity += -dir * 5.0 / dist; 
               }
@@ -245,12 +245,10 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
               last1.a += rand(uv + time) * 0.00025;
 
-              last1.rgb += velocity * dt;
-
               // last1.rgb += 0.01 * snoiseVec3(last1.rgb);
               // last1.rgb += 0.01 * curlNoise(last1.rgb);
 
-              gl_FragColor = vec4(last1.rgb, last1.a);
+              gl_FragColor = vec4(last1.rgb + velocity.rgb * dt, last1.a);
             }
           }
         `,
