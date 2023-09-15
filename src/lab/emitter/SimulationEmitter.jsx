@@ -59,7 +59,6 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             vec2 uv = gl_FragCoord.xy / vec2(WIDTH, HEIGHT);
             vec4 last1 = texture2D(read1, uv);
             vec4 last2 = texture2D(read2, uv);
-            vec3 diff = vec3(last2.rgb - last1.rgb); 
 
             float mode = 0.0;
             if (length(last1.rgb) == 0.0 || length(last2.rgb) == 0.0) {
@@ -68,8 +67,6 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               mode = 1.0;
             } if (length(last1) >= 25.0) {
               mode = 1.0;
-            } if (length(diff) >= 2.0) {
-              mode = 1.0;
             }
 
             if (mode == 1.0) {
@@ -77,24 +74,25 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
                 2.0 * (rand(uv + 0.3) - 0.5), 2.0 * (rand(uv + 0.2) - 0.5) + 1.0, 2.0 * (rand(uv + 0.1) - 0.5)
               );
 
-              initCube.y += 2.0;
+              initCube.rgb *= 0.5;
+              initCube.y += 1.0;
 
               gl_FragColor = vec4(initCube, rand(uv + time) * 2.0);
             } else {
-              vec3 velocity;
+              vec3 velocity = vec3(last1 - last2) * dt;
 
-              float radius = 1.5;
+              float radius = 1.3;
 
               vec3 dir = normalize(last1.rgb - mouse.rgb);
               float dist = length(last1.rgb - mouse.rgb);
 
-              float dd = radius - dist;
-              velocity += dir * 15.0 * dt * dd;
+              if (dist <= radius) {
+                velocity += dir * dist * dt * 16.777;
+              }
 
-              velocity.y += -1.0 * dt * 5.0 * rand(uv + time);
+              velocity.y += -1.0 * dt * 2.0 * rand(uv + time);
 
-
-              last1.a += rand(uv + time) * dt * 0.5;
+              last1.a += rand(uv + time) * dt * 0.1;
               last1.rgb += velocity;
 
               gl_FragColor = vec4(last1.rgb, last1.a);
