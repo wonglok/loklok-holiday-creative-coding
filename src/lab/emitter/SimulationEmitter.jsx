@@ -92,7 +92,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
               velocity.y += -1.0 * dt * 2.0 * rand(uv + time);
 
-              last1.a += rand(uv + time) * dt * 0.1;
+              last1.a += rand(uv + time) * dt * 0.25;
               last1.rgb += velocity;
 
               gl_FragColor = vec4(last1.rgb, last1.a);
