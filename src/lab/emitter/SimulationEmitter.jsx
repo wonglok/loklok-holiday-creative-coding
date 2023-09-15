@@ -228,22 +228,23 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             } else {
               vec3 velocity = vec3(last1 - last2) * dt;
 
-              float radius = 2.0;
+              float radius = 1.5;
 
               vec3 dir = normalize(last1.rgb - mouse.rgb);
               float dist = length(last1.rgb - mouse.rgb);
 
               if (dist <= radius) {
-                velocity += dir * dist * dt;
+                velocity += dir * dist;
               }
 
-              velocity.y += -1.0 * dt;// * rand(uv + time);
-
-              last1.rgb += curlNoise(last1.rgb * 1.5) * 0.5 * dt;
+              velocity.y += -0.5;// * rand(uv + time);
 
               last1.a += rand(uv + time) * dt * 0.25;
-              last1.rgb += velocity;
+
+              last1.rgb += velocity * dt;
               
+              // last1.rgb += curlNoise(last1.rgb * 0.25) * 0.003;
+
               gl_FragColor = vec4(last1.rgb, last1.a);
             }
           }
