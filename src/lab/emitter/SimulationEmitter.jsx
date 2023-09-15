@@ -222,11 +222,11 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               );
 
               initCube.rgb *= 0.2;
-              initCube.y += 2.0;
+              initCube.y += 1.0;
 
               gl_FragColor = vec4(initCube, rand(uv + time) * -2.0);
             } else {
-              vec3 velocity = vec3(last1 - last2) * dt;
+              vec3 velocity = vec3(last1 - last2);
 
               float radius = 1.5;
 
@@ -235,17 +235,17 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               float dist = length(last1.rgb - mouse.rgb);
 
               if (dist <= radius) {
-                velocity += dir * dist * dt * 5.0;
+                velocity += dir * radius * 5.0;
               } else {
-                // velocity += -dir * dt * 5.0 / dist; 
+                // velocity += -dir * 5.0 / dist; 
               }
               
 
-              velocity.y += -0.01 * rand(velocity.y + uv + time);
+              velocity.y += -1.0 * rand(velocity.y + uv + time);
 
-              last1.a += rand(uv + time) * dt * 0.0025;
+              last1.a += rand(uv + time) * 0.00025;
 
-              last1.rgb += velocity;
+              last1.rgb += velocity * dt;
 
               // last1.rgb += 0.01 * snoiseVec3(last1.rgb);
               // last1.rgb += 0.01 * curlNoise(last1.rgb);
@@ -317,58 +317,33 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
   let hover = useRef()
 
   useFrame(({ gl, raycaster, camera }, dt) => {
-    gl.setRenderTarget(layout[tick.current][WRITE])
+    for (let pass = 0; pass < 3; pass++) {
+      gl.setRenderTarget(layout[tick.current][WRITE])
 
-    quad.material.uniforms.time.value = performance.now() / 1000
-    quad.material.uniforms.dt.value = dt
+      quad.material.uniforms.time.value = performance.now() / 1000
+      quad.material.uniforms.dt.value = dt / 3
 
-    quad.material.uniforms.read1.value = layout[tick.current][READ1].texture
-    quad.material.uniforms.read2.value = layout[tick.current][READ2].texture
+      quad.material.uniforms.read1.value = layout[tick.current][READ1].texture
+      quad.material.uniforms.read2.value = layout[tick.current][READ2].texture
 
-    if (hover.current) {
-      hover.current.lookAt(camera.position)
+      if (hover.current) {
+        hover.current.lookAt(camera.position)
+      }
+
+      quad.render(gl)
+
+      gl.setRenderTarget(null)
+
+      if (displayShader.shader) {
+        displayShader.shader.uniforms.posTex.value = layout[tick.current][WRITE].texture
+        displayShader.shader.uniforms.read1.value = layout[tick.current][READ1].texture
+        displayShader.shader.uniforms.read2.value = layout[tick.current][READ2].texture
+      }
+
+      tick.current += 1
+      tick.current %= layout.length
     }
-
-    quad.render(gl)
-
-    gl.setRenderTarget(null)
-
-    if (displayShader.shader) {
-      displayShader.shader.uniforms.posTex.value = layout[tick.current][WRITE].texture
-      displayShader.shader.uniforms.read1.value = layout[tick.current][READ1].texture
-      displayShader.shader.uniforms.read2.value = layout[tick.current][READ2].texture
-    }
-
-    tick.current += 1
-    tick.current %= layout.length
-
-    gl.setRenderTarget(layout[tick.current][WRITE])
-
-    quad.material.uniforms.time.value = performance.now() / 1000
-    quad.material.uniforms.dt.value = dt
-
-    quad.material.uniforms.read1.value = layout[tick.current][READ1].texture
-    quad.material.uniforms.read2.value = layout[tick.current][READ2].texture
-
-    if (hover.current) {
-      hover.current.lookAt(camera.position)
-    }
-
-    quad.render(gl)
-
-    gl.setRenderTarget(null)
-
-    if (displayShader.shader) {
-      displayShader.shader.uniforms.posTex.value = layout[tick.current][WRITE].texture
-      displayShader.shader.uniforms.read1.value = layout[tick.current][READ1].texture
-      displayShader.shader.uniforms.read2.value = layout[tick.current][READ2].texture
-    }
-
-    tick.current += 1
-    tick.current %= layout.length
   })
-
-  //
 
   let posCount = WIDTH * HEIGHT
   let posArray = useMemo(() => {
