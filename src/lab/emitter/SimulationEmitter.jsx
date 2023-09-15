@@ -1,6 +1,6 @@
 import { Environment, OrbitControls, Plane, useFBO } from '@react-three/drei'
 import { useEffect, useMemo, useRef } from 'react'
-import { Camera, Color, FloatType, MeshPhysicalMaterial, RGBAFormat, ShaderMaterial } from 'three'
+import { Camera, Color, FloatType, MeshPhysicalMaterial, RGBAFormat, ShaderMaterial, Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'
 import { FullScreenQuad } from 'three-stdlib'
 
@@ -11,17 +11,17 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
   let layout = useMemo(() => {
     return [
-      [fbo0, fbo2, fbo1],
-      [fbo1, fbo0, fbo2],
-      [fbo2, fbo1, fbo0],
+      [fbo0, fbo1, fbo2],
+      [fbo2, fbo0, fbo1],
+      [fbo1, fbo2, fbo0],
     ]
   }, [fbo1, fbo0, fbo2])
 
   let tick = useRef(0)
 
-  let WRITE = 0
-  let READ1 = 1
-  let READ2 = 2
+  let READ2 = 0
+  let WRITE = 1
+  let READ1 = 2
 
   let quad = useMemo(() => {
     return new FullScreenQuad(
@@ -31,7 +31,8 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
           HEIGHT: `${HEIGHT.toFixed(1)}`,
         },
         uniforms: {
-          ready: { value: 0 },
+          mouse: { value: new Vector3() },
+          force: { value: new Vector3() },
           read1: { value: 0 },
           read2: { value: 0 },
           time: { value: 0 },
@@ -49,14 +50,16 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             vec2 uv = gl_FragCoord.xy / vec2(WIDTH, HEIGHT);
             vec4 last1 = texture2D(read1, uv);
             vec4 last2 = texture2D(read2, uv);
-
+            vec3 diff = vec3(last2.rgb - last1.rgb); 
 
             float mode = 0.0;
             if (length(last1.rgb) == 0.0 || length(last2.rgb) == 0.0) {
               mode = 1.0;
-            } if (last1.a >= 1.0) {
+            } if (last1.a >= 1.0 || last2.a >= 1.0) {
               mode = 1.0;
             } if (length(last1) >= 25.0) {
+              mode = 1.0;
+            } if (length(diff) >= 5.0) {
               mode = 1.0;
             }
 
@@ -71,15 +74,10 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             } else {
               vec3 velocity;
 
-              vec3 diff = normalize(last1.rgb - last1.rgb) * dt * 0.01; 
+              velocity.x += (last1.w) * 0.1 * sin(time * 0.5);
+              velocity.y += -1.0 * dt * 5.0 * rand(uv + time);
 
-              velocity.rgb += diff;
-
-              velocity.x += (last1.w) * 0.1;
-              velocity.y += -0.5 * dt * 5.0 * rand(uv + time);
-
-
-              last1.a += rand(uv + time) * dt * 0.3;  
+              last1.a += rand(uv + time) * dt * 0.5;
               gl_FragColor = vec4(last1.rgb + velocity, last1.a);
             }
           }
@@ -117,9 +115,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
         vec3 transformed = vec3( posData );
 
         #ifdef USE_ALPHAHASH
-
           vPosition = vec3( transformed );
-
         #endif`,
       )
       shader.vertexShader = shader.vertexShader.replace(
