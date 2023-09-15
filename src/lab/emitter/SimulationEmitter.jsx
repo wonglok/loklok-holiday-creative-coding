@@ -11,9 +11,9 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
 
   let layout = useMemo(() => {
     return [
-      [fbo0, fbo1, fbo2],
-      [fbo2, fbo0, fbo1],
-      [fbo1, fbo2, fbo0],
+      [fbo0, fbo1, fbo1],
+      [fbo2, fbo0, fbo0],
+      [fbo1, fbo2, fbo2],
     ]
   }, [fbo1, fbo0, fbo2])
 
@@ -210,9 +210,9 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             float mode = 0.0;
             if (length(last1.rgb) == 0.0 || length(last2.rgb) == 0.0) {
               mode = 1.0;
-            } if (last1.a >= 1.0 || last2.a >= 1.0) {
+            } if (last1.a >= 1.0) {
               mode = 1.0;
-            } if (length(last1) >= 5.0) {
+            } if (length(last1.rgb) >= 35.0) {
               mode = 1.0;
             }
 
@@ -221,10 +221,10 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
                 2.0 * (rand(uv + 0.3) - 0.5), 2.0 * (rand(uv + 0.2) - 0.5) + 1.0, 2.0 * (rand(uv + 0.1) - 0.5)
               );
 
-              initCube.rgb *= 0.15;
+              initCube.rgb *= 0.2;
               initCube.y += 2.0;
 
-              gl_FragColor = vec4(initCube, rand(uv + time) * 2.0);
+              gl_FragColor = vec4(initCube, rand(uv + time) * -2.0);
             } else {
               vec3 velocity = vec3(last1 - last2) * dt;
 
@@ -235,16 +235,20 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               float dist = length(last1.rgb - mouse.rgb);
 
               if (dist <= radius) {
-                velocity += dir * dist;
+                velocity += dir * dist * dt * 5.0;
+              } else {
+                // velocity += -dir * dt * 5.0 / dist; 
               }
-
-              velocity.y += -0.5;// * rand(uv + time);
-
-              last1.a += rand(uv + time) * dt * 0.25;
-
-              last1.rgb += velocity * dt;
               
-              // last1.rgb += curlNoise(last1.rgb * 0.25) * 0.003;
+
+              velocity.y += -0.01 * rand(velocity.y + uv + time);
+
+              last1.a += rand(uv + time) * dt * 0.0025;
+
+              last1.rgb += velocity;
+
+              // last1.rgb += 0.01 * snoiseVec3(last1.rgb);
+              // last1.rgb += 0.01 * curlNoise(last1.rgb);
 
               gl_FragColor = vec4(last1.rgb, last1.a);
             }
@@ -313,6 +317,31 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
   let hover = useRef()
 
   useFrame(({ gl, raycaster, camera }, dt) => {
+    gl.setRenderTarget(layout[tick.current][WRITE])
+
+    quad.material.uniforms.time.value = performance.now() / 1000
+    quad.material.uniforms.dt.value = dt
+
+    quad.material.uniforms.read1.value = layout[tick.current][READ1].texture
+    quad.material.uniforms.read2.value = layout[tick.current][READ2].texture
+
+    if (hover.current) {
+      hover.current.lookAt(camera.position)
+    }
+
+    quad.render(gl)
+
+    gl.setRenderTarget(null)
+
+    if (displayShader.shader) {
+      displayShader.shader.uniforms.posTex.value = layout[tick.current][WRITE].texture
+      displayShader.shader.uniforms.read1.value = layout[tick.current][READ1].texture
+      displayShader.shader.uniforms.read2.value = layout[tick.current][READ2].texture
+    }
+
+    tick.current += 1
+    tick.current %= layout.length
+
     gl.setRenderTarget(layout[tick.current][WRITE])
 
     quad.material.uniforms.time.value = performance.now() / 1000
