@@ -231,6 +231,7 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
               float radius = 1.5;
 
               vec3 dir = normalize(last1.rgb - mouse.rgb);
+
               float dist = length(last1.rgb - mouse.rgb);
 
               if (dist <= radius) {
