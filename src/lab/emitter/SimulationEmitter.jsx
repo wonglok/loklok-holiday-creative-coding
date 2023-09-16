@@ -54,7 +54,6 @@ export function SimulationEmitter({ WIDTH = 512, HEIGHT = 512 }) {
             return length(p)-s;
           }
 
-
           //	Simplex 3D Noise 
           //	by Ian McEwan, Ashima Arts
           //
