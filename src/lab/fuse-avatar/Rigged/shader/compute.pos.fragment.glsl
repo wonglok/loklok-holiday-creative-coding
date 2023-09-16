@@ -77,7 +77,7 @@ void main (void) {
   if (phase >= 1.0 || o_move.a >= 1.0 || length(o_pos.rgb) == 0.0) {
     gl_FragColor = vec4(transformed, 0.0);
   } else {
-    phase += rand(uv + time) * 0.1;
+    phase += rand(uv + time) * 0.08;
     gl_FragColor = vec4(position + velocity, phase);
   }
   

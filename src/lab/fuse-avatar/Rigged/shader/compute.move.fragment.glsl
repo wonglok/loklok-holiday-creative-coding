@@ -115,7 +115,7 @@ void main (void) {
   vec3 velocity = vec3(o_pos.rgb - o_move.rgb);
 
   // velocity += sin((u_mixerProgress * 0.5 + 0.5) * 3.1415) * 0.15 *  vec3(rotationX(0.01) * vec4(vec3(o_move.x, o_move.y, o_move.z), 1.0));
-  o_move.a += 0.01;
+  o_move.a += rand(uv + time) * 0.08;
 
   gl_FragColor = vec4(o_move.rgb + velocity, o_move.a);  
   
