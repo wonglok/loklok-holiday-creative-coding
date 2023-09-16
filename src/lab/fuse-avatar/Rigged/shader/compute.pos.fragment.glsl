@@ -44,42 +44,40 @@ void main (void) {
   vec3 velocity = vec3(0.0);
   float phase = o_pos.a;
 
-  velocity += vec3(o_pos.rgb - o_move.rgb) / 60.0;
+  // velocity += vec3(o_pos.rgb - o_move.rgb) / 60.0;
 
-  velocity.x = 0.0;
-  velocity.y = 0.0;
-  velocity.z = 0.0;
+  // vec4 data_o_layout = texture2D( o_layout, uv );
+  vec4 data_o_position = texture2D( o_position, uv );
 
-  if (phase >= 0.99 || length(o_pos.rgb) == 0.0) {
-    // vec4 data_o_layout = texture2D( o_layout, uv );
-    vec4 data_o_position = texture2D( o_position, uv );
+  vec4 data_o_skinIndex = texture2D( o_skinIndex, uv );
+  vec4 data_o_skinWeight = texture2D( o_skinWeight, uv );
 
-    vec4 data_o_skinIndex = texture2D( o_skinIndex, uv );
-    vec4 data_o_skinWeight = texture2D( o_skinWeight, uv );
+  vec3 transformed = data_o_position.xyz;
+  // vec3 objectNormal =  vec3(0.0);
+  // vec3 objectTangent =  data_o_normal.xyz;
 
-    vec3 transformed = data_o_position.xyz;
-    // vec3 objectNormal =  vec3(0.0);
-    // vec3 objectTangent =  data_o_normal.xyz;
+  mat4 boneMatX = getBoneMatrix( data_o_skinIndex.x );
+  mat4 boneMatY = getBoneMatrix( data_o_skinIndex.y );
+  mat4 boneMatZ = getBoneMatrix( data_o_skinIndex.z );
+  mat4 boneMatW = getBoneMatrix( data_o_skinIndex.w );
 
-    mat4 boneMatX = getBoneMatrix( data_o_skinIndex.x );
-    mat4 boneMatY = getBoneMatrix( data_o_skinIndex.y );
-    mat4 boneMatZ = getBoneMatrix( data_o_skinIndex.z );
-    mat4 boneMatW = getBoneMatrix( data_o_skinIndex.w );
+  vec4 skinVertex = o_bindMatrix * vec4( transformed, 1.0 );
+  vec4 skinned = vec4(0.0);
+  skinned += boneMatX * skinVertex * data_o_skinWeight.x;
+  skinned += boneMatY * skinVertex * data_o_skinWeight.y;
+  skinned += boneMatZ * skinVertex * data_o_skinWeight.z;
+  skinned += boneMatW * skinVertex * data_o_skinWeight.w;
+  transformed = vec4( o_bindMatrixInverse * skinned ).xyz;
 
-    vec4 skinVertex = o_bindMatrix * vec4( transformed, 1.0 );
-    vec4 skinned = vec4(0.0);
-    skinned += boneMatX * skinVertex * data_o_skinWeight.x;
-    skinned += boneMatY * skinVertex * data_o_skinWeight.y;
-    skinned += boneMatZ * skinVertex * data_o_skinWeight.z;
-    skinned += boneMatW * skinVertex * data_o_skinWeight.w;
-    transformed = vec4( o_bindMatrixInverse * skinned ).xyz;
+  transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
+  transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
 
-    transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
-    transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
+  velocity.xyz = vec3(o_pos.rgb - transformed) * 1.0 / 20.0;
 
+  if (phase >= 1.0 || o_move.a >= 1.0 || length(o_pos.rgb) == 0.0) {
     gl_FragColor = vec4(transformed, 0.0);
   } else {
-    phase += rand(uv + 0.1 + time) * 1.0/ 60.0 * 12.0;
+    phase += rand(uv + time) * 0.1;
     gl_FragColor = vec4(position + velocity, phase);
   }
   

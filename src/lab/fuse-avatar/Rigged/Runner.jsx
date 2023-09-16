@@ -24,10 +24,11 @@ export class Runner extends Object3D {
     this.hh = 256
     this.motionPromises = motionPromises
 
-    let firstSkinnedMesh = glb.scene.getObjectByProperty('type', 'SkinnedMesh')
+    let firstSkinnedMesh = glb.scene.getObjectsByProperty('type', 'SkinnedMesh').find((r) => r.name === 'Body')
     this.skinData = getSkinData({ ww: this.ww, hh: this.hh, skinnedMesh: firstSkinnedMesh })
 
     glb.scene.traverse((it) => {
+      console.log(it.name)
       it.frustumCulled = false
       if (it.geometry) {
         it.material.transparent = true

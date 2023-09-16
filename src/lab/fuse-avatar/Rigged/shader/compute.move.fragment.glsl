@@ -115,9 +115,9 @@ void main (void) {
   vec3 velocity = vec3(o_pos.rgb - o_move.rgb);
 
   // velocity += sin((u_mixerProgress * 0.5 + 0.5) * 3.1415) * 0.15 *  vec3(rotationX(0.01) * vec4(vec3(o_move.x, o_move.y, o_move.z), 1.0));
-  o_move.a += 0.02;
+  o_move.a += 0.01;
 
-  gl_FragColor = vec4(mix(o_pos.rgb, o_move.rgb + velocity, 1.0), o_move.a);  
+  gl_FragColor = vec4(o_move.rgb + velocity, o_move.a);  
   
   if (o_move.a >= 1.0 || o_pos.a >= 1.0) {
      // vec4 data_o_layout = texture2D( o_layout, uv );
@@ -146,6 +146,6 @@ void main (void) {
     transformed = vec3(o_o3dMatrix * vec4(transformed.rgb, 1.0));
     transformed = vec3(o_parentMatrix * vec4(transformed.rgb, 1.0));
     
-    gl_FragColor = vec4(o_pos.rgb, 0.0);
+    gl_FragColor = vec4(transformed, 0.0);
   }
 }

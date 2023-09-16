@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo } from 'react'
+import { Suspense, useEffect, useMemo } from 'react'
 import { Runner } from './Rigged/Runner'
 import { Box, Environment, OrbitControls, Stats, useFBX, useGLTF } from '@react-three/drei'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
@@ -10,19 +10,28 @@ export function ParticleWing() {
   return (
     <Canvas>
       <BG></BG>
-      <SkinnedParticles motionURLs={[`/fuse/mixa-motion/mma-kick3.fbx`]} url={`/fuse/ava.glb`}></SkinnedParticles>
+      <Suspense fallback={null}>
+        <SkinnedParticles motionURLs={[`/fuse/mixa-motion/mma-kick1.fbx`]} url={`/fuse/T-Pose.fbx`}></SkinnedParticles>
+      </Suspense>
       <OrbitControls makeDefault object-position={[3, 1.3, 2]} target={[0, 1.3, 0]} />
       <EffectComposer disableNormalPass multisampling={0}>
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
       <Stats></Stats>
+      <directionalLight></directionalLight>
       <Environment files={`/hdr/shanghai.hdr`}></Environment>
     </Canvas>
   )
 }
 
 function SkinnedParticles({ motionURLs = [`/fuse/mixa-motion/mma-kick4-side.fbx`], url = `/wings/wing1.glb` }) {
-  let glb = useGLTF(url)
+  let fbx = useFBX(url)
+
+  fbx.scale.setScalar(0.01)
+  fbx.updateMatrixWorld(true)
+  let glb = fbx
+  glb.scene = fbx
+
   let gl = useThree((r) => r.gl)
   let { compos, runner } = useMemo(() => {
     if (!glb || !gl) {
@@ -48,6 +57,7 @@ function SkinnedParticles({ motionURLs = [`/fuse/mixa-motion/mma-kick4-side.fbx`
   useFrame((st, dt) => {
     runner?.work(st, dt)
   }, [])
+
   return (
     <>
       {/*  */}
