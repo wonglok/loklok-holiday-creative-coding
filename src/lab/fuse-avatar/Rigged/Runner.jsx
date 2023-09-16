@@ -159,7 +159,7 @@ export class Runner extends Object3D {
 
     this.mixer = new AnimationMixer(glb.scene)
     this.onLoop((st, dt) => {
-      this.mixer.update(dt)
+      this.mixer.update(dt / 2.0)
       this.u_mixerProgress = (this.mixer.time / glb.animations[0].duration) % 1.0
     })
 
