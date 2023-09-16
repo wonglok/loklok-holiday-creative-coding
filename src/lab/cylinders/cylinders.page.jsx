@@ -60,30 +60,34 @@ function CylinderWall() {
   return (
     <>
       <group ref={ref}>
-        {'1234567890123456789012345678901234567890'
-          .split('')
-          .fill(0)
-          .map((r, i, a) => {
-            return (
-              <Cylinder
-                key={i + 'c'}
-                position={[(i - a.length * 0.5) * 2 * 5.3333, 0, 0]}
-                args={[5.3333, 5.3333, 500, 32, 1]}
-              >
-                <MeshTransmissionMaterial
-                  color={'#ffffff'}
-                  transmission={1}
-                  thickness={150}
-                  ior={2.0}
-                  chromaticAberration={0.2}
-                  transmissionSampler
-                  metalness={0.3}
-                  roughness={0.2}
-                  reflectivity={0.75}
-                ></MeshTransmissionMaterial>
-              </Cylinder>
-            )
-          })}
+        <group rotation={[0, 0, Math.PI * 0.5]}>
+          {'1234567890123456789012345678901234567890'
+            .split('')
+            .fill(0)
+            .map((r, i, a) => {
+              return (
+                <Cylinder
+                  key={i + 'c'}
+                  position={[(i - a.length * 0.5) * 2 * 5.3333, 0, 0]}
+                  args={[5.3333, 5.3333, 500, 32, 1]}
+                  rotation={[0, 0, 0]}
+                >
+                  <MeshTransmissionMaterial
+                    color={'#ffffff'}
+                    transmission={1}
+                    thickness={150}
+                    ior={2.0}
+                    chromaticAberration={0.2}
+                    transmissionSampler
+                    metalness={0.3}
+                    roughness={0.2}
+                    reflectivity={0.75}
+                  ></MeshTransmissionMaterial>
+                </Cylinder>
+              )
+            })}
+        </group>
+
         {/* 
         <Text
           font={`/susaye/Cronos-Pro-Light.ttf`}
