@@ -32,9 +32,10 @@ export class Runner extends Object3D {
       it.frustumCulled = false
       if (it.geometry) {
         it.material.transparent = true
-        it.material.opacity = 0
+        it.material.opacity = 0.0
       }
     })
+
     this.add(glb.scene)
 
     //
