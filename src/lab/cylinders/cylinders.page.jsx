@@ -21,9 +21,15 @@ export function Cylinders() {
       <div className='h-full w-full'>
         <Canvas>
           <Content></Content>
-          <Environment background files={'/hdr/greenwich_park_02_1k.hdr'}></Environment>
+          <Environment background files={'/hdr/shanghai.hdr'}></Environment>
           <PerspectiveCamera makeDefault fov={65} position={[0, 0, -80]}></PerspectiveCamera>
-          <OrbitControls autoRotate makeDefault object-position={[0, 0, -80]} target={[0, 0, 0]}></OrbitControls>
+          <OrbitControls
+            autoRotate
+            autoRotateSpeed={0.1}
+            makeDefault
+            object-position={[0, 0, -80]}
+            target={[0, 0, 0]}
+          ></OrbitControls>
         </Canvas>
       </div>
       {/*  */}
@@ -60,16 +66,18 @@ function CylinderWall() {
   return (
     <>
       <group ref={ref}>
-        <group rotation={[0, 0, Math.PI * 0.25]}>
+        <group rotation={[0, 0, Math.PI * 1]}>
           {'123456789012345678901234567890'
             .split('')
             .fill(0)
             .map((r, i, a) => {
+              //
+              //
               return (
                 <Cylinder
                   key={i + 'c'}
-                  position={[(i - a.length * 0.5) * 2 * 5.3333, 0, 0]}
-                  args={[5.3333, 5.3333, 500, 32, 1]}
+                  position={[(i - a.length * 0.5) * 2 * 7, 0, 0]}
+                  args={[7, 7, 500, 32, 1]}
                   rotation={[0, 0, 0]}
                 >
                   <MeshTransmissionMaterial
@@ -77,10 +85,12 @@ function CylinderWall() {
                     transmission={1}
                     thickness={5.333 * 15}
                     ior={2.485}
+                    // distortion={2}
+                    // distortionScale={0.2}
                     chromaticAberration={0.2}
                     transmissionSampler
                     metalness={0.3}
-                    roughness={0.2}
+                    roughness={0.3}
                     reflectivity={0.75}
                   ></MeshTransmissionMaterial>
                 </Cylinder>
