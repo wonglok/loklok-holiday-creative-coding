@@ -47,7 +47,7 @@ function CylinderWall() {
 
     let i = 0
 
-    let str = '1234567890123456789012345678901234567890'
+    let str = '123456789012345678901234567890'
     let n = str.length
     ref.current.traverse((it) => {
       if (it.geometry) {
@@ -61,7 +61,7 @@ function CylinderWall() {
     <>
       <group ref={ref}>
         <group rotation={[0, 0, Math.PI * 0.5]}>
-          {'1234567890123456789012345678901234567890'
+          {'123456789012345678901234567890'
             .split('')
             .fill(0)
             .map((r, i, a) => {
