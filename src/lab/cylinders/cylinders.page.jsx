@@ -60,7 +60,7 @@ function CylinderWall() {
   return (
     <>
       <group ref={ref}>
-        <group rotation={[0, 0, Math.PI * 0.5]}>
+        <group rotation={[0, 0, Math.PI * 0.25]}>
           {'123456789012345678901234567890'
             .split('')
             .fill(0)
@@ -75,8 +75,8 @@ function CylinderWall() {
                   <MeshTransmissionMaterial
                     color={'#ffffff'}
                     transmission={1}
-                    thickness={150}
-                    ior={2.0}
+                    thickness={5.333 * 15}
+                    ior={2.485}
                     chromaticAberration={0.2}
                     transmissionSampler
                     metalness={0.3}
