@@ -11,7 +11,22 @@ export function ParticleWing() {
     <Canvas>
       <BG></BG>
       <Suspense fallback={null}>
-        <SkinnedParticles motionURLs={[`/fuse/mixa-motion/mma-warmup.fbx`]} url={`/fuse/T-Pose.fbx`}></SkinnedParticles>
+        <SkinnedParticles
+          motionURLs={[
+            // `/fuse/mixa-motion/mma-warmup.fbx`,
+            `/fuse/mixa-motion/mma-taunt2.fbx`,
+
+            `/fuse/mixa-motion/mma-idle.fbx`,
+            `/fuse/mixa-motion/mma-kick1.fbx`,
+            `/fuse/mixa-motion/mma-kick2.fbx`,
+            // `/fuse/mixa-motion/mma-kick3.fbx`,
+            `/fuse/mixa-motion/mma-kick4-side.fbx`,
+            `/fuse/mixa-motion/mma-quad-punch.fbx`,
+            `/fuse/mixa-motion/mma-taunt.fbx`,
+            `/fuse/mixa-motion/mma-warmup.fbx`,
+          ]}
+          url={`/fuse/T-Pose.fbx`}
+        ></SkinnedParticles>
       </Suspense>
       <OrbitControls makeDefault object-position={[-3, 1.3, 2]} target={[0, 1.3, 0]} />
       <EffectComposer disableNormalPass multisampling={0}>

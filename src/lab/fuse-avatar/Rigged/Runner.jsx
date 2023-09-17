@@ -172,17 +172,38 @@ export class Runner extends Object3D {
 
     this.mixer = new AnimationMixer(glb.scene)
     this.onLoop((st, dt) => {
-      this.mixer.update(dt * 0.67)
+      this.mixer.update(dt)
       this.u_mixerProgress = (this.mixer.time / glb.animations[0].duration) % 1.0
     })
 
-    this.motionPromises.forEach((it, idx) => {
-      if (idx === 0) {
-        it.then((r) => {
-          this.mixer.clipAction(r.clip).reset().play()
-        })
-      }
-    })
+    let play = (cursor = 0, cb = () => {}) => {
+      this.motionPromises.forEach((it, idx) => {
+        if (idx === cursor) {
+          it.then((r) => {
+            cb()
+            this.mixer.clipAction(r.clip).reset().play()
+            let clean = () => {
+              this.mixer.clipAction(r.clip).fadeOut(0.1)
+            }
+            setTimeout(() => {
+              play((cursor + 1) % this.motionPromises.length, () => {
+                clean()
+              })
+            }, r.clip.duration * 1000)
+          })
+        }
+      })
+    }
+
+    play(0)
+
+    // this.motionPromises.forEach((it, idx) => {
+    //   if (idx === 0) {
+    //     it.then((r) => {
+    //       this.mixer.clipAction(r.clip).reset().play()
+    //     })
+    //   }
+    // })
   }
   fragmentShaderPos() {
     return require('./shader/compute.pos.fragment.glsl').default
