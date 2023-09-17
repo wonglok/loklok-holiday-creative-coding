@@ -40,7 +40,6 @@ export class Runner extends Object3D {
         })
       }
     })
-
     this.add(glb.scene)
 
     //
