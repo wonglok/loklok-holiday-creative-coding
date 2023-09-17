@@ -275,6 +275,7 @@ class Display extends Object3D {
 
         uniform float time;
         uniform sampler2D u_move;
+        uniform sampler2D u_pos;
         varying vec2 vMyUV;
         vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
           return a + b*cos( 6.28318*(c*t+d) );
@@ -287,9 +288,14 @@ class Display extends Object3D {
         ` 
           #include <dithering_fragment>
 
-          vec4 tPosData = texture2D( u_move, vMyUV.xy );
+          vec4 o_move = texture2D( u_move, vMyUV.xy );
+          vec4 o_pos = texture2D( u_pos, vMyUV.xy );
           
-          vec3 myColor = 1.0 * pal(time + abs(tPosData.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+          vec3 velocity = vec3(o_pos.rgb - o_move.rgb) / -25.0;
+          vec3 xyz = normalize(velocity);
+          float force = (length(xyz.x) + length(xyz.y) + length(xyz.z)) / 3.0;
+          
+          vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
 
           if (rand(vMyUV.xy + time * 0.000001) <= 0.009) {
             myColor += 25.0 * (myColor);
