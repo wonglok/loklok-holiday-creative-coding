@@ -112,7 +112,7 @@ void main (void) {
   vec4 o_pos = texture2D(texturePosition, uv);
   vec4 o_move = texture2D(textureMove, uv);
 
-  vec3 velocity = vec3(o_pos.rgb - o_move.rgb);
+  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) / -25.0;
 
   // velocity += sin((u_mixerProgress * 0.5 + 0.5) * 3.1415) * 0.15 *  vec3(rotationX(0.01) * vec4(vec3(o_move.x, o_move.y, o_move.z), 1.0));
   o_move.a += rand(uv + time) * 0.08;
@@ -120,7 +120,7 @@ void main (void) {
   gl_FragColor = vec4(o_move.rgb + velocity, o_move.a);  
   
   if (o_move.a >= 1.0 || o_pos.a >= 1.0) {
-     // vec4 data_o_layout = texture2D( o_layout, uv );
+    // vec4 data_o_layout = texture2D( o_layout, uv );
     vec4 data_o_position = texture2D( o_position, uv );
 
     vec4 data_o_skinIndex = texture2D( o_skinIndex, uv );
