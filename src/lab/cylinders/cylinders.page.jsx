@@ -25,8 +25,12 @@ export function Cylinders() {
           <PerspectiveCamera makeDefault fov={65} position={[0, 0, -80]}></PerspectiveCamera>
           <OrbitControls
             autoRotate
-            autoRotateSpeed={0.1}
+            autoRotateSpeed={1}
             makeDefault
+            enablePan={false}
+            enableRotate={false}
+            maxDistance={200}
+            minDistance={20}
             object-position={[0, 0, -80]}
             target={[0, 0, 0]}
           ></OrbitControls>
