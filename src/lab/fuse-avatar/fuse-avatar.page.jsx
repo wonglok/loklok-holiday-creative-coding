@@ -19,7 +19,7 @@ export function ParticleWing() {
       </EffectComposer>
       <Stats></Stats>
       <directionalLight></directionalLight>
-      <Environment files={`/hdr/shanghai.hdr`}></Environment>
+      <Environment files={`/hdr/anniversary_lounge_1k.hdr`}></Environment>
     </Canvas>
   )
 }

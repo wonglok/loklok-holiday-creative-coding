@@ -28,11 +28,14 @@ export class Runner extends Object3D {
     this.skinData = getSkinData({ ww: this.ww, hh: this.hh, skinnedMesh: firstSkinnedMesh })
 
     glb.scene.traverse((it) => {
-      console.log(it.name)
       it.frustumCulled = false
       if (it.geometry) {
-        it.material.transparent = true
-        it.material.opacity = 0.0
+        it.material = new MeshPhysicalMaterial({
+          roughness: 0.05,
+          metalness: 1,
+          opacity: 0.05,
+          transparent: true,
+        })
       }
     })
 
