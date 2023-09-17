@@ -13,7 +13,7 @@ export function ParticleWing() {
       <Suspense fallback={null}>
         <SkinnedParticles motionURLs={[`/fuse/mixa-motion/mma-warmup.fbx`]} url={`/fuse/T-Pose.fbx`}></SkinnedParticles>
       </Suspense>
-      <OrbitControls makeDefault object-position={[3, 1.3, 2]} target={[0, 1.3, 0]} />
+      <OrbitControls makeDefault object-position={[-3, 1.3, 2]} target={[0, 1.3, 0]} />
       <EffectComposer disableNormalPass multisampling={0}>
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
