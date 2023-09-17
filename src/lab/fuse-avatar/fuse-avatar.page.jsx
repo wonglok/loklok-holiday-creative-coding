@@ -18,7 +18,7 @@ export function ParticleWing() {
         <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
       </EffectComposer>
       <Stats></Stats>
-      <directionalLight></directionalLight>
+      {/* <directionalLight></directionalLight> */}
       {/* <Environment background files={`/hdr/anniversary_lounge_1k.hdr`}></Environment> */}
     </Canvas>
   )

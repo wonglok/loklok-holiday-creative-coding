@@ -1,4 +1,5 @@
 import {
+  AdditiveBlending,
   AnimationMixer,
   BufferGeometry,
   Clock,
@@ -33,10 +34,12 @@ export class Runner extends Object3D {
 
       if (it.geometry) {
         it.material = new MeshPhysicalMaterial({
-          color: new Color('#444444'),
+          color: new Color('#00000'),
+          color: new Color('#00000'),
           roughness: 0.0,
           metalness: 0.0,
-          transparent: false,
+          transparent: true,
+          opacity: 0.25,
         })
       }
     })
