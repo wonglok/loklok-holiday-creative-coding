@@ -33,13 +33,13 @@ export class Runner extends Object3D {
       it.frustumCulled = false
 
       if (it.geometry) {
-        it.material = new MeshPhysicalMaterial({
-          color: new Color('#00000'),
+        it.material = new MeshStandardMaterial({
+          emissive: new Color('#00000'),
           color: new Color('#00000'),
           roughness: 0.0,
-          metalness: 0.0,
+          metalness: 1.0,
           transparent: true,
-          opacity: 0.25,
+          opacity: 0.1,
         })
       }
     })
