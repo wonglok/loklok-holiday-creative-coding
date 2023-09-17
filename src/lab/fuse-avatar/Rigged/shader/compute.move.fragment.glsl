@@ -119,7 +119,7 @@ void main (void) {
 
   gl_FragColor = vec4(o_move.rgb + velocity, o_move.a);  
   
-  if (o_move.a >= 1.0 || o_pos.a >= 1.0) {
+  if (o_move.a >= 1.0) {
     // vec4 data_o_layout = texture2D( o_layout, uv );
     vec4 data_o_position = texture2D( o_position, uv );
 
