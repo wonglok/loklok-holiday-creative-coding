@@ -15,15 +15,15 @@ export function ParticleWing() {
           motionURLs={[
             // `/fuse/mixa-motion/mma-warmup.fbx`,
             `/fuse/mixa-motion/mma-taunt2.fbx`,
+            `/fuse/mixa-motion/mma-kick4-side.fbx`,
 
-            `/fuse/mixa-motion/mma-idle.fbx`,
+            `/fuse/mixa-motion/mma-warmup.fbx`,
             `/fuse/mixa-motion/mma-kick1.fbx`,
             `/fuse/mixa-motion/mma-kick2.fbx`,
-            // `/fuse/mixa-motion/mma-kick3.fbx`,
-            `/fuse/mixa-motion/mma-kick4-side.fbx`,
+            `/fuse/mixa-motion/mma-kick3.fbx`,
             `/fuse/mixa-motion/mma-quad-punch.fbx`,
             `/fuse/mixa-motion/mma-taunt.fbx`,
-            `/fuse/mixa-motion/mma-warmup.fbx`,
+            `/fuse/mixa-motion/mma-idle.fbx`,
           ]}
           url={`/fuse/T-Pose.fbx`}
         ></SkinnedParticles>
