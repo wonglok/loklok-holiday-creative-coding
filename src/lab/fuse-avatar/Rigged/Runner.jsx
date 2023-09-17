@@ -27,14 +27,16 @@ export class Runner extends Object3D {
     let firstSkinnedMesh = glb.scene.getObjectsByProperty('type', 'SkinnedMesh').find((r) => r.name === 'Body')
     this.skinData = getSkinData({ ww: this.ww, hh: this.hh, skinnedMesh: firstSkinnedMesh })
 
+    glb.scene.scale.setScalar(1 / 110)
     glb.scene.traverse((it) => {
       it.frustumCulled = false
+
       if (it.geometry) {
         it.material = new MeshPhysicalMaterial({
-          roughness: 0.05,
-          metalness: 1,
-          opacity: 0.05,
-          transparent: true,
+          color: new Color('#444444'),
+          roughness: 0.0,
+          metalness: 0.0,
+          transparent: false,
         })
       }
     })

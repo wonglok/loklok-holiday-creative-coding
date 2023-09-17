@@ -23,7 +23,7 @@ void main (void) {
   vec4 o_pos = texture2D(texturePosition, uv);
   vec4 o_move = texture2D(textureMove, uv);
 
-  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) / -25.0;
+  vec3 velocity = vec3(o_pos.rgb - o_move.rgb) / -25.0 * 2.0;
 
   gl_FragColor = vec4(o_pos.rgb + velocity, 0.0);
 }
