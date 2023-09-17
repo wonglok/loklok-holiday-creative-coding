@@ -75,7 +75,7 @@ export class Runner extends Object3D {
           array[ii + 0] = 0.0
           array[ii + 1] = 0.0
           array[ii + 2] = 0.0
-          array[ii + 3] = 1.0
+          array[ii + 3] = Math.random()
           ii += 4.0
         }
       }
@@ -91,7 +91,7 @@ export class Runner extends Object3D {
           array[ii + 0] = 0.0
           array[ii + 1] = 0.0
           array[ii + 2] = 0.0
-          array[ii + 3] = 1.0
+          array[ii + 3] = Math.random()
           ii += 4.0
         }
       }
@@ -172,7 +172,7 @@ export class Runner extends Object3D {
 
     this.mixer = new AnimationMixer(glb.scene)
     this.onLoop((st, dt) => {
-      this.mixer.update(dt / 2.0)
+      this.mixer.update(dt * 0.67)
       this.u_mixerProgress = (this.mixer.time / glb.animations[0].duration) % 1.0
     })
 
