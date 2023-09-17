@@ -32,10 +32,16 @@ export class Runner extends Object3D {
     glb.scene.traverse((it) => {
       it.frustumCulled = false
 
+      if (it.material) {
+        if (!it.mat) {
+          it.mat = it.material.clone()
+        }
+      }
       if (it.geometry) {
-        it.material = new MeshStandardMaterial({
-          emissive: new Color('#00000'),
-          color: new Color('#00000'),
+        it.material = new MeshPhysicalMaterial({
+          color: new Color('#000000'),
+          emissive: new Color('#000000'),
+          normalMap: it.mat.normalMap,
           roughness: 0.0,
           metalness: 1.0,
           transparent: true,
