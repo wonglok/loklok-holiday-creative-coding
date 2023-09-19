@@ -6,26 +6,38 @@ import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { Color } from 'three'
 import { FBXLoader } from 'three-stdlib'
 
-export function ParticleWing() {
+export function FuseDance() {
   return (
     <Canvas>
       <BG></BG>
       <Suspense fallback={null}>
         <SkinnedParticles
           motionURLs={[
+            `/fuse/mixa-motion/dance-flair.fbx`,
+            `/fuse/mixa-motion/dance-locking-2.fbx`,
+            `/fuse/mixa-motion/rallying.fbx`,
+
+            `/fuse/mixa-motion/dance-hiphop-1.fbx`,
+            `/fuse/mixa-motion/dance-locking.fbx`,
+            `/fuse/mixa-motion/dance-slide.fbx`,
+            `/fuse/mixa-motion/dance-tut-hiphop.fbx`,
+            `/fuse/mixa-motion/dance-wave-1.fbx`,
+            `/fuse/mixa-motion/dance-wave-2.fbx`,
+
             // `/fuse/mixa-motion/energy-02.fbx`,
             // `/fuse/mixa-motion/energy-01.fbx`,
-            // `/fuse/mixa-motion/mma-warmup.fbx`,
-            `/fuse/mixa-motion/mma-taunt2.fbx`,
-            `/fuse/mixa-motion/mma-kick4-side.fbx`,
+            // // `/fuse/mixa-motion/mma-warmup.fbx`,
+            // `/fuse/mixa-motion/rallying.fbx`,
+            // `/fuse/mixa-motion/mma-taunt2.fbx`,
+            // `/fuse/mixa-motion/mma-kick4-side.fbx`,
 
-            `/fuse/mixa-motion/mma-warmup.fbx`,
-            `/fuse/mixa-motion/mma-kick1.fbx`,
-            `/fuse/mixa-motion/mma-kick2.fbx`,
-            `/fuse/mixa-motion/mma-kick3.fbx`,
-            `/fuse/mixa-motion/mma-quad-punch.fbx`,
-            `/fuse/mixa-motion/mma-taunt.fbx`,
-            `/fuse/mixa-motion/mma-idle.fbx`,
+            // `/fuse/mixa-motion/mma-warmup.fbx`,
+            // `/fuse/mixa-motion/mma-kick1.fbx`,
+            // `/fuse/mixa-motion/mma-kick2.fbx`,
+            // `/fuse/mixa-motion/mma-kick3.fbx`,
+            // `/fuse/mixa-motion/mma-quad-punch.fbx`,
+            // `/fuse/mixa-motion/mma-taunt.fbx`,
+            // `/fuse/mixa-motion/mma-idle.fbx`,
           ]}
           url={`/fuse/T-Pose.fbx`}
         ></SkinnedParticles>
