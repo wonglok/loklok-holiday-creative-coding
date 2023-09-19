@@ -175,7 +175,7 @@ function getFiles() {
       }
     })
 
-    console.log(files)
+    // console.log(files)
 
     files = files.sort((a, b) => {
       if (b.ts > a.ts) {
@@ -189,7 +189,7 @@ function getFiles() {
     return files
   }
 
-  let files = requireAll(require.context('file-loader!../../public/blender-livelink-dropzone/', true, /\.glb$/))
+  let files = requireAll(require.context('file-loader!../../public/blender-livelink-dropzone', true, /\.glb$/))
 
   return files
 }
