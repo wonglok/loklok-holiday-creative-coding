@@ -5,7 +5,7 @@
 // import moment from 'moment'
 
 export function Blender({}) {
-  return <>123</>
+  return <>blend</>
 }
 // export function Blender() {
 //   let [files, setFiles] = useState([])
