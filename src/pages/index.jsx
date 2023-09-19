@@ -14,6 +14,7 @@ export default function Home({}) {
       <div className='mt-2 px-2 text-2xl font-bold text-purple-500'>Hallelujah to JESUS!</div>
       <div className='px-2 text-xl text-gray-500'>Holiday Creative Coding by LokLok</div>
       <div className='px-2 text-gray-400'>holiday.effectnode.com</div>
+      <div className='px-2 text-gray-400'>MIT Opensourced at GitHub</div>
       <div className='flex flex-wrap p-2'>
         {files.map((r) => {
           return <EachThumb item={r} key={r.uuid}></EachThumb>
