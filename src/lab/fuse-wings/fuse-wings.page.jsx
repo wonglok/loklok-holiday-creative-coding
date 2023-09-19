@@ -32,7 +32,7 @@ export function FuseWings() {
       </group>
       <OrbitControls makeDefault object-position={[0, 0, 2]} target={[0, 0, 0]} />
       <EffectComposer disableNormalPass multisampling={0}>
-        <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.5} />
+        <Bloom mipmapBlur intensity={2.5} luminanceThreshold={0.7} />
       </EffectComposer>
       <Stats></Stats>
       <directionalLight></directionalLight>
