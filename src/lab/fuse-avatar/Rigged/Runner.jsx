@@ -37,15 +37,23 @@ export class Runner extends Object3D {
         }
       }
       if (it.geometry) {
-        it.material = new MeshPhysicalMaterial({
-          color: new Color('#000000'),
-          emissive: new Color('#000000'),
-          // normalMap: it.mat.normalMap,
-          roughness: 0.0,
-          metalness: 1.0,
-          transparent: true,
-          opacity: 0.03,
-          wireframe: true,
+        // it.material = new MeshPhysicalMaterial({
+        //   color: new Color('#000000'),
+        //   emissive: new Color('#000000'),
+        //   // normalMap: it.mat.normalMap,
+        //   roughness: 0.0,
+        //   metalness: 1.0,
+        //   transparent: true,
+        //   opacity: 0.03,
+        //   wireframe: true,
+        // })
+        it.material = new ShaderMaterial({
+          depthWrite: false,
+          fragmentShader: `
+            void main (void) {
+              discard;
+            }
+          `,
         })
       }
     })
