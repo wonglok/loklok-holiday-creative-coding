@@ -28,7 +28,6 @@ export class Runner extends Object3D {
     let firstSkinnedMesh = glb.scene.getObjectsByProperty('type', 'SkinnedMesh').find((r) => r.name === 'Body')
     this.skinData = getSkinData({ ww: this.ww, hh: this.hh, skinnedMesh: firstSkinnedMesh })
 
-    glb.scene.scale.setScalar(1 / 110)
     glb.scene.traverse((it) => {
       it.frustumCulled = false
 
@@ -41,11 +40,12 @@ export class Runner extends Object3D {
         it.material = new MeshPhysicalMaterial({
           color: new Color('#000000'),
           emissive: new Color('#000000'),
-          normalMap: it.mat.normalMap,
+          // normalMap: it.mat.normalMap,
           roughness: 0.0,
           metalness: 1.0,
           transparent: true,
-          opacity: 0.1,
+          opacity: 0.03,
+          wireframe: true,
         })
       }
     })
@@ -234,6 +234,7 @@ class Display extends Object3D {
 
     let shader = new MeshBasicMaterial({
       color: getColor(),
+      transparent: true,
     })
     shader.onBeforeCompile = (shader) => {
       shader.uniforms.dt = { value: 0 }
@@ -306,7 +307,7 @@ class Display extends Object3D {
 
       shader.fragmentShader = shader.fragmentShader.replace(
         `#include <dithering_fragment>`,
-        ` 
+        /* glsl */ ` 
           #include <dithering_fragment>
 
           vec4 o_move = texture2D( u_move, vMyUV.xy );
@@ -318,10 +319,11 @@ class Display extends Object3D {
           
           vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
 
-          if (rand(vMyUV.xy + time * 0.000001) <= 0.009) {
+          if (rand(vMyUV.xy) <= 0.005) {
             myColor += 25.0 * (myColor);
           }
           gl_FragColor.rgb = myColor;
+          gl_FragColor.a = 0.5;
         `,
       )
     }
