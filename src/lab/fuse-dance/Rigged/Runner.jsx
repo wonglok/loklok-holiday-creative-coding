@@ -310,6 +310,9 @@ class Display extends Object3D {
         vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
           return a + b*cos( 6.28318*(c*t+d) );
         }
+        vec3 cosPalette(  float t,  vec3 a,  vec3 b,  vec3 c, vec3 d ){
+            return a + b*cos( 6.28318*(c*t+d) );
+        }
         void main() {`,
       )
 
@@ -323,10 +326,12 @@ class Display extends Object3D {
           
           vec3 velocity = vec3(o_pos.rgb - o_move.rgb) / -25.0;
           vec3 xyz = normalize(velocity);
-          float force = (length(xyz.x) + length(xyz.y) + length(xyz.z)) / 3.0;
-          
-          vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+          float force = (length(xyz.xy) + length(xyz.yz) + length(xyz.zx)) / 3.0;
 
+          float t = o_move.a + o_pos.a + time * 0.5;// + rand(vMyUV.xy);
+          // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+          vec3 myColor = cosPalette(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
+        
           if (rand(vMyUV.xy) <= 0.005) {
             myColor += 25.0 * (myColor);
           }
