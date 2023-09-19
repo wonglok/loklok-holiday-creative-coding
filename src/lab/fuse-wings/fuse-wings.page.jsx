@@ -43,17 +43,17 @@ export function FuseWings() {
 
 function SkinnedParticles({ motionURLs = [`/fuse/mixa-motion/mma-kick4-side.fbx`], url = `/wings/wing1.glb` }) {
   let glb
-  if (url.includes('.glb')) {
-    glb = useGLTF(url)
-    glb.scene.scale.setScalar(0.01)
-  } else {
-    let fbx = useFBX(url)
+  glb = useGLTF(url)
+  glb.scene.scale.setScalar(0.01)
 
-    fbx.scale.setScalar(0.01)
-    fbx.updateMatrixWorld(true)
-    let glb = fbx
-    glb.scene = fbx
-  }
+  // else {
+  //   let fbx = useFBX(url)
+
+  //   fbx.scale.setScalar(0.01)
+  //   fbx.updateMatrixWorld(true)
+  //   let glb = fbx
+  //   glb.scene = fbx
+  // }
 
   let gl = useThree((r) => r.gl)
   let { compos, runner } = useMemo(() => {
