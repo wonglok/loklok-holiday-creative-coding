@@ -22,7 +22,7 @@ export class Runner extends Object3D {
     super()
 
     this.ww = 512
-    this.hh = 512
+    this.hh = 256
     this.motionPromises = motionPromises
 
     // let firstSkinnedMesh = glb.scene.getObjectsByProperty('type', 'SkinnedMesh').find((r) => r.name === 'Body')
@@ -218,7 +218,7 @@ class Display extends Object3D {
     parent,
     getPositonTexture = () => null,
     getMoveTexture = () => null,
-    getColor = () => new Color('#ff0000'),
+    getColor = () => new Color('#ffffff'),
   }) {
     super()
 
@@ -302,6 +302,9 @@ class Display extends Object3D {
         vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
           return a + b*cos( 6.28318*(c*t+d) );
         }
+        vec3 cosPalette(  float t,  vec3 a,  vec3 b,  vec3 c, vec3 d ){
+            return a + b*cos( 6.28318*(c*t+d) );
+        }
         void main() {`,
       )
 
@@ -317,13 +320,16 @@ class Display extends Object3D {
           vec3 xyz = normalize(velocity);
           float force = (length(xyz.x) + length(xyz.y) + length(xyz.z)) / 3.0;
           
-          vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
+          // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
 
+          float t = (time * 0.1 + o_pos.a * 0.76 + o_move.a * 0.76);
+          
+          vec3 myColor = cosPalette(t,vec3(0.06,0.47,0.63),vec3(0.64,0.57,0.33),vec3(0.87,0.18,0.98),vec3(0.03,0.25,0.83));
           if (rand(vMyUV.xy) <= 0.0005) {
-            myColor += 25.0 * (myColor);
+            myColor += 35.0 * (myColor);
           }
-          gl_FragColor.rgb = myColor;
-          gl_FragColor.a = 0.45;
+          gl_FragColor.rgb = myColor * 1.3;
+          gl_FragColor.a = 1.0;
         `,
       )
     }
