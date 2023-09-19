@@ -16,7 +16,7 @@ export default function Home({}) {
       <div className='px-2 text-gray-400'>holiday.effectnode.com</div>
       <div className='cursor-auto px-2 text-blue-500 underline'>
         <a href={`https://github.com/wonglok/loklok-holiday-creative-coding`} target='_blank'>
-          MIT Opensourced at GitHub
+          Sharing VFX Code at GitHub
         </a>
       </div>
       <div className='flex flex-wrap p-2'>
