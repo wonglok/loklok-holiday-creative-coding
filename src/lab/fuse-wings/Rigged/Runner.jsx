@@ -322,7 +322,7 @@ class Display extends Object3D {
           
           // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a, vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
 
-          float t = (time * 0.1 + o_pos.a * 0.76 + o_move.a * 0.76);
+          float t = (time + o_pos.a * 0.76 + o_move.a * 0.76);
           
           vec3 myColor = cosPalette(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
           if (rand(vMyUV.xy) <= 0.0005) {
