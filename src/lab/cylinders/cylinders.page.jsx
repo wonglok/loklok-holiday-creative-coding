@@ -17,7 +17,6 @@ import { font } from './font'
 export function Cylinders() {
   return (
     <>
-      {/*  */}
       <div className='h-full w-full'>
         <Canvas>
           <Content></Content>
@@ -36,6 +35,7 @@ export function Cylinders() {
           ></OrbitControls>
         </Canvas>
       </div>
+      {/*  */}
       {/*  */}
     </>
   )
