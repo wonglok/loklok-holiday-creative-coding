@@ -71,7 +71,59 @@ export class NoodleGeoGPGPU {
               r * sin(el)
             );
           }
-          
+        
+
+
+        vec3 catmullRom (vec3 p0, vec3 p1, vec3 p2, vec3 p3, float t) {
+            vec3 v0 = (p2 - p0) * 0.5;
+            vec3 v1 = (p3 - p1) * 0.5;
+            float t2 = t * t;
+            float t3 = t * t * t;
+
+            return vec3((2.0 * p1 - 2.0 * p2 + v0 + v1) * t3 + (-3.0 * p1 + 3.0 * p2 - 2.0 * v0 - v1) * t2 + v0 * t + p1);
+        }
+
+         vec3 getLineByT (float t, float lineIndex) {
+
+          vec4 color = texture2D(txPosition,
+            vec2(
+              t,
+              lineIndex / ${this.lineCount.toFixed(1)}
+            )
+          );
+
+          return color.rgb;
+        }
+
+        vec3 getLineByCtrlPts (float t, float lineIndex) {
+          bool closed = false;
+          float ll = ${this.lineSegments.toFixed(1)};
+          float minusOne = 1.0;
+          if (closed) {
+            minusOne = 0.0;
+          }
+
+          float p = (ll - minusOne) * t;
+          float intPoint = floor(p);
+          float weight = p - intPoint;
+
+          float idx0 = intPoint + -1.0;
+          float idx1 = intPoint +  0.0;
+          float idx2 = intPoint +  1.0;
+          float idx3 = intPoint +  2.0;
+
+          vec3 pt0 = getLineByT(idx0, lineIndex);
+          vec3 pt1 = getLineByT(idx1, lineIndex);
+          vec3 pt2 = getLineByT(idx2, lineIndex);
+          vec3 pt3 = getLineByT(idx3, lineIndex);
+
+          vec3 pointoutput = catmullRom(pt0, pt1, pt2, pt3, weight);
+
+          return pointoutput;
+        }
+
+       
+
 
         void main()	{
           // const float width = resolution.x;
@@ -80,12 +132,15 @@ export class NoodleGeoGPGPU {
           // float yID = floor(gl_FragCoord.y);
 
           vec2 uvCursor = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution.xy;
+          vec2 uv = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution.xy;
           vec4 positionHead = texture2D( texturePosition, uvCursor );
 
           vec4 lookupData = texture2D(lookup, uvCursor);
           vec2 nextUV = lookupData.xy;
           float currentIDX = floor(gl_FragCoord.x);
           float currentLine = floor(gl_FragCoord.y);
+
+          float t = gl_FragCoord.x / resolution.x;
 
           vec4 datPos = texture2D(txPosition, vec2(1.0, currentLine / ${this.lineCount.toFixed(1)}));
           vec4 datMove = texture2D(txMove, vec2(1.0, currentLine / ${this.lineCount.toFixed(1)}));
@@ -108,38 +163,47 @@ export class NoodleGeoGPGPU {
 
           vec3 velocity = vec3(datMove.rgb - datPos.rgb);
 
-          if (floor(currentIDX) == 0.0) {
-            // datPos.y *= 0.15;
-            // datPos.y += 1.3;
-            // datPos.x *= 1.2;
-            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.15);
-            gl_FragColor = vec4(datPos.rgb, 1.0);
-          } else {
-            vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
+          // if (floor(currentIDX) == 0.0) {
+          //   // datPos.y *= 0.15;
+          //   // datPos.y += 1.3;
+          //   // datPos.x *= 1.2;
+          //   datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.075);
 
-            // if (mod(floor(currentLine), 2.0) == 0.0 ) {
-            //   positionChain.xz *= 1.08;
-            //   positionChain.y *= 0.97;
-            // } else {
-            // }
+          //   datPos.z += -0.03;
+          //   gl_FragColor = vec4(datPos.rgb, 1.0);
+          // } else {
+          //   vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
 
-            gl_FragColor = vec4(positionChain, 1.0);
+          //   positionChain.z += -0.02;
+            
+          //   positionChain.xz *= 1.08;
 
-            gl_FragColor.z += -0.08;
+          //   positionChain.y += 0.03;
 
-            gl_FragColor.x *= 1.07;
+          //   gl_FragColor = vec4(positionChain, 1.0);
 
-            gl_FragColor.y *= 1.01;
+          //   // gl_FragColor.z += -0.08;
 
-            // gl_FragColor.x += sin(gl_FragCoord.y * 0.2 + time * 3.0) * 0.05;
-            // gl_FragColor.y += cos(gl_FragCoord.y * 0.2 + gl_FragCoord.x * 0.2 + time * 3.0) * 0.05;
-            // gl_FragColor.z += -0.1;
-          }
+          //   // gl_FragColor.x *= 1.07;
 
-          // vec4 grid = vec4(ballify(datMove.rgb, 2.0), 1.0);
-          // vec4 avatar = vec4(datPos.rgb, 1.0);
+          //   // gl_FragColor.y *= 1.01;
+          //   // gl_FragColor.x += 0.1 * sin(yoo)* sin(yoo);
+          //   // gl_FragColor.y += 0.1 * sin(yoo) * cos(yoo);
+          //   // gl_FragColor.z += 0.1;
+          // }
 
-          // gl_FragColor.rgb = mix(grid.rgb, avatar.rgb, 1.0- gl_FragCoord.x / resolution.x);
+          float yoo = gl_FragCoord.y / resolution.y * 3.141592 * 2.0 + gl_FragCoord.x / resolution.x * 3.141592 * 2.0;
+
+          float middle = t * (1.0 - t);
+          float x = 1.0 * (sin(yoo) * sin(yoo) - 0.5);
+          float z = 1.0 * (sin(yoo) * cos(yoo));
+
+          vec3 ball = ballify(vec3(x, sin(time * 1.5) * 5.5, z) + normalize(datPos.rgb) * 2.5, 2.0);
+          ball.y += 1.0;
+
+          gl_FragColor.rgb = mix(ball, datPos.rgb, 0.5);
+
+          gl_FragColor.a = 1.0;
 
           // 
         }

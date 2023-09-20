@@ -36,6 +36,11 @@ export class NoodleMat extends ShaderMaterial {
         uniform float time;
 
 
+        vec3 lerp(vec3 a, vec3 b, float w)
+        {
+          return a + w*(b-a);
+        } 
+
         // pointLineMaker
 
         vec3 getLineByT (float t, float lineIndex) {
@@ -51,51 +56,55 @@ export class NoodleMat extends ShaderMaterial {
         }
 
 
-        // vec3 catmullRom (vec3 p0, vec3 p1, vec3 p2, vec3 p3, float t) {
-        //     vec3 v0 = (p2 - p0) * 0.5;
-        //     vec3 v1 = (p3 - p1) * 0.5;
-        //     float t2 = t * t;
-        //     float t3 = t * t * t;
+        vec3 catmullRom (vec3 p0, vec3 p1, vec3 p2, vec3 p3, float t) {
+            vec3 v0 = (p2 - p0) * 0.5;
+            vec3 v1 = (p3 - p1) * 0.5;
+            float t2 = t * t;
+            float t3 = t * t * t;
 
-        //     return vec3((2.0 * p1 - 2.0 * p2 + v0 + v1) * t3 + (-3.0 * p1 + 3.0 * p2 - 2.0 * v0 - v1) * t2 + v0 * t + p1);
-        // }
+            return vec3((2.0 * p1 - 2.0 * p2 + v0 + v1) * t3 + (-3.0 * p1 + 3.0 * p2 - 2.0 * v0 - v1) * t2 + v0 * t + p1);
+        }
 
-        // vec3 getLineByCtrlPts (float t, float lineIndex) {
-        //   bool closed = false;
-        //   float ll = ${subdivisions.toFixed(1)};
-        //   float minusOne = 1.0;
-        //   if (closed) {
-        //     minusOne = 0.0;
-        //   }
+        vec3 getLineByCtrlPts (float t, float lineIndex) {
+          bool closed = false;
+          float ll = ${subdivisions.toFixed(1)};
+          float minusOne = 1.0;
+          if (closed) {
+            minusOne = 0.0;
+          }
 
-        //   float p = (ll - minusOne) * t;
-        //   float intPoint = floor(p);
-        //   float weight = p - intPoint;
+          float p = (ll - minusOne) * t;
+          float intPoint = floor(p);
+          float weight = p - intPoint;
 
-        //   float idx0 = intPoint + -1.0;
-        //   float idx1 = intPoint +  0.0;
-        //   float idx2 = intPoint +  1.0;
-        //   float idx3 = intPoint +  2.0;
+          float idx0 = intPoint + -1.0;
+          float idx1 = intPoint +  0.0;
+          float idx2 = intPoint +  1.0;
+          float idx3 = intPoint +  2.0;
 
-        //   vec3 pt0 = getLineByT(idx0, lineIndex);
-        //   vec3 pt1 = getLineByT(idx1, lineIndex);
-        //   vec3 pt2 = getLineByT(idx2, lineIndex);
-        //   vec3 pt3 = getLineByT(idx3, lineIndex);
+          vec3 pt0 = getLineByT(idx0, lineIndex);
+          vec3 pt1 = getLineByT(idx1, lineIndex);
+          vec3 pt2 = getLineByT(idx2, lineIndex);
+          vec3 pt3 = getLineByT(idx3, lineIndex);
 
-        //   vec3 pointoutput = catmullRom(pt0, pt1, pt2, pt3, weight);
+          vec3 pointoutput = catmullRom(pt0, pt1, pt2, pt3, weight);
 
-        //   return pointoutput;
-        // }
+          return pointoutput;
+        }
+
 
         vec3 sampleFnc (float t) {
-          vec3 pt = (offset.xyz + 0.5) * 0.0;
+          vec3 pt = vec3(0.0);
 
           float lineIndex = offset.w;
 
-          pt += getLineByT(t, lineIndex);
+          pt = getLineByT(t, lineIndex);
+
+          // pt = getLineByCtrlPts(t, lineIndex);
 
           return pt;
         }
+
 
         void createTube (float t, vec2 volume, out vec3 pos, out vec3 normal) {
           // find next sample along curve
@@ -157,6 +166,8 @@ export class NoodleMat extends ShaderMaterial {
           vec2 volume = vec2(t * (1.0 - t)) * 0.005;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
+
+          // float lt = lerp(vec3(t), vec3(t), 0.1).x;
 
           createTube(t, volume, transformed, objectNormal);
 
