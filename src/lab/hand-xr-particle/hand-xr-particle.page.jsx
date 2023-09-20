@@ -133,9 +133,9 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
 
       <group
         userData={{
-          forceSize: 1,
+          forceSize: 3.6 / 8,
           forceTwist: 3.141592 * 2.0 * 2.8,
-          forceType: ['vortexY', 'vortexX', 'vortexZ', 'attract'][forceTypeIndex % 4],
+          forceType: ['vortexY', 'vortexX'][forceTypeIndex % 2],
           type: 'ForceField',
         }}
       ></group>
