@@ -34,7 +34,7 @@ export class NoodleGeoGPGPU {
           return a + w*(b-a);
         } 
 
-
+        #include <common>
         void main()	{
           // const float width = resolution.x;
           // const float height = resolution.y;
@@ -68,6 +68,7 @@ export class NoodleGeoGPGPU {
           //   }
           // }
 
+          vec3 velocity = vec3(datMove.rgb - datPos.rgb);
 
           if (floor(currentIDX) == 0.0) {
             datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.2);
@@ -75,16 +76,22 @@ export class NoodleGeoGPGPU {
           } else {
             vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
 
-     
             gl_FragColor = vec4(positionChain, 1.0);
+
+            gl_FragColor.x += sin(gl_FragCoord.y * 0.2 + time * 3.0) * 0.05;
+            gl_FragColor.y += cos(gl_FragCoord.x * 0.2 + time * 3.0) * 0.05;
+            gl_FragColor.z += -0.1;
           }
-          
         }
       `,
       txPos,
     )
     vaPos.material.uniforms.resolution = { value: new Vector2(lineSegments, lineCount) }
-    vaPos.material.uniforms.time = { value: 0 }
+    vaPos.material.uniforms.time = {
+      get value() {
+        return performance.now() / 1000
+      },
+    }
     vaPos.material.uniforms.dt = { value: 1 / 60 }
     vaPos.material.uniforms.txMove = { value: parent }
     vaPos.material.uniforms.txPosition = { value: this.parent.getPositionTexture() }

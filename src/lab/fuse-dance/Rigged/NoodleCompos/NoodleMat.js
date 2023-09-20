@@ -211,17 +211,17 @@ export class NoodleMat extends ShaderMaterial {
           // vec3 y = cross( viewDir, x );
           // vec2 uv = vec2( dot( x, vNormal ), dot( y, vNormal ) ) * 0.495 + 0.5; // 0.495 to remove artifacts caused by undersized matcap disks
 
-          vec4 matcapColor = vec4(0.3, 0.2, 0.9, 0.1); // texture2D( map, vUv );
+          // vec4 matcapColor = vec4(0.3, 0.2, 0.9, 0.1); // texture2D( map, vUv );
 
           float tt = (1.0 - vT);
 
-          vec3 color = pal(rand(vUv.yx) * 0.1 + time * 2.0 + tt + vLineCycle, vec3(0.0,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,0.5),vec3(0.8,0.90,0.30));
+          vec3 color = pal(time * 2.0 + tt + vLineCycle, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
           //o_move.a + o_pos.a + 
           // float t = time * 0.5 + rand(vUv.xy);
           // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
           // vec3 color = pal(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
         
-          gl_FragColor = vec4(vEachColor.rgb * 0.0 + color * 3.0, tt * vLineCycle);
+          gl_FragColor = vec4(vEachColor.rgb * 0.2 + color * 8.0, tt * vLineCycle);
 
           // if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
           //   gl_FragColor.x *= 1.0 * tt;

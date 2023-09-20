@@ -46,8 +46,8 @@ export class Runner extends Object3D {
         //   roughness: 0.0,
         //   metalness: 1.0,
         //   transparent: true,
-        //   opacity: 0.03,
-        //   wireframe: true,
+        //   opacity: 0.1,
+        //   wireframe: false,
         // })
         it.material = new ShaderMaterial({
           depthWrite: false,
@@ -357,7 +357,7 @@ class Display extends Object3D {
           if (rand(vMyUV.xy) <= 0.005) {
             myColor += 25.0 * (myColor);
           }
-          gl_FragColor.rgb = myColor;
+          gl_FragColor.rgb = myColor * 1.3;
           gl_FragColor.a = 0.5;
         `,
       )

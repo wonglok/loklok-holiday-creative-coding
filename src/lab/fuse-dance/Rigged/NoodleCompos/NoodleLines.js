@@ -14,7 +14,7 @@ export class NoodleLines extends Object3D {
 
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: lineCount,
-      numSides: 4,
+      numSides: 7,
       subdivisions: 32,
       openEnded: false,
     })
