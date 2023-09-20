@@ -41,6 +41,12 @@ export const useCore = () => {
     })
   }, [])
 
+  useEffect(() => {
+    return () => {
+      useInternalCore.getState().clean()
+    }
+  }, [useInternalCore])
+
   useFrame(({ clock }) => {
     let dt = clock.getDelta()
     let et = clock.getElapsedTime()
