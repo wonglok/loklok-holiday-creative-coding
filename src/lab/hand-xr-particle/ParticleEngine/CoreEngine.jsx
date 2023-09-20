@@ -193,9 +193,7 @@ function ParticleRelayCore({ surfaceMesh }) {
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
 
-  let unitGeomtry = useMemo(() => {
-    return new SphereGeometry(0.3, 4, 3)
-  }, [])
+  let unitGeomtry = new SphereGeometry(0.6, 4, 3)
 
   let roughness = 0.2,
     metalness = 0.2,
