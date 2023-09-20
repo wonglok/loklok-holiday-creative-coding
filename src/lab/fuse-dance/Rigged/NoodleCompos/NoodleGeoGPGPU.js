@@ -35,6 +35,44 @@ export class NoodleGeoGPGPU {
         } 
 
         #include <common>
+
+         
+          #define M_PI_3_1415 3.1415926535897932384626433832795
+
+          float atan2(in float y, in float x) {
+            bool xgty = (abs(x) > abs(y));
+            return mix(M_PI_3_1415 / 2.0 - atan(x,y), atan(y,x), float(xgty));
+          }
+
+          vec3 fromBall(float r, float az, float el) {
+            return vec3(
+              r * cos(el) * cos(az),
+              r * cos(el) * sin(az),
+              r * sin(el)
+            );
+          }
+          void toBall(vec3 pos, out float az, out float el) {
+            az = atan2(pos.y, pos.x);
+            el = atan2(pos.z, sqrt(pos.x * pos.x + pos.y * pos.y));
+          }
+
+          // float az = 0.0;
+          // float el = 0.0;
+          // vec3 noiser = vec3(lastVel);
+          // toBall(noiser, az, el);
+          // lastVel.xyz = fromBall(1.0, az, el);
+
+          vec3 ballify (vec3 pos, float r) {
+            float az = atan2(pos.y, pos.x);
+            float el = atan2(pos.z, sqrt(pos.x * pos.x + pos.y * pos.y));
+            return vec3(
+              r * cos(el) * cos(az),
+              r * cos(el) * sin(az),
+              r * sin(el)
+            );
+          }
+          
+
         void main()	{
           // const float width = resolution.x;
           // const float height = resolution.y;
@@ -71,20 +109,39 @@ export class NoodleGeoGPGPU {
           vec3 velocity = vec3(datMove.rgb - datPos.rgb);
 
           if (floor(currentIDX) == 0.0) {
-            datPos.y *= 0.15;
-            datPos.y += 1.3;
-            datPos.x *= 1.2;
-            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.5);
+            // datPos.y *= 0.15;
+            // datPos.y += 1.3;
+            // datPos.x *= 1.2;
+            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.15);
             gl_FragColor = vec4(datPos.rgb, 1.0);
           } else {
             vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
 
+            // if (mod(floor(currentLine), 2.0) == 0.0 ) {
+            //   positionChain.xz *= 1.08;
+            //   positionChain.y *= 0.97;
+            // } else {
+            // }
+
             gl_FragColor = vec4(positionChain, 1.0);
 
-            gl_FragColor.x += sin(gl_FragCoord.y * 0.2 + time * 3.0) * 0.05;
-            gl_FragColor.y += cos(gl_FragCoord.y * 0.2 + gl_FragCoord.x * 0.2 + time * 3.0) * 0.05;
-            gl_FragColor.z += -0.1;
+            gl_FragColor.z += -0.08;
+
+            gl_FragColor.x *= 1.07;
+
+            gl_FragColor.y *= 1.01;
+
+            // gl_FragColor.x += sin(gl_FragCoord.y * 0.2 + time * 3.0) * 0.05;
+            // gl_FragColor.y += cos(gl_FragCoord.y * 0.2 + gl_FragCoord.x * 0.2 + time * 3.0) * 0.05;
+            // gl_FragColor.z += -0.1;
           }
+
+          // vec4 grid = vec4(ballify(datMove.rgb, 2.0), 1.0);
+          // vec4 avatar = vec4(datPos.rgb, 1.0);
+
+          // gl_FragColor.rgb = mix(grid.rgb, avatar.rgb, 1.0- gl_FragCoord.x / resolution.x);
+
+          // 
         }
       `,
       txPos,
