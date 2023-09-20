@@ -1,7 +1,7 @@
 import { DataTexture, FloatType, FrontSide, NormalBlending, RGBAFormat, ShaderMaterial } from 'three'
 
 export class NoodleMat extends ShaderMaterial {
-  constructor({ subdivisions, lineCount }) {
+  constructor({ subdivisions, lineCount, parent }) {
     super({})
 
     // let galaxy = new TextureLoader().load(`/discover/000001__StarSky/image.png`)
@@ -215,28 +215,27 @@ export class NoodleMat extends ShaderMaterial {
 
           float tt = (1.0 - vT);
 
-          vec3 color = pal(sin(time + tt) + tt, vec3(0.0,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,0.5),vec3(0.8,0.90,0.30));
+          vec3 color = pal(time * 2.0 + tt + vLineCycle, vec3(0.0,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,1.0,0.5),vec3(0.8,0.90,0.30));
           //o_move.a + o_pos.a + 
           // float t = time * 0.5 + rand(vUv.xy);
           // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
           // vec3 color = pal(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
         
-          gl_FragColor = vec4(color * 1.0, tt * vLineCycle);
+          gl_FragColor = vec4(color * 3.0, tt * vLineCycle);
 
-          if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
-            gl_FragColor.x *= 1.0 * tt;
-            gl_FragColor.y *= 1.0 * tt;
-            gl_FragColor.z *= 1.0 * tt;
-          } else if (vLineCycle >= 0.334 && vLineCycle <= 0.667) {
-            gl_FragColor.x *= 1.0 * tt;
-            gl_FragColor.y *= 1.0 * tt;
-            gl_FragColor.z *= 1.0 * tt;
-          } else if (vLineCycle >= 0.668 && vLineCycle <= 1.0) {
-            gl_FragColor.x *= 1.0 * tt;
-            gl_FragColor.y *= 1.0 * tt;
-            gl_FragColor.z *= 1.0 * tt;
-          }
-
+          // if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
+          //   gl_FragColor.x *= 1.0 * tt;
+          //   gl_FragColor.y *= 1.0 * tt;
+          //   gl_FragColor.z *= 1.0 * tt;
+          // } else if (vLineCycle >= 0.334 && vLineCycle <= 0.667) {
+          //   gl_FragColor.x *= 1.0 * tt;
+          //   gl_FragColor.y *= 1.0 * tt;
+          //   gl_FragColor.z *= 1.0 * tt;
+          // } else if (vLineCycle >= 0.668 && vLineCycle <= 1.0) {
+          //   gl_FragColor.x *= 1.0 * tt;
+          //   gl_FragColor.y *= 1.0 * tt;
+          //   gl_FragColor.z *= 1.0 * tt;
+          // }
 
           // gl_FragColor.rgb = vec3(1.0);
           // gl_FragColor.a = 1.0;
@@ -254,22 +253,23 @@ export class NoodleMat extends ShaderMaterial {
       blending: NormalBlending,
     })
 
-    let data = new Float32Array(subdivisions * lineCount * 4)
+    /// debug
+    // let data = new Float32Array(subdivisions * lineCount * 4)
 
-    let i = 0
-    for (let y = 0; y < lineCount; y++) {
-      for (let x = 0; x < subdivisions; x++) {
-        data[i + 0] = (x / subdivisions) * 2
-        data[i + 1] = (y / lineCount) * 256
-        data[i + 2] = 0
-        data[i + 3] = 1
+    // let i = 0
+    // for (let y = 0; y < lineCount; y++) {
+    //   for (let x = 0; x < subdivisions; x++) {
+    //     data[i + 0] = (x / subdivisions) * 2
+    //     data[i + 1] = (y / lineCount) * 256
+    //     data[i + 2] = 0
+    //     data[i + 3] = 1
 
-        i += 4
-      }
-    }
-    let dataTex = new DataTexture(data, subdivisions, lineCount, RGBAFormat, FloatType)
-    dataTex.needsUpdate = true
-    mat.uniforms.posTexture.value = dataTex
+    //     i += 4
+    //   }
+    // }
+    // let dataTex = new DataTexture(data, subdivisions, lineCount, RGBAFormat, FloatType)
+    // dataTex.needsUpdate = true
+    // mat.uniforms.posTexture.value = dataTex
 
     Object.assign(this, mat)
   }

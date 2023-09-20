@@ -15,12 +15,12 @@ export class NoodleLines extends Object3D {
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: lineCount,
       numSides: 4,
-      subdivisions: 128,
+      subdivisions: 64,
       openEnded: false,
     })
     geometry.instanceCount = count
 
-    let material = new NoodleMat({ subdivisions, lineCount: lineCount })
+    let material = new NoodleMat({ parent, subdivisions, lineCount: lineCount })
 
     let mesh = new Mesh(geometry, material)
 

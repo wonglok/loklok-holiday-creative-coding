@@ -13,6 +13,8 @@ export class NoodleGeoGPGPU {
 
     gpu.setDataType(FloatType)
     let txPos = gpu.createTexture()
+    this.fillTxPos(txPos)
+
     let txLookUp = gpu.createTexture()
     this.fillLookupTexture(txLookUp)
     this.lookupTexture = txLookUp
@@ -67,6 +69,11 @@ export class NoodleGeoGPGPU {
             gl_FragColor = vec4(datPos.rgb, 1.0);
           } else {
             vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
+
+            positionChain.x *= 1.005;
+            positionChain.z *= 1.005;
+
+            positionChain.y *= 1.0;
             gl_FragColor = vec4(positionChain, 1.0);
           }
         }
@@ -106,6 +113,30 @@ export class NoodleGeoGPGPU {
         theArray[i++] = lastOneInArray[1]
         theArray[i++] = this.lineSegments
         theArray[i++] = this.lineCount
+        items.push([x / this.lineSegments, y / this.lineCount])
+      }
+    }
+    texture.needsUpdate = true
+  }
+  fillTxPos(texture) {
+    let i = 0
+    const theArray = texture.image.data
+    let items = []
+
+    for (let y = 0; y < this.lineCount; y++) {
+      for (let x = 0; x < this.lineSegments; x++) {
+        if (x === 0.0) {
+          theArray[i + 0] = 0.25 * (Math.random() * 2.0 - 1.0)
+          theArray[i + 1] = 0.05
+          theArray[i + 2] = 0.25 * (Math.random() * 2.0 - 1.0)
+          theArray[i + 3] = 1
+        } else {
+          theArray[i + 0] = theArray[i - x * 4 + 0]
+          theArray[i + 1] = theArray[i - x * 4 + 1]
+          theArray[i + 2] = theArray[i - x * 4 + 2]
+          theArray[i + 3] = theArray[i - x * 4 + 3]
+        }
+        i += 4
         items.push([x / this.lineSegments, y / this.lineCount])
       }
     }
