@@ -71,7 +71,10 @@ export class NoodleGeoGPGPU {
           vec3 velocity = vec3(datMove.rgb - datPos.rgb);
 
           if (floor(currentIDX) == 0.0) {
-            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.2);
+            datPos.y *= 0.15;
+            datPos.y += 1.3;
+            datPos.x *= 1.2;
+            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.5);
             gl_FragColor = vec4(datPos.rgb, 1.0);
           } else {
             vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
@@ -79,7 +82,7 @@ export class NoodleGeoGPGPU {
             gl_FragColor = vec4(positionChain, 1.0);
 
             gl_FragColor.x += sin(gl_FragCoord.y * 0.2 + time * 3.0) * 0.05;
-            gl_FragColor.y += cos(gl_FragCoord.x * 0.2 + time * 3.0) * 0.05;
+            gl_FragColor.y += cos(gl_FragCoord.y * 0.2 + gl_FragCoord.x * 0.2 + time * 3.0) * 0.05;
             gl_FragColor.z += -0.1;
           }
         }
