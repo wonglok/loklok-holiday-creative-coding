@@ -4,6 +4,7 @@ import {
   BufferGeometry,
   Clock,
   Color,
+  DoubleSide,
   InstancedBufferAttribute,
   InstancedBufferGeometry,
   MeshBasicMaterial,
@@ -39,24 +40,25 @@ export class Runner extends Object3D {
         }
       }
       if (it.geometry) {
-        // it.material = new MeshPhysicalMaterial({
-        //   color: new Color('#000000'),
-        //   emissive: new Color('#000000'),
-        //   // normalMap: it.mat.normalMap,
-        //   roughness: 0.0,
-        //   metalness: 1.0,
-        //   transparent: true,
-        //   opacity: 0.1,
-        //   wireframe: false,
-        // })
-        it.material = new ShaderMaterial({
-          depthWrite: false,
-          fragmentShader: `
-            void main (void) {
-              discard;
-            }
-          `,
+        it.material = new MeshPhysicalMaterial({
+          color: new Color('#0000ff'),
+          emissive: new Color('#0000ff'),
+          // normalMap: it.mat.normalMap,
+          roughness: 0.1,
+          metalness: 1.0,
+          transparent: true,
+          opacity: 0.03,
+          wireframe: true,
+          side: DoubleSide,
         })
+        // it.material = new ShaderMaterial({
+        //   depthWrite: false,
+        //   fragmentShader: `
+        //     void main (void) {
+        //       discard;
+        //     }
+        //   `,
+        // })
       }
     })
     this.add(glb.scene)
@@ -354,11 +356,11 @@ class Display extends Object3D {
           // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
           vec3 myColor = cosPalette(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
         
-          if (rand(vMyUV.xy) <= 0.005) {
-            myColor += 25.0 * (myColor);
+          if (rand(vMyUV.xy) <= 0.015) {
+            myColor += 35.0 * (myColor);
           }
           gl_FragColor.rgb = myColor * 1.3;
-          gl_FragColor.a = 0.5;
+          gl_FragColor.a = 1.0;
         `,
       )
     }

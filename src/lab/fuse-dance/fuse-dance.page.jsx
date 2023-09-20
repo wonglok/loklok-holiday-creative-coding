@@ -14,7 +14,7 @@ export function FuseDance() {
         <SkinnedParticles
           motionURLs={[
             //stay-running
-            `/fuse/mixa-motion/stay-running-2.fbx`,
+            // `/fuse/mixa-motion/stay-running-2.fbx`,
             // `/fuse/mixa-motion/rallying.fbx`,
             // `/fuse/mixa-motion/wave-big-both.fbx`,
             // `/fuse/mixa-motion/swan-idle.fbx`,
@@ -29,15 +29,16 @@ export function FuseDance() {
             // `/fuse/mixa-motion/dance-tut-hiphop.fbx`,
             // `/fuse/mixa-motion/dance-wave-1.fbx`,
             // `/fuse/mixa-motion/dance-wave-2.fbx`,
-            // `/fuse/mixa-motion/energy-02.fbx`,
+            `/fuse/mixa-motion/energy-02.fbx`,
             // `/fuse/mixa-motion/energy-01.fbx`,
-            // // `/fuse/mixa-motion/mma-warmup.fbx`,
-            // `/fuse/mixa-motion/mma-taunt2.fbx`,
+            `/fuse/mixa-motion/mma-warmup.fbx`,
             // `/fuse/mixa-motion/mma-kick4-side.fbx`,
             // `/fuse/mixa-motion/mma-kick1.fbx`,
             // `/fuse/mixa-motion/mma-kick2.fbx`,
             // `/fuse/mixa-motion/mma-kick3.fbx`,
-            // `/fuse/mixa-motion/mma-quad-punch.fbx`,
+            `/fuse/mixa-motion/mma-quad-punch.fbx`,
+            // `/fuse/mixa-motion/mma-taunt.fbx`,
+            // `/fuse/mixa-motion/mma-taunt2.fbx`,
           ]}
           url={`/fuse/T-Pose.fbx`}
         ></SkinnedParticles>
