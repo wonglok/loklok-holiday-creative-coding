@@ -295,7 +295,7 @@ function Scene() {
       {[...Array(1)].map((_, i) => (
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))} */}
-      {[...Array(3)].map((_, i) => (
+      {[...Array(1)].map((_, i) => (
         <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.5]}></MySphere>
       ))}
 
