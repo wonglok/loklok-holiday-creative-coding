@@ -198,7 +198,7 @@ export class NoodleGeoGPGPU {
           float x = 1.0 * (sin(yoo) * sin(yoo) - 0.5);
           float z = 1.0 * (sin(yoo) * cos(yoo));
 
-          vec3 ball = ballify(vec3(x, sin(time * 1.5) * 5.5, z) + normalize(datPos.rgb) * 2.5, 2.0);
+          vec3 ball = ballify(vec3(x, sin(time * 1.5) * 5.5, z) + normalize(datPos.rgb) * 5.5 / 2.0, 2.3);
           ball.y += 1.0;
 
           gl_FragColor.rgb = mix(ball, datPos.rgb, 0.5);
