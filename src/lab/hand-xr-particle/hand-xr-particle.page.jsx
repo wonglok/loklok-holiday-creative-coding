@@ -18,6 +18,9 @@ import { joints } from './joints'
 import { AnimationMixer } from 'three'
 import { Geometry, Face3 } from './Geo'
 import { ParticleCoreEngine } from './ParticleEngine/CoreEngine'
+
+//  "@react-three/cannon": "^1.4.0",
+
 // import { WaterSurfaceContent } from '../WaterSurface/WaterSurface'
 /**
  * Returns legacy geometry vertices, faces for ConvP
@@ -243,20 +246,20 @@ function Scene() {
       </group> */}
 
       {[...Array(1)].map((_, i) => (
-        <Arch key={'arch' + i} position={[0.3, 1.1 + 0.1 * i, -0.5]}></Arch>
+        <Arch key={'arch' + i} position={[0.1, 1.1 + 0.1 * i, -0.5]}></Arch>
       ))}
       {[...Array(1)].map((_, i) => (
-        <Cube2 key={'cube' + i} position={[0.6, 1.1 + 0.1 * i, -0.5]}></Cube2>
+        <Cube2 key={'cube' + i} position={[0.3, 1.1 + 0.1 * i, -0.5]}></Cube2>
       ))}
       {[...Array(1)].map((_, i) => (
-        <Triangle key={'Triangle' + i} position={[0.9, 1.1 + 0.1 * i, -0.5]}></Triangle>
+        <Triangle key={'Triangle' + i} position={[-0.3, 1.1 + 0.1 * i, -0.5]}></Triangle>
       ))}
       {[...Array(1)].map((_, i) => (
-        <Rectangle key={'Rectangle' + i} position={[1.2, 1.1 + 0.1 * i, -0.5]}></Rectangle>
+        <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
-        <MeshDiscardMaterial></MeshDiscardMaterial>
+        {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
         <meshStandardMaterial attach='material' color='#fff' transparent opacity={0.5} />
       </Plane>
       <Hands />
@@ -268,7 +271,7 @@ function Scene() {
         <Cube key={i} position={[0, 1.1 + 0.1 * i, -0.5]} />
       ))} */}
 
-      <OrbitControls makeDefault object-position={[0, 1.1, 15]} target={[0, 1.1, 0]} />
+      <OrbitControls makeDefault object-position={[0, 1.1, 0.0]} target={[0, 1.1, -0.1]} />
       <ambientLight intensity={0.5} />
       {/* <spotLight position={[1, 8, 1]} angle={0.3} penumbra={1} intensity={1} castShadow /> */}
     </>
@@ -307,11 +310,11 @@ export const HandXR = () => (
         >
           <group position={[0, 0, 0]}>
             <Scene />
+            <ParticleCoreEngine></ParticleCoreEngine>
           </group>
         </Physics>
       </XR>
 
-      <ParticleCoreEngine></ParticleCoreEngine>
       {/*  */}
       <Environment files={`/hdr/shanghai.hdr`}></Environment>
     </Canvas>

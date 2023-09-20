@@ -1,3 +1,4 @@
+import { useFrame } from '@react-three/fiber'
 import { useEffect, useMemo } from 'react'
 import { Clock } from 'three'
 import { create } from 'zustand'
@@ -40,22 +41,11 @@ export const useCore = () => {
     })
   })
 
-  useEffect(() => {
-    let clock = new Clock()
-    let rAFID = 0
-    let rAF = () => {
-      let dt = clock.getDelta()
-      let et = clock.getElapsedTime()
-      rAFID = requestAnimationFrame(rAF)
-      //
-      useInternalCore.getState().loop(dt, et)
-    }
-    rAFID = requestAnimationFrame(rAF)
-    return () => {
-      useInternalCore.getState().clean()
-      cancelAnimationFrame(rAFID)
-    }
-  }, [])
+  useFrame(({ clock }) => {
+    let dt = clock.getDelta()
+    let et = clock.getElapsedTime()
+    useInternalCore.getState().loop(dt, et)
+  })
 
   return {
     useCoreStore: useInternalCore,

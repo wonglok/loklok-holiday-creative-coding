@@ -73,26 +73,26 @@ export function ParticleCoreEngine() {
   )
 }
 
-function Score({ cursorA, cursorB }) {
-  let scoreA = useScore((r) => r.scoreA)
-  let scoreB = useScore((r) => r.scoreB)
-  return (
-    <>
-      <primitive object={cursorA}>
-        <Text scale={0.5} position={[0, 0, 1.5]}>
-          {scoreA}
-        </Text>
-      </primitive>
-      <primitive object={cursorB}>
-        <Text scale={0.5} position={[0, 0, 1.5]}>
-          {scoreB}
-        </Text>
-      </primitive>
+// function Score({ cursorA, cursorB }) {
+//   let scoreA = useScore((r) => r.scoreA)
+//   let scoreB = useScore((r) => r.scoreB)
+//   return (
+//     <>
+//       <primitive object={cursorA}>
+//         <Text scale={0.5} position={[0, 0, 1.5]}>
+//           {scoreA}
+//         </Text>
+//       </primitive>
+//       <primitive object={cursorB}>
+//         <Text scale={0.5} position={[0, 0, 1.5]}>
+//           {scoreB}
+//         </Text>
+//       </primitive>
 
-      <Stats></Stats>
-    </>
-  )
-}
+//       <Stats></Stats>
+//     </>
+//   )
+// }
 
 function CurveYo() {
   let [pts, setPts] = useState(() => {
