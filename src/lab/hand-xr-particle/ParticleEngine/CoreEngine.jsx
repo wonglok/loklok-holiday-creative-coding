@@ -308,6 +308,12 @@ export function CoreEngine({
   randomness,
 }) {
   let core = useCore()
+  useEffect(() => {
+    return () => {
+      core.clean()
+    }
+  }, [])
+
   let unitScaleRef = useRef(0)
 
   let surfaceEmissionForceRef = useRef(1)

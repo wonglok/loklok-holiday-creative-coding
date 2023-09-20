@@ -15,7 +15,7 @@ import {
 } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
-import { AnimationMixer } from 'three'
+import { AnimationMixer, SphereGeometry } from 'three'
 import { Geometry, Face3 } from './Geo'
 import { ParticleCoreEngine } from './ParticleEngine/CoreEngine'
 
@@ -41,7 +41,15 @@ function WoodMaterial() {
   //   // roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
   //   // metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
   // })
-  return <meshPhysicalMaterial roughness={0} transmission={1} thickness={3} color={'#ff00ff'}></meshPhysicalMaterial>
+  return (
+    <meshPhysicalMaterial
+      flatShading
+      roughness={0}
+      transmission={1}
+      thickness={3}
+      color={'#ff00ff'}
+    ></meshPhysicalMaterial>
+  )
 }
 
 function Arch({ position = [0, 1.2, 0], ...props }) {
@@ -94,6 +102,36 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
           forceSize: 0.5,
           forceTwist: 3.141592 * 2.0 * 2.8,
           forceType: 'attract',
+          type: 'ForceField',
+        }}
+      ></group>
+      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
+    </mesh>
+  )
+}
+
+function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
+  const selectGeo = useMemo(() => {
+    return new SphereGeometry(0.13, 4, 4)
+  }, [])
+  selectGeo.scale(0.75, 0.75, 0.75)
+  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  const [ref] = useConvexPolyhedron(() => ({
+    ...props,
+    position: position,
+    mass: 1,
+    args: geo,
+  }))
+
+  return (
+    <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
+      <WoodMaterial></WoodMaterial>
+
+      <group
+        userData={{
+          forceSize: 1,
+          forceTwist: -3.141592 * 2.0 * 2.8,
+          forceType: 'vortexY',
           type: 'ForceField',
         }}
       ></group>
@@ -245,7 +283,7 @@ function Scene() {
         <WaterSurfaceContent></WaterSurfaceContent>
       </group> */}
 
-      {[...Array(1)].map((_, i) => (
+      {/* {[...Array(1)].map((_, i) => (
         <Arch key={'arch' + i} position={[0.1, 1.1 + 0.1 * i, -0.5]}></Arch>
       ))}
       {[...Array(1)].map((_, i) => (
@@ -256,6 +294,9 @@ function Scene() {
       ))}
       {[...Array(1)].map((_, i) => (
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
+      ))} */}
+      {[...Array(3)].map((_, i) => (
+        <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.5]}></MySphere>
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>

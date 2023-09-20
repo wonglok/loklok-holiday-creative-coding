@@ -48,6 +48,9 @@ export const useCore = () => {
   })
 
   return {
+    clean: () => {
+      useInternalCore.getState().clean()
+    },
     useCoreStore: useInternalCore,
     onInterval: useInternalCore.getState().onInterval,
     onClean: useInternalCore.getState().onClean,
