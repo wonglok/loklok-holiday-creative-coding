@@ -221,7 +221,7 @@ export class NoodleMat extends ShaderMaterial {
           // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
           // vec3 color = pal(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
         
-          gl_FragColor = vec4(color * 3.0, tt * vLineCycle);
+          gl_FragColor = vec4(vEachColor.rgb * 3.0 + color * 3.0, tt * vLineCycle);
 
           // if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
           //   gl_FragColor.x *= 1.0 * tt;

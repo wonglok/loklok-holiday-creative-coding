@@ -70,7 +70,7 @@ export class NoodleGeoGPGPU {
 
 
           if (floor(currentIDX) == 0.0) {
-            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.15);
+            datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.2);
             gl_FragColor = vec4(datPos.rgb, 1.0);
           } else {
             vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;

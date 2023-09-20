@@ -120,7 +120,7 @@ export class NoodleGeo {
     // }
 
     let colors = []
-    let palet = Pal[5]
+    let palet = Pal[25]
     let color = new Color('#ffffff')
     for (let i = 0; i < count; i++) {
       let hex = palet[Math.floor(palet.length * Math.random())]
