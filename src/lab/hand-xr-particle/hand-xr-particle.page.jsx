@@ -112,7 +112,7 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.08, 2)
+    return new IcosahedronGeometry(0.07, 2)
   }, [])
   selectGeo.scale(1, 1, 1)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
@@ -296,7 +296,7 @@ function Scene() {
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))} */}
       {[...Array(1)].map((_, i) => (
-        <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.1]}></MySphere>
+        <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.2]}></MySphere>
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
