@@ -15,7 +15,7 @@ import {
 } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
-import { AnimationMixer, SphereGeometry } from 'three'
+import { AnimationMixer, IcosahedronGeometry, SphereGeometry } from 'three'
 import { Geometry, Face3 } from './Geo'
 import { ParticleCoreEngine } from './ParticleEngine/CoreEngine'
 
@@ -112,7 +112,7 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new SphereGeometry(0.05, 4, 4)
+    return new IcosahedronGeometry(0.08, 2)
   }, [])
   selectGeo.scale(1, 1, 1)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
@@ -129,8 +129,8 @@ function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
 
       <group
         userData={{
-          forceSize: 1,
-          forceTwist: -3.141592 * 2.0 * 2.8,
+          forceSize: 0.33333,
+          forceTwist: -3.141592 * 1.0 * 1.5,
           forceType: 'vortexY',
           type: 'ForceField',
         }}

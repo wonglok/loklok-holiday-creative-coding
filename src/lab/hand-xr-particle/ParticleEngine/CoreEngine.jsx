@@ -47,7 +47,7 @@ let useScore = create(() => {
 export function ParticleCoreEngine() {
   // let csgRef = useRef()
   let [surfaceMesh, setSurfaceMesh] = useState(() => {
-    return new Mesh(new BoxGeometry(30, 30, 30, 1, 1, 1))
+    return new Mesh(new BoxGeometry(10, 10, 10, 1, 1, 1))
   })
   // let tt = useRef()
 
@@ -193,7 +193,9 @@ function ParticleRelayCore({ surfaceMesh }) {
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
 
-  let unitGeomtry = new SphereGeometry(0.1, 4, 3)
+  let unitGeomtry = useMemo(() => {
+    return new SphereGeometry(1, 4, 3)
+  }, [])
 
   let roughness = 0.2,
     metalness = 0.2,
@@ -312,7 +314,7 @@ export function CoreEngine({
     return () => {
       core.clean()
     }
-  }, [])
+  }, [core])
 
   let unitScaleRef = useRef(0)
 
