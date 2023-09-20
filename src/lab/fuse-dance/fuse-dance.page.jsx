@@ -13,6 +13,7 @@ export function FuseDance() {
       <Suspense fallback={null}>
         <SkinnedParticles
           motionURLs={[
+            `/fuse/mixa-motion/salute.fbx`,
             //stay-running
             // `/fuse/mixa-motion/stay-running-2.fbx`,
             // `/fuse/mixa-motion/rallying.fbx`,
