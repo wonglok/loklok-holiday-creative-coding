@@ -122,9 +122,6 @@ export class NoodleGeoGPGPU {
           return pointoutput;
         }
 
-       
-
-
         void main()	{
           // const float width = resolution.x;
           // const float height = resolution.y;
