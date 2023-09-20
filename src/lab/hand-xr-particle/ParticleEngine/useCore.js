@@ -39,7 +39,7 @@ export const useCore = () => {
         },
       }
     })
-  })
+  }, [])
 
   useFrame(({ clock }) => {
     let dt = clock.getDelta()

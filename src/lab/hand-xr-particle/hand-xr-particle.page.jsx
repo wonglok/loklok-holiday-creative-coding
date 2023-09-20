@@ -129,7 +129,7 @@ function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
 
       <group
         userData={{
-          forceSize: 0.33333,
+          forceSize: 1,
           forceTwist: -3.141592 * 1.0 * 1.5,
           forceType: 'vortexY',
           type: 'ForceField',
@@ -382,7 +382,7 @@ export const HandXR = () => (
           onError={(error) => {}}
         >
           {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
-          {(status) => (status === 'unsupported' ? `Enter` : `Enter`)}
+          {(status) => (status === 'unsupported' ? `Enter MixReality` : `Enter MixReality`)}
         </XRButton>
       </div>
     </div>

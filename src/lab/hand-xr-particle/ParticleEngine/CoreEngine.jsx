@@ -310,11 +310,6 @@ export function CoreEngine({
   randomness,
 }) {
   let core = useCore()
-  useEffect(() => {
-    return () => {
-      core.clean()
-    }
-  }, [core])
 
   let unitScaleRef = useRef(0)
 
