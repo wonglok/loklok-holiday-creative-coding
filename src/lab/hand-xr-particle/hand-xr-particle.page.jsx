@@ -110,7 +110,7 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
   )
 }
 
-function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
+function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
     return new IcosahedronGeometry(0.07, 1)
   }, [])
@@ -129,9 +129,9 @@ function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
 
       <group
         userData={{
-          forceSize: 3,
-          forceTwist: 3.141592 * 1.0 * 2.8,
-          forceType: 'vortexY',
+          forceSize: 0.5,
+          forceTwist: 3.141592 * 2.0 * 2.8,
+          forceType: ['vortexY', 'vortexX', 'vortexZ', 'attract'][forceTypeIndex % 4],
           type: 'ForceField',
         }}
       ></group>
@@ -295,8 +295,8 @@ function Scene() {
       {[...Array(1)].map((_, i) => (
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))} */}
-      {[...Array(3)].map((_, i) => (
-        <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.2]}></MySphere>
+      {[...Array(5)].map((_, i) => (
+        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.2]}></MySphere>
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
