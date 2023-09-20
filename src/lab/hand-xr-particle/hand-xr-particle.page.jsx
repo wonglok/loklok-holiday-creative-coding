@@ -35,19 +35,19 @@ function toConvexProps(bufferGeometry) {
 }
 
 function WoodMaterial() {
-  // let myTexture = useTexture({
-  //   // map: '/bricks/Wood048_1K-JPG/Wood048_1K_Color.jpg',
-  //   // normalMap: '/bricks/Wood048_1K-JPG/Wood048_1K_NormalGL.jpg',
-  //   // roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
-  //   // metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
-  // })
+  let myTexture = useTexture({
+    map: '/bricks/Wood048_1K-JPG/Wood048_1K_Color.jpg',
+    normalMap: '/bricks/Wood048_1K-JPG/Wood048_1K_NormalGL.jpg',
+    roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
+    metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
+  })
   return (
     <meshPhysicalMaterial
       flatShading
+      {...myTexture}
       roughness={0}
       transmission={1}
       thickness={3}
-      color={'#ff00ff'}
     ></meshPhysicalMaterial>
   )
 }
@@ -112,7 +112,7 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.07, 2)
+    return new IcosahedronGeometry(0.07, 1)
   }, [])
   selectGeo.scale(1, 1, 1)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
