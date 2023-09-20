@@ -10,7 +10,7 @@ export class NoodleLines extends Object3D {
     this.onLoop = onLoop
     this.parent = parent
 
-    let lineCount = 1024
+    let lineCount = 512
 
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: lineCount,
