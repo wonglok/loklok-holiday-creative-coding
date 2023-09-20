@@ -92,8 +92,6 @@ export function Rain() {
     })
   }, [mini, cursorPointer, PhysicsInfluences.key, FunSim.key])
 
-  //
-
   // let mouse = useTweaks('mouse', {
   //   // enabled: true,
   //   mouse: true,

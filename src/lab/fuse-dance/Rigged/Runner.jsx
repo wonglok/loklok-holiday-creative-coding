@@ -16,11 +16,13 @@ import {
 } from 'three'
 import { getSkinData } from './Rigged'
 import { GPUComputationRenderer } from 'three-stdlib'
+import { FlyingNoodles } from './FlyingNoodles'
 
 export class Runner extends Object3D {
   constructor({ glb, gl, motionPromises }) {
     super()
 
+    this.gl = gl
     this.ww = 256
     this.hh = 256
     this.motionPromises = motionPromises
@@ -163,13 +165,20 @@ export class Runner extends Object3D {
       this.gpu.compute()
     })
 
+    this.getMoveTexture = () => {
+      return this.gpu.getCurrentRenderTarget(this.moveVar).texture
+    }
+    this.getPositionTexture = () => {
+      return this.gpu.getCurrentRenderTarget(this.posVar).texture
+    }
+
     this.add(
       new Display({
         parent: this,
         getMoveTexture: () => {
           return this.gpu.getCurrentRenderTarget(this.moveVar).texture
         },
-        getPositonTexture: () => {
+        getPositionTexture: () => {
           return this.gpu.getCurrentRenderTarget(this.posVar).texture
         },
         getColor: () => {
@@ -178,9 +187,22 @@ export class Runner extends Object3D {
       }),
     )
 
+    this.add(
+      new FlyingNoodles({
+        //
+        parent: this,
+        getMoveTexture: () => {
+          return this.gpu.getCurrentRenderTarget(this.moveVar).texture
+        },
+        getPositionTexture: () => {
+          return this.gpu.getCurrentRenderTarget(this.posVar).texture
+        },
+      }),
+    )
+
     this.mixer = new AnimationMixer(glb.scene)
     this.onLoop((st, dt) => {
-      this.mixer.update(dt)
+      this.mixer.update(dt * 0.2)
       this.u_mixerProgress = (this.mixer.time / glb.animations[0].duration) % 1.0
     })
 
@@ -224,7 +246,7 @@ export class Runner extends Object3D {
 class Display extends Object3D {
   constructor({
     parent,
-    getPositonTexture = () => null,
+    getPositionTexture = () => null,
     getMoveTexture = () => null,
     getColor = () => new Color('#ff0000'),
   }) {
@@ -253,7 +275,7 @@ class Display extends Object3D {
       this.onLoop(() => {
         shader.uniforms.dt = { value: clock.getDelta() }
         shader.uniforms.time = { value: clock.getElapsedTime() }
-        shader.uniforms.u_pos.value = getPositonTexture()
+        shader.uniforms.u_pos.value = getPositionTexture()
         shader.uniforms.u_move.value = getMoveTexture()
       })
 
