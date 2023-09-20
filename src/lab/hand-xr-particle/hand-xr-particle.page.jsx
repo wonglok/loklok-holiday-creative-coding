@@ -112,9 +112,9 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new SphereGeometry(0.13, 4, 4)
+    return new SphereGeometry(0.05, 4, 4)
   }, [])
-  selectGeo.scale(0.75, 0.75, 0.75)
+  selectGeo.scale(1, 1, 1)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
   const [ref] = useConvexPolyhedron(() => ({
     ...props,
