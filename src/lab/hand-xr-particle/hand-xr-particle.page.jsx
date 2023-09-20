@@ -12,6 +12,7 @@ import {
   Environment,
   useTexture,
   MeshDiscardMaterial,
+  Line,
 } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
@@ -112,7 +113,7 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.07, 1)
+    return new IcosahedronGeometry(0.05, 1)
   }, [])
   selectGeo.scale(1, 1, 1)
   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
@@ -129,10 +130,48 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
 
       <group
         userData={{
-          forceSize: 0.5,
-          forceTwist: 3.141592 * 2.0 * 2.8,
+          forceSize: 0.2,
+          forceTwist: 3.141592 * 2.0 * 2.9,
           forceType: ['vortexY', 'vortexX', 'vortexZ', 'attract'][forceTypeIndex % 4],
           type: 'ForceField',
+        }}
+      ></group>
+      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
+    </mesh>
+  )
+}
+
+function MyLineNode({ nodeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
+  const selectGeo = useMemo(() => {
+    return new IcosahedronGeometry(0.05, 1)
+  }, [])
+  const renderGeo = useMemo(() => {
+    return new SphereGeometry(0.05, 25, 25)
+  }, [])
+  selectGeo.scale(1, 1, 1)
+  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  const [ref] = useConvexPolyhedron(() => ({
+    ...props,
+    position: position,
+    mass: 1,
+    args: geo,
+  }))
+
+  return (
+    <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
+      <meshPhysicalMaterial
+        roughness={0}
+        transmission={1}
+        metalness={0}
+        thickness={1.5}
+        color={'#ff0000'}
+      ></meshPhysicalMaterial>
+
+      <group
+        userData={{
+          indexID: nodeIndex,
+          lineID: 0,
+          type: 'ForceCurve',
         }}
       ></group>
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
@@ -295,9 +334,25 @@ function Scene() {
       {[...Array(1)].map((_, i) => (
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))} */}
-      {[...Array(1)].map((_, i) => (
+      {[...Array(2)].map((_, i) => (
         <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.2]}></MySphere>
       ))}
+
+      {[...Array(5)].map((_, i) => (
+        <MyLineNode key={'MyLineNode' + i} forceTypeIndex={i} position={[0.1 * i, 1.1 + 0.1, -0.2]}></MyLineNode>
+      ))}
+
+      {/*  <group
+              userData={{
+                indexID: i,
+                lineID: 0,
+                type: 'ForceCurve',
+              }}
+            >
+              <Box scale={0.1}>
+                <meshStandardMaterial color={'#ff0000'}></meshStandardMaterial>
+              </Box>
+            </group> */}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
         {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
