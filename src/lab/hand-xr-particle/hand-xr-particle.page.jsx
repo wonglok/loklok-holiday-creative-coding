@@ -296,7 +296,7 @@ function Scene() {
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))} */}
       {[...Array(1)].map((_, i) => (
-        <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.5]}></MySphere>
+        <MySphere key={'MySphere' + i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.1]}></MySphere>
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
