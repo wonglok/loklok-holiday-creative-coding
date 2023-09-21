@@ -42,15 +42,7 @@ function WoodMaterial() {
     roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
     metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
   })
-  return (
-    <meshPhysicalMaterial
-      flatShading
-      {...myTexture}
-      roughness={0}
-      transmission={1}
-      thickness={3}
-    ></meshPhysicalMaterial>
-  )
+  return <meshPhysicalMaterial {...myTexture} transmission={1} thickness={3}></meshPhysicalMaterial>
 }
 
 function Arch({ position = [0, 1.2, 0], ...props }) {
