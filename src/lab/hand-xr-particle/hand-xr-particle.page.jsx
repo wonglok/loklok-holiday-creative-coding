@@ -274,7 +274,7 @@ function JointCollider({ index, hand }) {
   let size = 0
   if (joint) {
     size = joint.jointRadius ?? 0.0001
-    size *= 1.25
+    size *= 1.3333
   }
 
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
@@ -284,7 +284,7 @@ function JointCollider({ index, hand }) {
   })
 
   return (
-    <Sphere ref={tipRef} args={[size]} scale={1.25}>
+    <Sphere ref={tipRef} args={[size]}>
       <meshBasicMaterial color={'#ff0000'} transparent opacity={1} attach='material' />
     </Sphere>
   )
