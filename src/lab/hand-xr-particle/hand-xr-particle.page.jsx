@@ -285,7 +285,7 @@ function JointCollider({ index, hand }) {
 
   return (
     <Sphere ref={tipRef} args={[size]}>
-      <meshBasicMaterial color={'#ff0000'} transparent opacity={1} attach='material' />
+      <meshBasicMaterial color={'#ff0000'} transparent opacity={0} attach='material' />
     </Sphere>
   )
 }
