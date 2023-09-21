@@ -16,7 +16,7 @@ import {
 } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
-import { AnimationMixer, IcosahedronGeometry, SphereGeometry } from 'three'
+import { AnimationMixer, IcosahedronGeometry, LinearSRGBColorSpace, SRGBColorSpace, SphereGeometry } from 'three'
 import { Geometry, Face3 } from './Geo'
 import { ParticleCoreEngine } from './ParticleEngine/CoreEngine'
 
@@ -36,13 +36,25 @@ function toConvexProps(bufferGeometry) {
 }
 
 function WoodMaterial() {
-  let myTexture = useTexture({
+  let tx = useTexture({
     map: '/bricks/Wood048_1K-JPG/Wood048_1K_Color.jpg',
     normalMap: '/bricks/Wood048_1K-JPG/Wood048_1K_NormalGL.jpg',
-    roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
-    metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
+    // roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
+    // metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
   })
-  return <meshPhysicalMaterial {...myTexture} transmission={1} thickness={3}></meshPhysicalMaterial>
+  tx.map.colorSpace = SRGBColorSpace
+  return (
+    <meshPhysicalMaterial
+      //
+      normalMap={tx?.normalMap}
+      map={tx.map}
+      emissive={'#ffffff'}
+      emissiveMap={tx.map}
+      transmission={1}
+      thickness={3}
+      roughness={0.1}
+    ></meshPhysicalMaterial>
+  )
 }
 
 function Arch({ position = [0, 1.2, 0], ...props }) {
@@ -105,7 +117,7 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.05, 1)
+    return new IcosahedronGeometry(0.05, 2)
   }, [])
   const renderGeo = useMemo(() => {
     return new SphereGeometry(0.05, 25, 25)
@@ -116,7 +128,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
   const [ref] = useConvexPolyhedron(() => ({
     ...props,
     position: position,
-    mass: 1,
+    mass: 0.1,
     args: geo,
   }))
 
@@ -262,7 +274,7 @@ function JointCollider({ index, hand }) {
   let size = 0
   if (joint) {
     size = joint.jointRadius ?? 0.0001
-    size *= 1.333
+    size *= 1.25
   }
 
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
@@ -272,8 +284,8 @@ function JointCollider({ index, hand }) {
   })
 
   return (
-    <Sphere ref={tipRef} args={[size]}>
-      <meshBasicMaterial transparent opacity={0} attach='material' />
+    <Sphere ref={tipRef} args={[size]} scale={1.25}>
+      <meshBasicMaterial color={'#ff0000'} transparent opacity={1} attach='material' />
     </Sphere>
   )
 }
@@ -337,9 +349,6 @@ function Scene() {
       {[...Array(1)].map((_, i) => (
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
       ))} */}
-      {[...Array(2)].map((_, i) => (
-        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.2]}></MySphere>
-      ))}
 
       {/* {[...Array(5)].map((_, i) => (
         <MyLineNode key={'MyLineNode' + i} forceTypeIndex={i} position={[0.1 * i, 1.1 + 0.1, -0.2]}></MyLineNode>
@@ -357,10 +366,15 @@ function Scene() {
               </Box>
             </group> */}
 
+      {[...Array(2)].map((_, i) => (
+        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.3]}></MySphere>
+      ))}
+
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
         {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
         <meshStandardMaterial attach='material' color='#fff' transparent opacity={0.5} />
       </Plane>
+
       <Hands />
       <HandsReady>
         <HandsColliders />
