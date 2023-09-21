@@ -1,23 +1,11 @@
 import React, { useState, useEffect, Fragment, useMemo } from 'react'
-import { Hands, VRButton, XR, XRButton } from '@react-three/xr'
+import { Hands, XR, XRButton } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
-import {
-  Box,
-  OrbitControls,
-  Plane,
-  Sphere,
-  Sky,
-  useGLTF,
-  useFBX,
-  Environment,
-  useTexture,
-  MeshDiscardMaterial,
-  Line,
-} from '@react-three/drei'
+import { Box, OrbitControls, Plane, Sphere, useGLTF, Environment, useTexture } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
-import { AnimationMixer, IcosahedronGeometry, LinearSRGBColorSpace, SRGBColorSpace, SphereGeometry } from 'three'
-import { Geometry, Face3 } from './Geo'
+import { IcosahedronGeometry, SRGBColorSpace, SphereGeometry } from 'three'
+import { Geometry } from './Geo'
 import { ParticleCoreEngine } from './ParticleEngine/CoreEngine'
 
 //  "@react-three/cannon": "^1.4.0",
