@@ -127,6 +127,13 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     args: geo,
   }))
 
+  // const [ref] = useSphere(() => ({
+  //   ...props,
+  //   position: position,
+  //   mass: 1,
+  //   args: 0.05 * 2.0,
+  // }))
+
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
       <WoodMaterial></WoodMaterial>
