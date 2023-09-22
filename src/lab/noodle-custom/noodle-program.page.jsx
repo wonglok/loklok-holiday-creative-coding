@@ -7,7 +7,7 @@ import {
   useGLTF,
   useSurfaceSampler,
 } from '@react-three/drei'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useMemo, useRef } from 'react'
 import { NoodleEntry } from './NoodleCompos/NoodleEntry'
 import { DataTexture, FloatType, Group, Mesh, Object3D, RGBAFormat, SphereGeometry, Vector3 } from 'three'
@@ -25,7 +25,7 @@ export function Page() {
           <Yo></Yo>
         </Suspense>
 
-        <OrbitControls object-position={[-2, 1.5, 2]} target={[0, 1.5, 0]} makeDefault></OrbitControls>
+        <OrbitControls object-position={[-2, 1.68, 2]} target={[0, 1.68, 0]} makeDefault></OrbitControls>
 
         <EffectComposer disableNormalPass>
           <Bloom mipmapBlur intensity={1} luminanceThreshold={0.05}></Bloom>
@@ -132,38 +132,58 @@ function Yo() {
     <>
       {/*  */}
       {compos}
-      <primitive object={glb.scene}></primitive>
+      {createPortal(<></>, glb.scene)}
+
+      <gridHelper args={[10, 10, 'white', 'white']}></gridHelper>
       <Mouse mouse={mouse}></Mouse>
+      <primitive object={glb.scene}></primitive>
+
       {/*  */}
     </>
   )
 }
 
 function Mouse({ mouse }) {
+  let o3d = new Object3D()
   let ref = useRef()
-  let nowPt = new Vector3(0, 0, 0.2)
-  useFrame(({ camera }) => {
-    if (ref.current) {
-      ref.current.lookAt(camera.position)
+  let nowPt = new Vector3(0, 0, 0.0)
+
+  useFrame(({ camera, controls }) => {
+    if (controls) {
+      o3d.position.copy(controls.target)
     }
-    mouse.position.lerp(nowPt, 0.1)
+    o3d.lookAt(camera.position)
+    mouse.position.lerp(nowPt, 0.3)
   })
   return (
-    <Plane
-      args={[10000, 10000]}
-      ref={ref}
-      onPointerOver={({ point }) => {
-        nowPt.copy(point)
-      }}
-      onPointerEnter={({ point }) => {
-        nowPt.copy(point)
-      }}
-      onPointerMove={({ point }) => {
-        nowPt.copy(point)
-      }}
-    >
-      <MeshDiscardMaterial></MeshDiscardMaterial>
-      {/* <meshBasicMaterial attach={'material'} color={'green'}></meshBasicMaterial> */}
-    </Plane>
+    <>
+      {createPortal(
+        <Plane
+          position={[0, 0, 0]}
+          args={[25, 25, 50, 50]}
+          ref={ref}
+          onPointerOver={({ point }) => {
+            nowPt.copy(point)
+          }}
+          onPointerEnter={({ point }) => {
+            nowPt.copy(point)
+          }}
+          onPointerMove={({ point }) => {
+            nowPt.copy(point)
+          }}
+        >
+          <MeshDiscardMaterial></MeshDiscardMaterial>
+          {/* <meshBasicMaterial
+            wireframe
+            attach={'material'}
+            opacity={0.5}
+            transparent
+            color={'green'}
+          ></meshBasicMaterial> */}
+        </Plane>,
+        o3d,
+      )}
+      <primitive object={o3d}></primitive>
+    </>
   )
 }
