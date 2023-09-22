@@ -215,7 +215,8 @@ export class NoodleGeoGPGPU {
             tPos.y += -0.1;
 
             // wind
-            // tPos.z += -0.1;
+            tPos.z += -0.01;
+            tPos.x += -0.01 * sin(time) * 0.3;
 
             // hair root normal
             vec4 hairRootPosition = texture2D(txHairRootPosition, 
