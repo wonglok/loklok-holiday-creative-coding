@@ -223,7 +223,7 @@ export class NoodleGeoGPGPU {
             toPos = lerp(fromPos, toPos, 0.15);
 
             // spring
-            vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 0.3, sticky));
+            vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 1.0, sticky));
 
             vec3 outputData = spring;
             gl_FragColor.rgb = outputData;
