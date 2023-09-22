@@ -1,4 +1,4 @@
-import { FloatType, Vector2 } from 'three'
+import { Clock, FloatType, Vector2 } from 'three'
 import { GPUComputationRenderer } from 'three-stdlib'
 
 export class NoodleGeoGPGPU {
@@ -34,38 +34,36 @@ export class NoodleGeoGPGPU {
       
       uniform sampler2D txPosition;
       // uniform sampler2D txMove;
-        uniform vec3 mousePosition;
+      uniform vec3 mousePosition;
 
-        uniform sampler2D nextSegment;
-        uniform sampler2D backSegment;
-        uniform float time;
+      uniform sampler2D nextSegment;
+      uniform sampler2D backSegment;
+      uniform float time;
 
-        vec3 lerp(vec3 a, vec3 b, float w)
-        {
-          return a + w*(b-a);
-        } 
+      vec3 lerp(vec3 a, vec3 b, float w) {
+        return a + w*(b-a);
+      } 
 
-        #include <common>
+      #include <common>
 
+        #define M_PI_3_1415 3.1415926535897932384626433832795
 
-          #define M_PI_3_1415 3.1415926535897932384626433832795
+        float atan2(in float y, in float x) {
+          bool xgty = (abs(x) > abs(y));
+          return mix(M_PI_3_1415 / 2.0 - atan(x,y), atan(y,x), float(xgty));
+        }
 
-          float atan2(in float y, in float x) {
-            bool xgty = (abs(x) > abs(y));
-            return mix(M_PI_3_1415 / 2.0 - atan(x,y), atan(y,x), float(xgty));
-          }
-
-          vec3 fromBall(float r, float az, float el) {
-            return vec3(
-              r * cos(el) * cos(az),
-              r * cos(el) * sin(az),
-              r * sin(el)
-            );
-          }
-          void toBall(vec3 pos, out float az, out float el) {
-            az = atan2(pos.y, pos.x);
-            el = atan2(pos.z, sqrt(pos.x * pos.x + pos.y * pos.y));
-          }
+        vec3 fromBall(float r, float az, float el) {
+          return vec3(
+            r * cos(el) * cos(az),
+            r * cos(el) * sin(az),
+            r * sin(el)
+          );
+        }
+        void toBall(vec3 pos, out float az, out float el) {
+          az = atan2(pos.y, pos.x);
+          el = atan2(pos.z, sqrt(pos.x * pos.x + pos.y * pos.y));
+        }
 
           // float az = 0.0;
           // float el = 0.0;
@@ -230,8 +228,6 @@ export class NoodleGeoGPGPU {
             gl_FragColor.a = 1.0;
           }
 
-          
-
 
           // vec4 datPos = texture2D(txPosition, vec2(1.0, currentLine / ${this.lineCount.toFixed(1)}));
           // vec4 datMove = texture2D(txMove, vec2(1.0, currentLine / ${this.lineCount.toFixed(1)}));
@@ -339,8 +335,14 @@ export class NoodleGeoGPGPU {
 
     gpu.init()
 
+    let clock = new Clock()
     this.core.onLoop(() => {
       gpu.compute()
+      let dt = 1 / 60
+
+      dt = clock.getDelta()
+
+      vaPos.material.uniforms.dt = { value: dt }
       vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }
       vaPos.material.uniforms.txPosition = { value: null }
       vaPos.material.uniforms.txMove = { value: null }
