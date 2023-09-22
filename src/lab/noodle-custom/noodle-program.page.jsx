@@ -71,14 +71,14 @@ const useHairSculpPosition = () => {
       for (let i = 0; i < count; i++) {
         sampler.sample(v3, n3)
 
-        positionTexture.image.data[i * 4 + 0] = v3.x
-        positionTexture.image.data[i * 4 + 1] = v3.y
-        positionTexture.image.data[i * 4 + 2] = v3.z
+        positionTexture.image.data[i * 4 + 0] = v3.x + (Math.random() * 2.0 - 1.0) * 0.01
+        positionTexture.image.data[i * 4 + 1] = v3.y + (Math.random() * 2.0 - 1.0) * 0.01
+        positionTexture.image.data[i * 4 + 2] = v3.z + (Math.random() * 2.0 - 1.0) * 0.01
         positionTexture.image.data[i * 4 + 3] = 1.0
 
-        normalTexture.image.data[i * 4 + 0] = v3.x
-        normalTexture.image.data[i * 4 + 1] = v3.y
-        normalTexture.image.data[i * 4 + 2] = v3.z
+        normalTexture.image.data[i * 4 + 0] = n3.x
+        normalTexture.image.data[i * 4 + 1] = n3.y
+        normalTexture.image.data[i * 4 + 2] = n3.z
         normalTexture.image.data[i * 4 + 3] = 1.0
       }
 
