@@ -178,7 +178,7 @@ export class NoodleGeoGPGPU {
           float lineT = gl_FragCoord.x / resolution.x;
 
           if (currentIDX == 0.0) {
-            gl_FragColor.rgb = vec3(3.0 * (rand(uv + 0.1) * 2.0 - 1.0), 3.0, 3.0 * (rand(uv + 0.2) * 2.0 - 1.0));
+            gl_FragColor.rgb = vec3(1.0 * (rand(uv + 0.1) * 2.0 - 1.0), 2.0, 1.0 * (rand(uv + 0.2) * 2.0 - 1.0));
             gl_FragColor.a = 1.0;
           } else {
             vec4 backData =  texture2D( texturePosition, backSegmentData.rg );
@@ -186,7 +186,7 @@ export class NoodleGeoGPGPU {
             vec4 nextData =  texture2D( texturePosition, nextSegmentData.rg );
 
             float dist = length(thisData.rgb - backData.rgb);
-            float maxDist = 1.0;
+            float maxDist = 0.1;
             if (dist >= maxDist) {
               dist = maxDist;
             }
@@ -196,7 +196,7 @@ export class NoodleGeoGPGPU {
             vec3 fromPos = thisData.rgb;
             vec3 toPos = backData.rgb;
 
-            float windX = sin(time * 2.0) * 0.5; 
+            float windX = sin(time * 2.0 + 3.1415 * sin(time * 0.1)) * 0.25; 
             float radiusAffected = 25.0;
             float distMouseToHair = length(mousePosition - fromPos.xyz);
             float maxDistMouseToHair = radiusAffected;
@@ -206,15 +206,16 @@ export class NoodleGeoGPGPU {
 
             float mouseForceSize = 1.0 * (1.0 - (distMouseToHair / maxDistMouseToHair));
 
-            toPos = lerp(fromPos, toPos, 0.5);
             
             toPos.y += -mouseForceSize;
-            toPos.y += -0.1;
+            toPos.y += -0.15 * (1.0 - lineT);
             toPos.x += windX;
             
             toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
+            toPos = lerp(fromPos, toPos, 0.15);
 
-            vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 1.0, sticky));
+            
+            vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 0.3, sticky));
 
             vec3 outputData = spring;
             gl_FragColor.rgb = outputData;
