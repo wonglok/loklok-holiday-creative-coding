@@ -160,7 +160,7 @@ export class NoodleMat {
 
           vTColor = normalize(getLineByT(0.5, lineIDXER) - getLineByT(0.6, lineIDXER));
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 3.0;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 1.0;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
 

@@ -1,6 +1,14 @@
-import { Box, MeshDiscardMaterial, OrbitControls, Plane, useSurfaceSampler } from '@react-three/drei'
+import {
+  Box,
+  Environment,
+  MeshDiscardMaterial,
+  OrbitControls,
+  Plane,
+  useGLTF,
+  useSurfaceSampler,
+} from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
+import { Suspense, useMemo, useRef } from 'react'
 import { NoodleEntry } from './NoodleCompos/NoodleEntry'
 import { DataTexture, FloatType, Group, Mesh, Object3D, RGBAFormat, SphereGeometry, Vector3 } from 'three'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
@@ -13,13 +21,17 @@ export function Page() {
 
       <Canvas>
         <color attach={'background'} args={['#000000']}></color>
-        <Yo></Yo>
+        <Suspense fallback={null}>
+          <Yo></Yo>
+        </Suspense>
 
-        <OrbitControls object-position={[0, 0, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
+        <OrbitControls object-position={[-2, 1.5, 2]} target={[0, 1.5, 0]} makeDefault></OrbitControls>
 
         <EffectComposer disableNormalPass>
           <Bloom mipmapBlur intensity={2} luminanceThreshold={0.1}></Bloom>
         </EffectComposer>
+
+        <Environment files={`/hdr/shanghai.hdr`}></Environment>
       </Canvas>
 
       {/*  */}
@@ -28,40 +40,61 @@ export function Page() {
 }
 
 const useHairSculpPosition = () => {
+  let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
+  let name = 'Wolf3D_Head001'
+  let mesh = glb?.scene?.getObjectByName(name)
   let count = 512
   let sampler = useMemo(() => {
-    let mss = new MeshSurfaceSampler(new Mesh(new SphereGeometry(10, 32, 32)))
+    if (!mesh) {
+      console.log('no headskin found')
+      mesh = new Mesh(new SphereGeometry(1, 32, 32))
+    }
+    let mss = new MeshSurfaceSampler(mesh)
     mss.build()
     return mss
-  }, [])
+  }, [mesh])
 
-  let { dataTexture } = useMemo(() => {
-    let dataArray = new Float32Array(count * 4 * 1)
-    let dataTexture = new DataTexture(dataArray, count, 1, RGBAFormat, FloatType)
+  let { positionTexture, normalTexture } = useMemo(() => {
+    let positionTexture
+    let normalTexture
+    {
+      let dataArray = new Float32Array(count * 4 * 1)
+      positionTexture = new DataTexture(dataArray, count, 1, RGBAFormat, FloatType)
 
-    let o3 = new Object3D()
-    let v3 = o3.position
-    for (let i = 0; i < count; i++) {
-      sampler.sample(v3)
+      let normalArray = new Float32Array(count * 4 * 1)
+      normalTexture = new DataTexture(normalArray, count, 1, RGBAFormat, FloatType)
 
-      dataTexture.image.data[i * 4 + 0] = v3.x
-      dataTexture.image.data[i * 4 + 1] = v3.y
-      dataTexture.image.data[i * 4 + 2] = v3.z
-      dataTexture.image.data[i * 4 + 3] = 1.0
+      let o3 = new Object3D()
+      let v3 = o3.position
+      let n3 = new Vector3()
+      for (let i = 0; i < count; i++) {
+        sampler.sample(v3, n3)
+
+        positionTexture.image.data[i * 4 + 0] = v3.x
+        positionTexture.image.data[i * 4 + 1] = v3.y
+        positionTexture.image.data[i * 4 + 2] = v3.z
+        positionTexture.image.data[i * 4 + 3] = 1.0
+
+        normalTexture.image.data[i * 4 + 0] = v3.x
+        normalTexture.image.data[i * 4 + 1] = v3.y
+        normalTexture.image.data[i * 4 + 2] = v3.z
+        normalTexture.image.data[i * 4 + 3] = 1.0
+      }
+
+      normalTexture.needsUpdate = true
+      positionTexture.needsUpdate = true
     }
 
-    dataTexture.needsUpdate = true
-
-    return { dataTexture }
+    return { positionTexture, normalTexture }
   }, [sampler, count])
 
-  return { dataTexture }
+  return { positionTexture, normalTexture, glb }
 }
 
 function Yo() {
-  const { dataTexture } = useHairSculpPosition()
+  const { positionTexture, normalTexture, glb } = useHairSculpPosition()
 
-  console.log({ dataTexture })
+  console.log({ positionTexture })
 
   let gl = useThree((r) => r.gl)
 
@@ -72,7 +105,8 @@ function Yo() {
     core.onLoop = (v) => {
       works.push(v)
     }
-    core.hairRootDataTexture = dataTexture
+    core.txHairRootPosition = positionTexture
+    core.txHairRootNormal = normalTexture
     core.mouseObject = new Object3D()
 
     let noodle = new NoodleEntry({
@@ -85,7 +119,7 @@ function Yo() {
       mouse: core.mouseObject,
       compos: <primitive key={core.uuid} object={core}></primitive>,
     }
-  }, [gl, dataTexture])
+  }, [gl, positionTexture, normalTexture])
 
   useFrame((st, dt) => {
     works.forEach((fnc) => {
@@ -97,7 +131,7 @@ function Yo() {
     <>
       {/*  */}
       {compos}
-
+      <primitive object={glb.scene}></primitive>
       <Mouse mouse={mouse}></Mouse>
       {/*  */}
     </>
@@ -106,7 +140,7 @@ function Yo() {
 
 function Mouse({ mouse }) {
   let ref = useRef()
-  let nowPt = new Vector3()
+  let nowPt = new Vector3(0, 0, 0.2)
   useFrame(({ camera }) => {
     if (ref.current) {
       ref.current.lookAt(camera.position)

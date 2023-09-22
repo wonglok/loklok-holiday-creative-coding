@@ -12,7 +12,7 @@ export class NoodleEntry extends Object3D {
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: lineCount,
       numSides: 7,
-      subdivisions: 128,
+      subdivisions: 32,
       openEnded: false,
     })
     geometry.instanceCount = count
@@ -29,6 +29,8 @@ export class NoodleEntry extends Object3D {
       material,
       core: core,
     })
+
+    mesh.frustumCulled = false
 
     // mesh.add(new Mesh(new BoxGeometry(1, 1, 1)))
     this.add(mesh)

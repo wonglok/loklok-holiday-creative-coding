@@ -34,7 +34,8 @@ export class NoodleGeoGPGPU {
 
       uniform sampler2D txPosition;
       // uniform sampler2D txMove;
-      uniform sampler2D txHairRoot;
+      uniform sampler2D txHairRootPosition;
+      uniform sampler2D txHairRootNormal;
       uniform vec3 mousePosition;
 
       uniform sampler2D nextSegment;
@@ -44,6 +45,8 @@ export class NoodleGeoGPGPU {
       vec3 lerp(vec3 a, vec3 b, float w) {
         return a + w*(b-a);
       } 
+
+      #define lineCount ${this.lineCount.toFixed(1)}
 
       #include <common>
 
@@ -98,7 +101,7 @@ export class NoodleGeoGPGPU {
           vec4 color = texture2D(txPosition,
             vec2(
               t,
-              lineIndex / ${this.lineCount.toFixed(1)}
+              lineIndex / lineCount
             )
           );
 
@@ -175,14 +178,15 @@ export class NoodleGeoGPGPU {
           float currentIDX = floor(gl_FragCoord.x);
           float currentLine = floor(gl_FragCoord.y);
           float lineT = gl_FragCoord.x / resolution.x;
+          float lineE = (1.0 - lineT);
 
           if (metaData.w == -1.0) {
             gl_FragColor.rgb = vec3(0.0);
             gl_FragColor.a = 1.0;
           } else if (currentIDX == 0.0) {
-            vec4 hairRootPosition = texture2D(txHairRoot, 
+            vec4 hairRootPosition = texture2D(txHairRootPosition, 
               vec2(
-                currentLine / 512.0,
+                currentLine / lineCount,
                 0.5
               )
             );
@@ -204,28 +208,48 @@ export class NoodleGeoGPGPU {
             float sticky = 1.0 / dist;
 
             vec3 fromPos = thisData.rgb;
-            vec3 toPos = backData.rgb;
+            vec3 tPos = backData.rgb;
 
-            float radiusAffected = 25.0;
-            float distMouseToHair = length(mousePosition - fromPos.xyz);
+
+            // gravity
+            tPos.y += -0.1;
+
+            // wind
+            // tPos.z += -0.1;
+
+            // hair root normal
+            vec4 hairRootPosition = texture2D(txHairRootPosition, 
+              vec2(
+                currentLine / lineCount,
+                0.0
+              )
+            );
+
+            vec4 hairRootNormalData = texture2D(txHairRootNormal, 
+              vec2(
+                currentLine / lineCount,
+                0.0
+              )
+            );
+
+            // spread the hair
+            tPos.xyz += 0.3 * normalize(vec3(hairRootNormalData.x * 1.0, hairRootNormalData.y * 0.25, hairRootNormalData.z * 1.0 - 0.2)) * pow(lineE, 10.3);
+
+            // previous hair
+            // tPos += (vec3(thisData.xyz - tPos.xyz)) * 0.1;
+            
+            // mouse
+            float radiusAffected = 1.0;
+            float distMouseToHair = length(mousePosition - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
             if (distMouseToHair >= radiusAffected) {
               distMouseToHair = radiusAffected;
             }
-
-            // gravity
-            toPos.y += -0.3 * (1.0 - lineT);
-            
-            // head
-            toPos += vec3(thisData.xyz - toPos.xyz) * 0.01;
-            
-            // mouse
-            float mouseForceSize = 0.34 * (1.0 - (distMouseToHair / maxDistMouseToHair));
-            toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
-
+            float mouseForceSize = 0.1 * (1.0 - (distMouseToHair / maxDistMouseToHair));
+            tPos += normalize(mousePosition - tPos.xyz) * -mouseForceSize;
 
             // smooth
-            fromPos = lerp(fromPos, toPos, smoothstep(0.0, 0.05, sticky));
+            fromPos = lerp(fromPos, tPos, smoothstep(0.0, 0.015, sticky));
 
             //
             gl_FragColor.rgb = fromPos;
@@ -330,7 +354,8 @@ export class NoodleGeoGPGPU {
     vaPos.material.uniforms.txMove = { value: null }
     vaPos.material.uniforms.txPosition = { value: null }
     vaPos.material.uniforms.txMove = { value: null }
-    vaPos.material.uniforms.txHairRoot = { value: core.hairRootDataTexture }
+    vaPos.material.uniforms.txHairRootPosition = { value: core.txHairRootPosition }
+    vaPos.material.uniforms.txHairRootNormal = { value: core.txHairRootNormal }
     vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }
     vaPos.material.uniforms.nextSegment = { value: this.nextSegmentTexture }
     vaPos.material.uniforms.backSegment = { value: this.backSegmentTexture }
