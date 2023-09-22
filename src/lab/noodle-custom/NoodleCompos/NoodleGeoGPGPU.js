@@ -233,21 +233,22 @@ export class NoodleGeoGPGPU {
             );
 
             // spread the hair
-            float spreadSize = 1.0;
-            tPos.xyz += 0.3 * normalize(vec3(hairRootNormalData.x * spreadSize, hairRootNormalData.y * 0.25, hairRootNormalData.z * spreadSize - 0.2)) * pow(lineE, 5.0);
+            float spreadSize = 3.3;
+            tPos.xyz += 0.3 * normalize(vec3(hairRootNormalData.x * spreadSize, hairRootNormalData.y * 0.25, hairRootNormalData.z * spreadSize - 0.2)) * pow(lineE, 23.0);
 
             // previous hair
             // tPos += (vec3(thisData.xyz - tPos.xyz)) * 0.1;
             
             // mouse
-            float radiusAffected = 1.05;
-            float distMouseToHair = length(mousePosition - tPos.xyz);
+            float radiusAffected = 0.3;
+            vec3 mPos = mousePosition;
+            float distMouseToHair = length(mPos - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
             if (distMouseToHair >= radiusAffected) {
               distMouseToHair = radiusAffected;
             }
-            float mouseForceSize = 0.25 * (radiusAffected - (distMouseToHair / maxDistMouseToHair));
-            tPos += normalize(mousePosition - tPos.xyz) * -mouseForceSize;
+            float mouseForceSize = 0.25 * ((distMouseToHair / maxDistMouseToHair)) * pow(lineE, 1.0);
+            tPos += normalize(mPos - tPos.xyz) * -mouseForceSize;
 
             // smooth
             fromPos = lerp(fromPos, tPos, smoothstep(0.0, 0.015, sticky));
