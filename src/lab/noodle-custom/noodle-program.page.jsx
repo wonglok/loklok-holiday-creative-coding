@@ -45,13 +45,14 @@ const useHairSculpPosition = () => {
   let mesh = glb?.scene?.getObjectByName(name)
   let count = 512
   let sampler = useMemo(() => {
-    if (!mesh) {
+    let iMesh = mesh
+    if (!iMesh) {
       console.log('no headskin found')
-      mesh = new Mesh(new SphereGeometry(1, 32, 32))
+      iMesh = new Mesh(new SphereGeometry(1, 32, 32))
     }
-    let mss = new MeshSurfaceSampler(mesh)
-    mss.build()
-    return mss
+    let sampler = new MeshSurfaceSampler(iMesh)
+    sampler.build()
+    return sampler
   }, [mesh])
 
   let { positionTexture, normalTexture } = useMemo(() => {
@@ -85,7 +86,7 @@ const useHairSculpPosition = () => {
       positionTexture.needsUpdate = true
     }
 
-    return { positionTexture, normalTexture }
+    return { positionTexture, normalTexture, initPosition: mesh }
   }, [sampler, count])
 
   return { positionTexture, normalTexture, glb }

@@ -12,7 +12,7 @@ export class NoodleEntry extends Object3D {
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: lineCount,
       numSides: 7,
-      subdivisions: 32,
+      subdivisions: 16,
       openEnded: false,
     })
     geometry.instanceCount = count

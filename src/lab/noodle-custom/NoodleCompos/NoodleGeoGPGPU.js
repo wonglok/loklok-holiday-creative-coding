@@ -233,8 +233,8 @@ export class NoodleGeoGPGPU {
             );
 
             // spread the hair
-            float spreadSize = 1.2;
-            tPos.xyz += 0.3 * normalize(vec3(hairRootNormalData.x * spreadSize, hairRootNormalData.y * 0.25, hairRootNormalData.z * spreadSize - 0.2)) * pow(lineE, 9.3);
+            float spreadSize = 1.0;
+            tPos.xyz += 0.3 * normalize(vec3(hairRootNormalData.x * spreadSize, hairRootNormalData.y * 0.25, hairRootNormalData.z * spreadSize - 0.2)) * pow(lineE, 5.0);
 
             // previous hair
             // tPos += (vec3(thisData.xyz - tPos.xyz)) * 0.1;
@@ -252,6 +252,7 @@ export class NoodleGeoGPGPU {
             // smooth
             fromPos = lerp(fromPos, tPos, smoothstep(0.0, 0.015, sticky));
 
+            fromPos.y -= 0.01;
             //
             gl_FragColor.rgb = fromPos;
           
