@@ -28,7 +28,7 @@ export function Page() {
         <OrbitControls object-position={[-2, 1.5, 2]} target={[0, 1.5, 0]} makeDefault></OrbitControls>
 
         <EffectComposer disableNormalPass>
-          <Bloom mipmapBlur intensity={2} luminanceThreshold={0.1}></Bloom>
+          <Bloom mipmapBlur intensity={1} luminanceThreshold={0.05}></Bloom>
         </EffectComposer>
 
         <Environment files={`/hdr/shanghai.hdr`}></Environment>
@@ -119,7 +119,7 @@ function Yo() {
       mouse: core.mouseObject,
       compos: <primitive key={core.uuid} object={core}></primitive>,
     }
-  }, [gl, positionTexture, normalTexture])
+  }, [gl, positionTexture, normalTexture, NoodleEntry])
 
   useFrame((st, dt) => {
     works.forEach((fnc) => {

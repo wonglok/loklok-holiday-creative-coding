@@ -1,10 +1,8 @@
 import { FrontSide, NormalBlending, ShaderMaterial } from 'three'
 
-export class NoodleMat {
+export class NoodleMat extends ShaderMaterial {
   constructor({ core, subdivisions, lineCount }) {
-    // let galaxy = new TextureLoader().load(`/discover/000001__StarSky/image.png`)
-    // galaxy.mapping = EquirectangularReflectionMapping
-    let mat = new ShaderMaterial({
+    super({
       uniforms: {
         time: { value: 0 },
         posTexture: {
@@ -160,7 +158,8 @@ export class NoodleMat {
 
           vTColor = normalize(getLineByT(0.5, lineIDXER) - getLineByT(0.6, lineIDXER));
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 1.0;
+          // vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 1.0;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 0.3;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
 
@@ -261,11 +260,12 @@ export class NoodleMat {
       depthWrite: true,
       blending: NormalBlending,
     })
+    // let galaxy = new TextureLoader().load(`/discover/000001__StarSky/image.png`)
+    // galaxy.mapping = EquirectangularReflectionMapping
+    let mat = this
 
     core.onLoop((st, dt) => {
       mat.uniforms.time.value += dt
     })
-
-    return mat
   }
 }
