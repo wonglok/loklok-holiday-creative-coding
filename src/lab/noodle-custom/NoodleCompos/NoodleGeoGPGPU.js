@@ -196,7 +196,6 @@ export class NoodleGeoGPGPU {
             vec3 fromPos = thisData.rgb;
             vec3 toPos = backData.rgb;
 
-            float windX = sin(time * 2.0 + 3.1415 * sin(time * 0.1)) * 0.25; 
             float radiusAffected = 25.0;
             float distMouseToHair = length(mousePosition - fromPos.xyz);
             float maxDistMouseToHair = radiusAffected;
@@ -204,14 +203,17 @@ export class NoodleGeoGPGPU {
               distMouseToHair = radiusAffected;
             }
 
-            float mouseForceSize = 1.0 * (1.0 - (distMouseToHair / maxDistMouseToHair));
+            float mouseForceSize = 0.4 * (1.0 - (distMouseToHair / maxDistMouseToHair));
 
-            
             toPos.y += -mouseForceSize;
-            toPos.y += -0.15 * (1.0 - lineT);
+            toPos.y += -0.2 * (1.0 - lineT);
+
+            float windX = sin(time * 0.3 + 3.1415 * sin(time * 0.01)) * 0.25; 
             toPos.x += windX;
             
             toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
+            
+            
             toPos = lerp(fromPos, toPos, 0.15);
 
             

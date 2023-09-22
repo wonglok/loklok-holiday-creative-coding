@@ -223,7 +223,7 @@ export class NoodleMat {
 
           float tt = (1.0 - vT);
 
-          vec3 color = pal(time * 2.0 + tt + vLineCycle, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
+          vec3 color = pal(time * 2.0 + rand(vUv) + tt * 5.0, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
           //o_move.a + o_pos.a + 
           // float t = time * 0.5 + rand(vUv.xy);
           // vec3 myColor = 1.0 * pal(time + o_pos.a + o_move.a + abs(o_move.x * 0.005 * -cos(3.0 * time)), vec3(0.5,0.5,0.5),vec3(0.5,0.5,0.5),vec3(1.0,0.0,0.5),vec3(0.8,0.90,0.30));
