@@ -199,7 +199,7 @@ export class NoodleGeoGPGPU {
             vec3 fromPos = thisData.rgb;
             vec3 toPos = backData.rgb;
 
-            float radiusAffected = 25.0;
+            float radiusAffected = 35.0;
             float distMouseToHair = length(mousePosition - fromPos.xyz);
             float maxDistMouseToHair = radiusAffected;
             if (distMouseToHair >= radiusAffected) {
