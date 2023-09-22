@@ -134,10 +134,10 @@ export class NoodleGeo {
     lineGeo.setAttribute('offset', new InstancedBufferAttribute(new Float32Array(offset), 4))
     lineGeo.setAttribute('colorEach', new InstancedBufferAttribute(new Float32Array(colors), 4))
 
-    let eachLineIdx = []
-    for (let c = 0; c < count; c++) {
-      eachLineIdx.push(c)
-    }
+    // let eachLineIdx = []
+    // for (let c = 0; c < count; c++) {
+    //   eachLineIdx.push(c)
+    // }
 
     // lineGeo.setAttribute(
     //   "lineIDXER",

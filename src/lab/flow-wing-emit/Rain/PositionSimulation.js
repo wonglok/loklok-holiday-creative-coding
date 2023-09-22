@@ -975,7 +975,7 @@ export class PositionSimulation {
                       0.0,                                0.0,                                0.0,                                1.0);
       }
 
-
+      
       //	Classic Perlin 3D Noise
       //	by Stefan Gustavson
       //
