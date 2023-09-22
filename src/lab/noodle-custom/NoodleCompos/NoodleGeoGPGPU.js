@@ -31,7 +31,7 @@ export class NoodleGeoGPGPU {
     let vaPos = gpu.addVariable(
       'texturePosition',
       /* glsl */ `
-      
+
       uniform sampler2D txPosition;
       // uniform sampler2D txMove;
       uniform vec3 mousePosition;
