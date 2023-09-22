@@ -167,6 +167,7 @@ export class NoodleMat extends ShaderMaterial {
 
           createTube(t, volume, transformed, objectNormal);
 
+          
           vec3 transformedNormal = normalMatrix * objectNormal;
           vNormal = normalize(transformedNormal);
 
@@ -229,6 +230,8 @@ export class NoodleMat extends ShaderMaterial {
           // vec3 color = pal(t,vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
         
           gl_FragColor = vec4(vEachColor.rgb * 1.0 + color * 8.0, tt * vLineCycle);
+
+          gl_FragColor.rgb *= 0.5;
 
           // gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
           // if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
