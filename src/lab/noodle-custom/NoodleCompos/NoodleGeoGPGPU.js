@@ -165,7 +165,7 @@ export class NoodleGeoGPGPU {
           // float yID = floor(gl_FragCoord.y);
 
           vec2 uv = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution.xy;
-          // vec4 positionHead = texture2D( texturePosition, uv );
+          vec4 metaData = texture2D( texturePosition, uv );
 
           vec4 nextSegmentData = texture2D(nextSegment, uv);
           vec2 nextUV = nextSegmentData.xy;
@@ -177,7 +177,10 @@ export class NoodleGeoGPGPU {
           float currentLine = floor(gl_FragCoord.y);
           float lineT = gl_FragCoord.x / resolution.x;
 
-          if (currentIDX == 0.0) {
+          if (metaData.w == -1.0) {
+            gl_FragColor.rgb = vec3(0.0);
+            gl_FragColor.a = 1.0;
+          } else if (currentIDX == 0.0) {
             gl_FragColor.rgb = vec3(1.0 * (rand(uv + 0.1) * 2.0 - 1.0), 2.0, 1.0 * (rand(uv + 0.2) * 2.0 - 1.0));
             gl_FragColor.a = 1.0;
           } else {
@@ -400,7 +403,7 @@ export class NoodleGeoGPGPU {
         theArray[i + 0] = 0.0
         theArray[i + 1] = 0.0
         theArray[i + 2] = 0.0
-        theArray[i + 3] = 1
+        theArray[i + 3] = -1
         i += 4
         items.push([x / this.lineSegments, y / this.lineCount])
       }
