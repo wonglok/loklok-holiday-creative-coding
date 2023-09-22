@@ -16,18 +16,28 @@ export class NoodleGeoGPGPU {
     let txPos = gpu.createTexture()
     this.fillTxPos(txPos)
 
-    let txLookUp = gpu.createTexture()
-    this.fillLookupTexture(txLookUp)
-    this.lookupTexture = txLookUp
+    {
+      let tx = gpu.createTexture()
+      this.fillNextLookUp(tx)
+      this.nextSegmentTexture = tx
+    }
+
+    {
+      let tx = gpu.createTexture()
+      this.fillBackLookUp(tx)
+      this.backSegmentTexture = tx
+    }
 
     let vaPos = gpu.addVariable(
       'texturePosition',
       /* glsl */ `
       
       uniform sampler2D txPosition;
-      uniform sampler2D txMove;
+      // uniform sampler2D txMove;
+        uniform vec3 mousePosition;
 
-        uniform sampler2D lookup;
+        uniform sampler2D nextSegment;
+        uniform sampler2D backSegment;
         uniform float time;
 
         vec3 lerp(vec3 a, vec3 b, float w)
@@ -37,7 +47,7 @@ export class NoodleGeoGPGPU {
 
         #include <common>
 
-         
+
           #define M_PI_3_1415 3.1415926535897932384626433832795
 
           float atan2(in float y, in float x) {
@@ -84,7 +94,7 @@ export class NoodleGeoGPGPU {
             return vec3((2.0 * p1 - 2.0 * p2 + v0 + v1) * t3 + (-3.0 * p1 + 3.0 * p2 - 2.0 * v0 - v1) * t2 + v0 * t + p1);
         }
 
-         vec3 getLineByT (float t, float lineIndex) {
+        vec3 getLineByT (float t, float lineIndex) {
 
           vec4 color = texture2D(txPosition,
             vec2(
@@ -94,6 +104,31 @@ export class NoodleGeoGPGPU {
           );
 
           return color.rgb;
+        }
+
+        float sdfSphere(vec3 position, float radius) {
+          return length(position) - radius;
+        }
+
+        vec3 scene(vec3 pos) {
+          float val = sdfSphere(pos, 1.0);
+          return vec3(val);
+        }
+
+        vec3 calcNormalCore(vec3 pos, float eps) {
+          const vec3 v1 = vec3( 1.0,-1.0,-1.0);
+          const vec3 v2 = vec3(-1.0,-1.0, 1.0);
+          const vec3 v3 = vec3(-1.0, 1.0,-1.0);
+          const vec3 v4 = vec3( 1.0, 1.0, 1.0);
+
+          return normalize( v1 * scene( pos + v1*eps ).x +
+                            v2 * scene( pos + v2*eps ).x +
+                            v3 * scene( pos + v3*eps ).x +
+                            v4 * scene( pos + v4*eps ).x );
+        }
+
+        vec3 calcNormal(vec3 pos) {
+          return calcNormalCore(pos, 0.002);
         }
 
         vec3 getLineByCtrlPts (float t, float lineIndex) {
@@ -129,16 +164,65 @@ export class NoodleGeoGPGPU {
           // float xID = floor(gl_FragCoord.x);
           // float yID = floor(gl_FragCoord.y);
 
-          vec2 uvCursor = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution.xy;
           vec2 uv = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution.xy;
-          vec4 positionHead = texture2D( texturePosition, uvCursor );
+          // vec4 positionHead = texture2D( texturePosition, uv );
 
-          vec4 lookupData = texture2D(lookup, uvCursor);
-          vec2 nextUV = lookupData.xy;
+          vec4 nextSegmentData = texture2D(nextSegment, uv);
+          vec2 nextUV = nextSegmentData.xy;
+
+          vec4 backSegmentData = texture2D(backSegment, uv);
+          vec2 backUV = backSegmentData.xy;
+
           float currentIDX = floor(gl_FragCoord.x);
           float currentLine = floor(gl_FragCoord.y);
+          float lineT = gl_FragCoord.x / resolution.x;
 
-          float t = gl_FragCoord.x / resolution.x;
+          if (currentIDX == 0.0) {
+            gl_FragColor.rgb = vec3(3.0 * (rand(uv + 0.1) * 2.0 - 1.0), 3.0, 3.0 * (rand(uv + 0.2) * 2.0 - 1.0));
+            gl_FragColor.a = 1.0;
+          } else {
+            vec4 backData =  texture2D( texturePosition, backSegmentData.rg );
+            vec4 thisData =  texture2D( texturePosition, uv );
+            vec4 nextData =  texture2D( texturePosition, nextSegmentData.rg );
+
+            float dist = length(thisData.rgb - backData.rgb);
+            float maxDist = 1.0;
+            if (dist >= maxDist) {
+              dist = maxDist;
+            }
+
+            float sticky = dist / maxDist;
+
+            vec3 fromPos = thisData.rgb;
+            vec3 toPos = backData.rgb;
+
+            float windX = sin(time * 2.0) * 0.5; 
+            float radiusAffected = 25.0;
+            float distMouseToHair = length(mousePosition - fromPos.xyz);
+            float maxDistMouseToHair = radiusAffected;
+            if (distMouseToHair >= radiusAffected) {
+              distMouseToHair = radiusAffected;
+            }
+
+            float mouseForceSize = 1.0 * (1.0 - (distMouseToHair / maxDistMouseToHair));
+
+            toPos = lerp(fromPos, toPos, 0.5);
+            
+            toPos.y += -mouseForceSize;
+            toPos.y += -0.1;
+            toPos.x += windX;
+            
+            toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
+
+            vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 1.0, sticky));
+
+            vec3 outputData = spring;
+            gl_FragColor.rgb = outputData;
+            gl_FragColor.a = 1.0;
+          }
+
+          
+
 
           // vec4 datPos = texture2D(txPosition, vec2(1.0, currentLine / ${this.lineCount.toFixed(1)}));
           // vec4 datMove = texture2D(txMove, vec2(1.0, currentLine / ${this.lineCount.toFixed(1)}));
@@ -201,12 +285,27 @@ export class NoodleGeoGPGPU {
 
           // gl_FragColor.rgb = mix(ball, datPos.rgb, 0.5);
 
-          gl_FragColor.rgb = ballify(vec3(
-            rand(uv + 0.1) * 2.0 - 1.0,
-            rand(uv + 0.2) * 2.0 - 1.0,
-            rand(uv + 0.3) * 2.0 - 1.0
-          ), 10.0);
-          gl_FragColor.a = 1.0;
+
+          // gl_FragColor.rgb = ballify(vec3(
+          //   sin(time + uv.x) + t + rand(uv + 0.1) * 2.0 - 1.0,
+          //   sin(time + uv.y) + t + rand(uv + 0.2) * 2.0 - 1.0,
+          //   sin(time + uv.x) + t + rand(uv + 0.3) * 2.0 - 1.0
+          // ), 5.0);
+
+          // vec3 datPos = vec3(t * 15.0, 15.0 * sin(t + time), 0.0);
+          // if (floor(currentIDX) == 0.0) {
+          //   datPos.rgb = lerp(positionHead.rgb, datPos.rgb, 0.15);
+          //   gl_FragColor = vec4(datPos.rgb, 1.0);
+          // } else {
+          //   vec3 positionChain = texture2D(texturePosition, nextUV ).xyz;
+
+          //   positionChain.x *= 1.0;
+          //   positionChain.z *= 1.0;
+          //   positionChain.y *= 1.0;
+          //   gl_FragColor = vec4(positionChain, 1.0);
+          // }
+
+
 
           // 
         }
@@ -223,7 +322,9 @@ export class NoodleGeoGPGPU {
     vaPos.material.uniforms.txMove = { value: null }
     vaPos.material.uniforms.txPosition = { value: null }
     vaPos.material.uniforms.txMove = { value: null }
-    vaPos.material.uniforms.lookup = { value: this.lookupTexture }
+    vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }
+    vaPos.material.uniforms.nextSegment = { value: this.nextSegmentTexture }
+    vaPos.material.uniforms.backSegment = { value: this.backSegmentTexture }
     vaPos.material.needsUpdate = true
     gpu.setVariableDependencies(vaPos, [vaPos])
 
@@ -231,14 +332,16 @@ export class NoodleGeoGPGPU {
 
     this.core.onLoop(() => {
       gpu.compute()
-
+      vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }
       vaPos.material.uniforms.txPosition = { value: null }
       vaPos.material.uniforms.txMove = { value: null }
-      vaPos.material.uniforms.lookup = { value: this.lookupTexture }
+      vaPos.material.uniforms.nextSegment = { value: this.nextSegmentTexture }
+      vaPos.material.uniforms.backSegment = { value: this.backSegmentTexture }
       material.uniforms.posTexture.value = gpu.getCurrentRenderTarget(vaPos).texture
     })
   }
-  fillLookupTexture(texture) {
+
+  fillNextLookUp(texture) {
     let i = 0
     const theArray = texture.image.data
     let items = []
@@ -255,6 +358,23 @@ export class NoodleGeoGPGPU {
     }
     texture.needsUpdate = true
   }
+
+  fillBackLookUp(texture) {
+    let i = 0
+    const theArray = texture.image.data
+
+    for (let y = 0; y < this.lineCount; y++) {
+      for (let x = 0; x < this.lineSegments; x++) {
+        let xn1 = x - 1
+        theArray[i++] = (xn1 > 0.0 ? xn1 : 0.0) / this.lineSegments
+        theArray[i++] = y / this.lineCount
+        theArray[i++] = this.lineSegments
+        theArray[i++] = this.lineCount
+      }
+    }
+    texture.needsUpdate = true
+  }
+
   fillTxPos(texture) {
     let i = 0
     const theArray = texture.image.data
@@ -262,17 +382,22 @@ export class NoodleGeoGPGPU {
 
     for (let y = 0; y < this.lineCount; y++) {
       for (let x = 0; x < this.lineSegments; x++) {
-        if (x === 0.0) {
-          theArray[i + 0] = 0.25 * (Math.random() * 2.0 - 1.0)
-          theArray[i + 1] = 0.05
-          theArray[i + 2] = 0.25 * (Math.random() * 2.0 - 1.0)
-          theArray[i + 3] = 1
-        } else {
-          theArray[i + 0] = theArray[i - x * 4 + 0]
-          theArray[i + 1] = theArray[i - x * 4 + 1]
-          theArray[i + 2] = theArray[i - x * 4 + 2]
-          theArray[i + 3] = theArray[i - x * 4 + 3]
-        }
+        // if (x === 0.0) {
+        //   theArray[i + 0] = 0
+        //   theArray[i + 1] = 0
+        //   theArray[i + 2] = 0
+        //   theArray[i + 3] = 1
+        // } else {
+        //   theArray[i + 0] = theArray[i - x * 4 + 0]
+        //   theArray[i + 1] = theArray[i - x * 4 + 1]
+        //   theArray[i + 2] = theArray[i - x * 4 + 2]
+        //   theArray[i + 3] = theArray[i - x * 4 + 3]
+        // }
+
+        theArray[i + 0] = 0.0
+        theArray[i + 1] = 0.0
+        theArray[i + 2] = 0.0
+        theArray[i + 3] = 1
         i += 4
         items.push([x / this.lineSegments, y / this.lineCount])
       }

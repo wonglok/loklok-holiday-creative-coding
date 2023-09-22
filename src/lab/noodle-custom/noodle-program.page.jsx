@@ -1,8 +1,8 @@
-import { Box, OrbitControls } from '@react-three/drei'
+import { Box, MeshDiscardMaterial, OrbitControls, Plane } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { NoodleEntry } from './NoodleCompos/NoodleEntry'
-import { Group } from 'three'
+import { Group, Object3D } from 'three'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 export function Page() {
@@ -14,7 +14,7 @@ export function Page() {
         <color attach={'background'} args={['#333333']}></color>
         <Yo></Yo>
 
-        <OrbitControls object-position={[0, 1.3, 20]} target={[0, 1.3, 0]} makeDefault></OrbitControls>
+        <OrbitControls object-position={[0, 0, 10]} target={[0, 0, 0]} makeDefault></OrbitControls>
 
         <EffectComposer disableNormalPass>
           <Bloom mipmapBlur intensity={2} luminanceThreshold={0.1}></Bloom>
@@ -29,13 +29,14 @@ export function Page() {
 function Yo() {
   let gl = useThree((r) => r.gl)
 
-  let { compos, works } = useMemo(() => {
+  let { mouse, compos, works } = useMemo(() => {
     let works = []
     let core = new Group()
     core.gl = gl
     core.onLoop = (v) => {
       works.push(v)
     }
+    core.mouseObject = new Object3D()
 
     let noodle = new NoodleEntry({
       core: core,
@@ -44,9 +45,10 @@ function Yo() {
 
     return {
       works,
+      mouse: core.mouseObject,
       compos: <primitive key={core.uuid} object={core}></primitive>,
     }
-  }, [gl])
+  })
 
   useFrame((st, dt) => {
     works.forEach((fnc) => {
@@ -59,7 +61,32 @@ function Yo() {
       {/*  */}
       {compos}
 
+      <Mouse mouse={mouse}></Mouse>
       {/*  */}
     </>
+  )
+}
+
+function Mouse({ mouse }) {
+  let ref = useRef()
+  useFrame(({ camera }) => {
+    if (ref.current) {
+      ref.current.lookAt(camera.position)
+    }
+  })
+  return (
+    <Plane
+      args={[10000, 10000]}
+      ref={ref}
+      onPointerOver={({ point }) => {
+        mouse.position.copy(point)
+      }}
+      onPointerMove={({ point }) => {
+        mouse.position.copy(point)
+      }}
+    >
+      <MeshDiscardMaterial></MeshDiscardMaterial>
+      {/* <meshBasicMaterial attach={'material'} color={'green'}></meshBasicMaterial> */}
+    </Plane>
   )
 }

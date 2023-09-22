@@ -30,7 +30,7 @@ export class NoodleEntry extends Object3D {
       core: core,
     })
 
-    mesh.add(new Mesh(new BoxGeometry(1, 1, 1)))
+    // mesh.add(new Mesh(new BoxGeometry(1, 1, 1)))
     this.add(mesh)
 
     // {

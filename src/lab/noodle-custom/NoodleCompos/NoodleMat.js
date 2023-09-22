@@ -160,7 +160,7 @@ export class NoodleMat {
 
           vTColor = normalize(getLineByT(0.5, lineIDXER) - getLineByT(0.6, lineIDXER));
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 3.0;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
 
@@ -231,7 +231,7 @@ export class NoodleMat {
         
           gl_FragColor = vec4(vEachColor.rgb * 1.0 + color * 8.0, tt * vLineCycle);
 
-          gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+          // gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
           // if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
           //   gl_FragColor.x *= 1.0 * tt;
           //   gl_FragColor.y *= 1.0 * tt;
