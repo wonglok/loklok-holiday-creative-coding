@@ -32,8 +32,9 @@ export class NoodleEntry extends Object3D {
 
     mesh.frustumCulled = false
 
-    // mesh.add(new Mesh(new BoxGeometry(1, 1, 1)))
     this.add(mesh)
+
+    // mesh.add(new Mesh(new BoxGeometry(1, 1, 1)))
 
     // {
     //   // / debug

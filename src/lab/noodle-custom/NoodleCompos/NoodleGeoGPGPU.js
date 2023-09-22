@@ -303,18 +303,18 @@ export class NoodleGeoGPGPU {
             );
 
             // spread the hair
-            float behind = 0.4;
+            float behind = 0.5;
             vec3 sculp = normalize(vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z - behind));
 
-            sculp *= 0.25;
-            sculp.xz *= 0.6;
+            sculp *= 0.125;
+            sculp.xz *= 0.36;
             
             tPos.xyz += sculp * pow(lineE, 6.0);
 
             tPos.y += -0.1 * pow(lineE, 1.0);
 
             // wind
-            tPos.z += -0.05;
+            tPos.z += -0.015 * lineE;
             
             // tPos.x += -0.1 * sin(time) * pow(lineE, 6.0);
 
