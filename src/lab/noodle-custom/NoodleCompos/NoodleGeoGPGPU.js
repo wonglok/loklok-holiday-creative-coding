@@ -233,7 +233,7 @@ export class NoodleGeoGPGPU {
             );
 
             // spread the hair
-            float spreadSize = 3.3;
+            float spreadSize = 1.5;
             tPos.xyz += 0.3 * normalize(vec3(hairRootNormalData.x * spreadSize, hairRootNormalData.y * 0.25, hairRootNormalData.z * spreadSize - 0.2)) * pow(lineE, 23.0);
 
             // previous hair
