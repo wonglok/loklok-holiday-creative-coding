@@ -208,18 +208,21 @@ export class NoodleGeoGPGPU {
 
             float mouseForceSize = 0.4 * (1.0 - (distMouseToHair / maxDistMouseToHair));
 
-            toPos.y += -mouseForceSize;
-            toPos.y += -0.2 * (1.0 - lineT);
+            // gravity
+            toPos.y += -0.3 * (1.0 - lineT);
 
-            float windX = sin(time * 0.3 + 3.1415 * sin(time * 0.01)) * 0.25; 
+
+            // wind
+            float windX = sin(time * 0.3 + 3.1415 * sin(time * 0.01) + sin(fromPos.y / 30.0)) * 0.25; 
             toPos.x += windX;
-            
+
+            // mouse
             toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
             
-            
+            // smooth
             toPos = lerp(fromPos, toPos, 0.15);
 
-            
+            // spring
             vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 0.3, sticky));
 
             vec3 outputData = spring;
