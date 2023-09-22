@@ -34,6 +34,7 @@ export class NoodleGeoGPGPU {
 
       uniform sampler2D txPosition;
       // uniform sampler2D txMove;
+      uniform sampler2D txHairRoot;
       uniform vec3 mousePosition;
 
       uniform sampler2D nextSegment;
@@ -179,7 +180,15 @@ export class NoodleGeoGPGPU {
             gl_FragColor.rgb = vec3(0.0);
             gl_FragColor.a = 1.0;
           } else if (currentIDX == 0.0) {
-            gl_FragColor.rgb = vec3(1.0 * (rand(uv + 0.1) * 2.0 - 1.0), 2.0, 1.0 * (rand(uv + 0.2) * 2.0 - 1.0));
+            vec4 hairRootPosition = texture2D(txHairRoot, 
+              vec2(
+                currentLine / 512.0,
+                0.5
+              )
+            );
+
+            gl_FragColor.rgb = hairRootPosition.rgb;
+            // gl_FragColor.rgb = vec3(1.0 * (rand(uv + 0.1) * 2.0 - 1.0), 2.0, 1.0 * (rand(uv + 0.2) * 2.0 - 1.0));
             gl_FragColor.a = 1.0;
           } else {
             vec4 backData =  texture2D( texturePosition, backSegmentData.rg );
@@ -187,44 +196,40 @@ export class NoodleGeoGPGPU {
             vec4 nextData =  texture2D( texturePosition, nextSegmentData.rg );
 
             float dist = length(thisData.rgb - backData.rgb);
-            float maxDist = 0.1;
+            float maxDist = 0.3;
             if (dist >= maxDist) {
               dist = maxDist;
             }
 
-            float sticky = dist / maxDist;
+            float sticky = 1.0 / dist;
 
             vec3 fromPos = thisData.rgb;
             vec3 toPos = backData.rgb;
 
-            float radiusAffected = 35.0;
+            float radiusAffected = 25.0;
             float distMouseToHair = length(mousePosition - fromPos.xyz);
             float maxDistMouseToHair = radiusAffected;
             if (distMouseToHair >= radiusAffected) {
               distMouseToHair = radiusAffected;
             }
 
-            float mouseForceSize = 0.4 * (1.0 - (distMouseToHair / maxDistMouseToHair));
-
             // gravity
             toPos.y += -0.3 * (1.0 - lineT);
-
-
-            // wind
-            float windX = sin(time * 0.3 + 3.1415 * sin(time * 0.01) + sin(fromPos.y / 30.0)) * 0.25; 
-            toPos.x += windX;
-
-            // mouse
-            toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
             
+            // head
+            toPos += vec3(thisData.xyz - toPos.xyz) * 0.01;
+            
+            // mouse
+            float mouseForceSize = 0.34 * (1.0 - (distMouseToHair / maxDistMouseToHair));
+            toPos += normalize(mousePosition - toPos.xyz) * -mouseForceSize;
+
+
             // smooth
-            toPos = lerp(fromPos, toPos, 0.15);
+            fromPos = lerp(fromPos, toPos, smoothstep(0.0, 0.05, sticky));
 
-            // spring
-            vec3 spring = lerp(fromPos, toPos, smoothstep(0.0, 1.0, sticky));
-
-            vec3 outputData = spring;
-            gl_FragColor.rgb = outputData;
+            //
+            gl_FragColor.rgb = fromPos;
+          
             gl_FragColor.a = 1.0;
           }
 
@@ -310,8 +315,6 @@ export class NoodleGeoGPGPU {
           //   gl_FragColor = vec4(positionChain, 1.0);
           // }
 
-
-
           // 
         }
       `,
@@ -327,6 +330,7 @@ export class NoodleGeoGPGPU {
     vaPos.material.uniforms.txMove = { value: null }
     vaPos.material.uniforms.txPosition = { value: null }
     vaPos.material.uniforms.txMove = { value: null }
+    vaPos.material.uniforms.txHairRoot = { value: core.hairRootDataTexture }
     vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }
     vaPos.material.uniforms.nextSegment = { value: this.nextSegmentTexture }
     vaPos.material.uniforms.backSegment = { value: this.backSegmentTexture }
