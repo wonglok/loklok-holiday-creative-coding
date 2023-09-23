@@ -311,7 +311,7 @@ export class NoodleGeoGPGPU {
             // tPos.z += -0.01 * lineE + sin(time) * -0.005;
             
             // mouse
-            float radiusAffected = 0.333;
+            float radiusAffected = 1.0;
             vec3 mPos = mousePosition;
             float distMouseToHair = length(mPos - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
@@ -334,7 +334,7 @@ export class NoodleGeoGPGPU {
             
             
             // smooth
-            sPos = lerp(sPos, tPos, 0.3);
+            sPos = lerp(sPos, tPos, 0.5);
 
             gl_FragColor.xyz = sPos;
           
