@@ -42,6 +42,12 @@ export class NoodleGeoGPGPU {
       uniform sampler2D backSegment;
       uniform float time;
       uniform vec3 headPosition;
+      uniform vec4 headQuaternion;
+      
+      //rotate vector 
+      vec3 qrot(vec4 q, vec3 v) { 
+        return v + 2.0*cross(q.xyz, cross(q.xyz,v) + q.w*v); 
+      } 
 
       vec3 lerp(vec3 a, vec3 b, float w) {
         return a + w*(b-a);
@@ -268,8 +274,9 @@ export class NoodleGeoGPGPU {
                 0.
               )
             );
+                
+            gl_FragColor.rgb = qrot(headQuaternion, hairRootPosition.rgb) + headPosition.rgb;
 
-            gl_FragColor.rgb = hairRootPosition.rgb + headPosition.rgb;
             // gl_FragColor.rgb = vec3(1.0 * (rand(uv + 0.1) * 2.0 - 1.0), 2.0, 1.0 * (rand(uv + 0.2) * 2.0 - 1.0));
             gl_FragColor.a = 1.0;
           } else {
@@ -280,13 +287,13 @@ export class NoodleGeoGPGPU {
             vec3 sPos = thisData.rgb;
             vec3 tPos = backData.rgb;
 
-            // hair root normal
-            vec4 hairRootPosition = texture2D(txHairRootPosition, 
-              vec2(
-                currentLine / lineCount,
-                0.0
-              )
-            );
+            // // hair root normal
+            // vec4 hairRootPosition = texture2D(txHairRootPosition, 
+            //   vec2(
+            //     currentLine / lineCount,
+            //     0.0
+            //   )
+            // );
 
             vec4 hairRootNormalData = texture2D(txHairRootNormal, 
               vec2(
@@ -295,13 +302,15 @@ export class NoodleGeoGPGPU {
               )
             );
 
-            tPos.y += .002;
+            // tPos.y += .002;
 
-            vec3 sculp = normalize(vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z));
+            vec3 sculp = normalize(qrot(headQuaternion, vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z)));
             sculp *= 0.004 * 1.5;
 
             tPos.xyz += sculp * pow(lineE, 1.5);
             tPos.y += -0.004 * pow(lineT * lineE, 1.5);
+
+            tPos.y -= 0.01 * lineH;
 
             tPos.z += -0.005 * pow(lineT * lineE, 1.5);
             // tPos.z += -0.004;
@@ -321,15 +330,19 @@ export class NoodleGeoGPGPU {
             tPos += normalize(mPos - tPos.xyz) * -mouseForceSize * lineT;
 
             // // baseSculp
-            // float radiusAffected2 = 0.3333;
-            // vec3 mPos2 = mousePosition;
-            // float distMouseToHair2 = length(mPos2 - tPos.xyz);
-            // float maxDistMouseToHair2 = radiusAffected2;
-            // if (distMouseToHair2 >= radiusAffected2) {
-            //   distMouseToHair2 = radiusAffected2;
-            // }
-            // float mouseForceSize2 = (((radiusAffected2 * 1.01 - distMouseToHair2) / maxDistMouseToHair2));
-            // tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT;
+            float radiusAffected2 = 0.3;
+            vec3 mPos2 = vec3(headPosition);
+            mPos2.z += radiusAffected2 / 3.0 * lineE;
+            mPos2.y += radiusAffected2 / -3.0 * lineE;
+            tPos.z += -0.01 * lineE;
+
+            float distMouseToHair2 = length(mPos2 - tPos.xyz);
+            float maxDistMouseToHair2 = radiusAffected2;
+            if (distMouseToHair2 >= radiusAffected2) {
+              distMouseToHair2 = radiusAffected2;
+            }
+            float mouseForceSize2 = (((radiusAffected2 - distMouseToHair2) / maxDistMouseToHair2));
+            tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT;
             
             
             // smooth
@@ -433,6 +446,7 @@ export class NoodleGeoGPGPU {
         return performance.now() / 1000
       },
     }
+    vaPos.material.uniforms.headQuaternion = { value: core.headQuaternion }
     vaPos.material.uniforms.headPosition = { value: core.headPosition }
     vaPos.material.uniforms.dt = { value: 1 / 60 }
     vaPos.material.uniforms.txMove = { value: null }
@@ -454,7 +468,7 @@ export class NoodleGeoGPGPU {
       let dt = 1 / 60
 
       dt = clock.getDelta()
-
+      vaPos.material.uniforms.headQuaternion = { value: core.headQuaternion }
       vaPos.material.uniforms.headPosition = { value: core.headPosition }
       vaPos.material.uniforms.dt = { value: dt }
       vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }

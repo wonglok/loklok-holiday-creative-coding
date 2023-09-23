@@ -18,6 +18,7 @@ import {
   Group,
   Mesh,
   Object3D,
+  Quaternion,
   RGBAFormat,
   SphereGeometry,
   Vector3,
@@ -52,7 +53,7 @@ export function Page() {
 
 const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
-  let fbx = useFBX(`/rpm/rpm-actions-locomotion/swim-float.fbx`)
+  let fbx = useFBX(`/rpm/dance/ymca.fbx`)
   let mixer = useMemo(() => {
     return new AnimationMixer(glb.scene)
   }, [glb])
@@ -61,6 +62,9 @@ const useHairSculpPosition = () => {
   })
   mixer.clipAction(fbx.animations[0]).play()
 
+  glb?.scene.traverse((it) => {
+    console.log(it.name)
+  })
   let name = 'Wolf3D_Head001'
   let mesh = glb?.scene?.getObjectByName(name)
   let count = 512
@@ -76,12 +80,14 @@ const useHairSculpPosition = () => {
   }, [mesh])
 
   let headPosition = new Vector3()
+  let headQuaternion = new Quaternion()
 
   useFrame(() => {
     glb.scene.traverse((it) => {
       if (it.name === 'Head') {
         it.getWorldPosition(headPosition)
         headPosition.y += 0.11
+        it.getWorldQuaternion(headQuaternion)
       }
     })
   })
@@ -129,11 +135,11 @@ const useHairSculpPosition = () => {
     return { positionTexture, normalTexture }
   }, [sampler, count, mesh])
 
-  return { positionTexture, normalTexture, glb, count, headPosition }
+  return { positionTexture, normalTexture, glb, count, headPosition, headQuaternion }
 }
 
 function Yo() {
-  const { positionTexture, normalTexture, glb, count, headPosition } = useHairSculpPosition()
+  const { positionTexture, normalTexture, glb, count, headPosition, headQuaternion } = useHairSculpPosition()
 
   // console.log({ positionTexture })
 
@@ -151,6 +157,7 @@ function Yo() {
     core.mouseObject = new Object3D()
     core.count = count
     core.headPosition = headPosition
+    core.headQuaternion = headQuaternion
 
     let noodle = new NoodleEntry({
       core: core,
@@ -162,7 +169,7 @@ function Yo() {
       mouse: core.mouseObject,
       compos: <primitive key={core.uuid} object={core}></primitive>,
     }
-  }, [gl, positionTexture, normalTexture, count, headPosition, NoodleEntry])
+  }, [gl, positionTexture, normalTexture, count, headPosition, headQuaternion, NoodleEntry])
 
   useFrame((st, dt) => {
     works.forEach((fnc) => {
