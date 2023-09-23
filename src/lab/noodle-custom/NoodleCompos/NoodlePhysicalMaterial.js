@@ -17,8 +17,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     this.onBeforeCompile = (shader) => {
       shader.defines = {
         ...shader.defines,
-        lengthSegments: props.subdivisions.toFixed(1),
-        lineCount: props.lineCount.toFixed(1),
+        lengthSegments: props.subdivisions.toFixed(2),
+        lineCount: props.lineCount.toFixed(2),
       }
 
       shader.uniforms.posTexture = {
