@@ -4,13 +4,24 @@ import {
   MeshDiscardMaterial,
   OrbitControls,
   Plane,
+  useFBX,
   useGLTF,
   useSurfaceSampler,
 } from '@react-three/drei'
 import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Suspense, useMemo, useRef } from 'react'
 import { NoodleEntry } from './NoodleCompos/NoodleEntry'
-import { DataTexture, FloatType, Group, Mesh, Object3D, RGBAFormat, SphereGeometry, Vector3 } from 'three'
+import {
+  AnimationMixer,
+  DataTexture,
+  FloatType,
+  Group,
+  Mesh,
+  Object3D,
+  RGBAFormat,
+  SphereGeometry,
+  Vector3,
+} from 'three'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
@@ -19,7 +30,7 @@ export function Page() {
     <>
       {/*  */}
 
-      <Canvas>
+      <Canvas shadows>
         <color attach={'background'} args={['#000000']}></color>
         <Suspense fallback={null}>
           <Yo></Yo>
@@ -41,6 +52,15 @@ export function Page() {
 
 const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
+  let fbx = useFBX(`/rpm/rpm-actions-locomotion/swim-float.fbx`)
+  let mixer = useMemo(() => {
+    return new AnimationMixer(glb.scene)
+  }, [glb])
+  useFrame((st, dt) => {
+    mixer.update(dt)
+  })
+  mixer.clipAction(fbx.animations[0]).play()
+
   let name = 'Wolf3D_Head001'
   let mesh = glb?.scene?.getObjectByName(name)
   let count = 512
@@ -55,9 +75,22 @@ const useHairSculpPosition = () => {
     return sampler
   }, [mesh])
 
+  let headPosition = new Vector3()
+
+  useFrame(() => {
+    glb.scene.traverse((it) => {
+      if (it.name === 'Head') {
+        it.getWorldPosition(headPosition)
+        headPosition.y += 0.11
+        headPosition.z += 0.05
+      }
+    })
+  })
+
   let { positionTexture, normalTexture } = useMemo(() => {
     let positionTexture
     let normalTexture
+
     {
       let dataArray = new Float32Array(count * 4 * 1)
       positionTexture = new DataTexture(dataArray, count, 1, RGBAFormat, FloatType)
@@ -68,12 +101,17 @@ const useHairSculpPosition = () => {
       let o3 = new Object3D()
       let v3 = o3.position
       let n3 = new Vector3()
+      let geo = mesh.geometry
+      geo.computeBoundingSphere()
+
+      let geoDiff = new Vector3()
+      geoDiff.copy(geo.boundingSphere.center)
       for (let i = 0; i < count; i++) {
         sampler.sample(v3, n3)
 
-        positionTexture.image.data[i * 4 + 0] = v3.x + (Math.random() * 2.0 - 1.0) * 0.01
-        positionTexture.image.data[i * 4 + 1] = v3.y + (Math.random() * 2.0 - 1.0) * 0.01
-        positionTexture.image.data[i * 4 + 2] = v3.z + (Math.random() * 2.0 - 1.0) * 0.01
+        positionTexture.image.data[i * 4 + 0] = v3.x - geoDiff.x + (Math.random() * 2.0 - 1.0) * 0.01
+        positionTexture.image.data[i * 4 + 1] = v3.y - geoDiff.y + (Math.random() * 2.0 - 1.0) * 0.01
+        positionTexture.image.data[i * 4 + 2] = v3.z - geoDiff.z + (Math.random() * 2.0 - 1.0) * 0.01
         positionTexture.image.data[i * 4 + 3] = 1.0
 
         normalTexture.image.data[i * 4 + 0] = n3.x
@@ -87,15 +125,15 @@ const useHairSculpPosition = () => {
     }
 
     return { positionTexture, normalTexture, initPosition: mesh }
-  }, [sampler, count])
+  }, [sampler, count, mesh])
 
-  return { positionTexture, normalTexture, glb, count }
+  return { positionTexture, normalTexture, glb, count, headPosition }
 }
 
 function Yo() {
-  const { positionTexture, normalTexture, glb, count } = useHairSculpPosition()
+  const { positionTexture, normalTexture, glb, count, headPosition } = useHairSculpPosition()
 
-  console.log({ positionTexture })
+  // console.log({ positionTexture })
 
   let gl = useThree((r) => r.gl)
 
@@ -110,6 +148,7 @@ function Yo() {
     core.txHairRootNormal = normalTexture
     core.mouseObject = new Object3D()
     core.count = count
+    core.headPosition = headPosition
 
     let noodle = new NoodleEntry({
       core: core,
@@ -121,7 +160,7 @@ function Yo() {
       mouse: core.mouseObject,
       compos: <primitive key={core.uuid} object={core}></primitive>,
     }
-  }, [gl, positionTexture, normalTexture, count, NoodleEntry])
+  }, [gl, positionTexture, normalTexture, count, headPosition, NoodleEntry])
 
   useFrame((st, dt) => {
     works.forEach((fnc) => {
@@ -129,6 +168,14 @@ function Yo() {
     })
   })
 
+  glb.scene.traverse((it) => {
+    if (it) {
+      it.castShadow = true
+    }
+    if (it) {
+      it.receiveShadow = true
+    }
+  })
   return (
     <>
       {/*  */}
@@ -157,12 +204,13 @@ function Mouse({ mouse }) {
     mouse.position.lerp(nowPt, 0.3)
 
     if (ptl.current) {
-      ptl.current.position.lerp(nowPt, 0.3)
+      ptl.current.position.lerp(nowPt, 0.1)
+      ptl.current.color.offsetHSL(0.01, 0, 0)
     }
   })
   return (
     <>
-      <pointLight ref={ptl} intensity={1.0} color={'#ffff00'}></pointLight>
+      <pointLight castShadow ref={ptl} intensity={3.0} color={'#ff0000'}></pointLight>
       {createPortal(
         <Plane
           position={[0, 0, 0]}

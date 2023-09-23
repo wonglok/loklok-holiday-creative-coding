@@ -41,6 +41,7 @@ export class NoodleGeoGPGPU {
       uniform sampler2D nextSegment;
       uniform sampler2D backSegment;
       uniform float time;
+      uniform vec3 headPosition;
 
       vec3 lerp(vec3 a, vec3 b, float w) {
         return a + w*(b-a);
@@ -257,6 +258,7 @@ export class NoodleGeoGPGPU {
           float lineH = pow(lineE, 1.5);
 
           if (metaData.w == -1.0) {
+            
             gl_FragColor.rgb = vec3(0.0);
             gl_FragColor.a = 1.0;
           } else if (currentIDX == 0.0) {
@@ -267,7 +269,7 @@ export class NoodleGeoGPGPU {
               )
             );
 
-            gl_FragColor.rgb = hairRootPosition.rgb;
+            gl_FragColor.rgb = hairRootPosition.rgb + headPosition.rgb;
             // gl_FragColor.rgb = vec3(1.0 * (rand(uv + 0.1) * 2.0 - 1.0), 2.0, 1.0 * (rand(uv + 0.2) * 2.0 - 1.0));
             gl_FragColor.a = 1.0;
           } else {
@@ -307,7 +309,7 @@ export class NoodleGeoGPGPU {
             // tPos.z += -0.01 * lineE + sin(time) * -0.005;
             
             // mouse
-            float radiusAffected = 0.5;
+            float radiusAffected = 0.25;
             vec3 mPos = mousePosition;
             float distMouseToHair = length(mPos - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
@@ -317,6 +319,18 @@ export class NoodleGeoGPGPU {
             float mouseForceSize = (((radiusAffected * 1.01 - distMouseToHair) / maxDistMouseToHair));
             tPos += normalize(mPos - tPos.xyz) * -mouseForceSize * lineT;
 
+            // baseSculp
+            float radiusAffected2 = 0.25;
+            vec3 mPos2 = mousePosition;
+            float distMouseToHair2 = length(mPos2 - tPos.xyz);
+            float maxDistMouseToHair2 = radiusAffected2;
+            if (distMouseToHair2 >= radiusAffected2) {
+              distMouseToHair2 = radiusAffected2;
+            }
+            float mouseForceSize2 = (((radiusAffected2 * 1.01 - distMouseToHair2) / maxDistMouseToHair2));
+            tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT;
+            
+            
             // smooth
             sPos = lerp(sPos, tPos, 0.7);
 
@@ -418,6 +432,7 @@ export class NoodleGeoGPGPU {
         return performance.now() / 1000
       },
     }
+    vaPos.material.uniforms.headPosition = { value: core.headPosition }
     vaPos.material.uniforms.dt = { value: 1 / 60 }
     vaPos.material.uniforms.txMove = { value: null }
     vaPos.material.uniforms.txPosition = { value: null }
@@ -439,6 +454,7 @@ export class NoodleGeoGPGPU {
 
       dt = clock.getDelta()
 
+      vaPos.material.uniforms.headPosition = { value: core.headPosition }
       vaPos.material.uniforms.dt = { value: dt }
       vaPos.material.uniforms.mousePosition = { value: core.mouseObject.position }
       vaPos.material.uniforms.txPosition = { value: null }

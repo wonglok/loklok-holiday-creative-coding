@@ -162,13 +162,13 @@ export class NoodleMat extends ShaderMaterial {
           vec2 volume = vec2(t * (1.0 - t)) * 0.005;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
-
           // float lt = lerp(vec3(t), vec3(t), 0.1).x;
 
           createTube(t, volume, transformed, objectNormal);
 
           
           vec3 transformedNormal = normalMatrix * objectNormal;
+          
           vNormal = normalize(transformedNormal);
 
           vUv = uv.yx;

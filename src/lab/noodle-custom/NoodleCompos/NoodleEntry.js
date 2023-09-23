@@ -21,6 +21,8 @@ export class NoodleEntry extends Object3D {
 
     let material = new NoodlePhysicalMaterial({ core, subdivisions, lineCount: lineCount })
     let mesh = new Mesh(geometry, material)
+    mesh.castShadow = true
+    mesh.receiveShadow = true
 
     mesh.needsUpdate = true
 

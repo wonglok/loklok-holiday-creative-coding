@@ -9,6 +9,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     this.metalness = 1.0
     this.roughness = 0.0
     this.envMapIntensity = 1.0
+    this.color = new Color('#ffffff')
 
     // this.map = new TextureLoader().load(``)
     this.uniforms = {
@@ -53,6 +54,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
         #include <logdepthbuf_pars_vertex>
         #include <clipping_planes_pars_vertex>
 
+        // uniform vec3 headPositon;
 
         attribute float angle;
         attribute float newPosition;
@@ -278,13 +280,14 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           #endif
 
           float tt = 1.0 - vT;
-          vec3 colorPal = pal(time * 2.0 + rand(vMyUV) + tt * 5.0, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
+
+          vec3 colorPal = pal(time * 2.0 + rand(vMyUV) * 1.3 + tt * 5.0, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
           diffuseColor.rgb *= vEachColor.rgb * 0.3 + colorPal * 1.0;
           diffuseColor.rgb = normalize(diffuseColor.rgb);
 
-          diffuseColor.r *= pow(diffuseColor.r, 1.5) * 1.5;
-          diffuseColor.g *= pow(diffuseColor.g, 1.5) * 1.5;
-          diffuseColor.b *= pow(diffuseColor.b, 1.5) * 1.5;
+          // diffuseColor.r *= pow(diffuseColor.r, 0.5) * 0.5;
+          // diffuseColor.g *= pow(diffuseColor.g, 0.5) * 0.5;
+          // diffuseColor.b *= pow(diffuseColor.b, 0.5) * 0.5;
 
           // diffuseColor.rgb = vec3(1.0,1.0,0.0);
           
