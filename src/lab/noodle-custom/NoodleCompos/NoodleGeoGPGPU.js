@@ -334,7 +334,7 @@ export class NoodleGeoGPGPU {
             
             
             // smooth
-            sPos = lerp(sPos, tPos, 1.0 - 0.2);
+            sPos = lerp(sPos, tPos, 0.3);
 
             gl_FragColor.xyz = sPos;
           
