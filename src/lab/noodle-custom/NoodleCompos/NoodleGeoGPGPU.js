@@ -254,6 +254,7 @@ export class NoodleGeoGPGPU {
           float currentLine = floor(gl_FragCoord.y);
           float lineT = gl_FragCoord.x / resolution.x;
           float lineE = (1.0 - lineT);
+          float lineH = pow(lineE, 1.5);
 
           if (metaData.w == -1.0) {
             gl_FragColor.rgb = vec3(0.0);
@@ -274,7 +275,7 @@ export class NoodleGeoGPGPU {
             vec4 thisData =  texture2D( texturePosition, uv );
             vec4 nextData =  texture2D( texturePosition, nextSegmentData.rg );
 
-            vec3 selfPos = thisData.rgb;
+            vec3 sPos = thisData.rgb;
             vec3 tPos = backData.rgb;
 
             // hair root normal
@@ -292,36 +293,34 @@ export class NoodleGeoGPGPU {
               )
             );
 
-            float lineHair = pow(lineE, 1.0);
 
             // spread the hair
-            float behind = 0.8;
-            vec3 sculp = normalize(vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z - behind));
-            
-            sculp.y *= 1.5;
-            sculp *= 0.15 * lineHair;
-            
-            tPos.xyz += sculp * lineHair;
-            tPos.y += -0.15;
+            float behind = 0.0;
+            vec3 sculp = normalize(vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z));
+            sculp *= 0.004;
+
+            tPos.xyz += sculp * pow(lineE, 1.5);
+            tPos.y += -0.004 * pow(lineT, 1.5);
+            tPos.z += -0.004 * pow(lineT, 1.5);
 
             // wind
-            tPos.z += -0.015 * lineE + sin(time) * 0.015;
+            // tPos.z += -0.01 * lineE + sin(time) * -0.005;
             
             // mouse
-            float radiusAffected = 1.0;
+            float radiusAffected = 0.5;
             vec3 mPos = mousePosition;
             float distMouseToHair = length(mPos - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
             if (distMouseToHair >= radiusAffected) {
               distMouseToHair = radiusAffected;
             }
-            float mouseForceSize = (((radiusAffected - distMouseToHair) / maxDistMouseToHair));
-            tPos += 0.5 * normalize(mPos - tPos.xyz) * -mouseForceSize * lineT;
+            float mouseForceSize = (((radiusAffected * 1.01 - distMouseToHair) / maxDistMouseToHair));
+            tPos += normalize(mPos - tPos.xyz) * -mouseForceSize * lineT;
 
             // smooth
-            selfPos = lerp(selfPos, tPos, 0.25);
+            sPos = lerp(sPos, tPos, 0.7);
 
-            gl_FragColor.rgb = selfPos;
+            gl_FragColor.rgb = sPos;
           
             gl_FragColor.a = 1.0;
           }

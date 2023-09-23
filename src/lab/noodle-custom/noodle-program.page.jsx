@@ -43,7 +43,7 @@ const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
   let name = 'Wolf3D_Head001'
   let mesh = glb?.scene?.getObjectByName(name)
-  let count = 1024
+  let count = 512
   let sampler = useMemo(() => {
     let iMesh = mesh
     if (!iMesh) {
@@ -89,11 +89,11 @@ const useHairSculpPosition = () => {
     return { positionTexture, normalTexture, initPosition: mesh }
   }, [sampler, count])
 
-  return { positionTexture, normalTexture, glb }
+  return { positionTexture, normalTexture, glb, count }
 }
 
 function Yo() {
-  const { positionTexture, normalTexture, glb } = useHairSculpPosition()
+  const { positionTexture, normalTexture, glb, count } = useHairSculpPosition()
 
   console.log({ positionTexture })
 
@@ -109,6 +109,7 @@ function Yo() {
     core.txHairRootPosition = positionTexture
     core.txHairRootNormal = normalTexture
     core.mouseObject = new Object3D()
+    core.count = count
 
     let noodle = new NoodleEntry({
       core: core,
@@ -120,7 +121,7 @@ function Yo() {
       mouse: core.mouseObject,
       compos: <primitive key={core.uuid} object={core}></primitive>,
     }
-  }, [gl, positionTexture, normalTexture, NoodleEntry])
+  }, [gl, positionTexture, normalTexture, count, NoodleEntry])
 
   useFrame((st, dt) => {
     works.forEach((fnc) => {
