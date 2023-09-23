@@ -1,4 +1,4 @@
-import { Color, MeshPhysicalMaterial } from 'three'
+import { Color, MeshPhysicalMaterial, TextureLoader } from 'three'
 
 export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
   constructor({ core, subdivisions, lineCount, ...props }) {
@@ -6,17 +6,17 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
 
     let self = this
 
-    this.metalness = 0.0
+    this.metalness = 1.0
     this.roughness = 0.0
     this.envMapIntensity = 1.0
-    this.transmission = 1.0
-    this.thickness = 2.0
 
+    // this.map = new TextureLoader().load(``)
     this.uniforms = {
       posTexture: { value: null },
     }
 
     this.onBeforeCompile = (shader) => {
+      //
       shader.defines = {
         ...shader.defines,
         lengthSegments: subdivisions.toFixed(2),
@@ -139,7 +139,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           float t = tubeInfo + 0.5;
           vT = t;
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 2.0;
 
           createTube(t, volume, transformed, objectNormal);
           
@@ -282,9 +282,11 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           diffuseColor.rgb *= vEachColor.rgb * 0.3 + colorPal * 1.0;
           diffuseColor.rgb = normalize(diffuseColor.rgb);
 
-          diffuseColor.r *= pow(diffuseColor.r, 0.9) * 3.0;
-          diffuseColor.g *= pow(diffuseColor.g, 0.9) * 3.0;
-          diffuseColor.b *= pow(diffuseColor.b, 0.9) * 3.0;
+          diffuseColor.r *= pow(diffuseColor.r, 1.5) * 1.5;
+          diffuseColor.g *= pow(diffuseColor.g, 1.5) * 1.5;
+          diffuseColor.b *= pow(diffuseColor.b, 1.5) * 1.5;
+
+          // diffuseColor.rgb = vec3(1.0,1.0,0.0);
           
           #include <alphamap_fragment>
           #include <alphatest_fragment>

@@ -148,16 +148,21 @@ function Mouse({ mouse }) {
   let o3d = new Object3D()
   let ref = useRef()
   let nowPt = new Vector3(0, 0, 0.0)
-
+  let ptl = useRef()
   useFrame(({ camera, controls }) => {
     if (controls) {
       o3d.position.copy(controls.target)
     }
     o3d.lookAt(camera.position)
     mouse.position.lerp(nowPt, 0.3)
+
+    if (ptl.current) {
+      ptl.current.position.lerp(nowPt, 0.3)
+    }
   })
   return (
     <>
+      <pointLight ref={ptl} intensity={1.0} color={'#ffff00'}></pointLight>
       {createPortal(
         <Plane
           position={[0, 0, 0]}
