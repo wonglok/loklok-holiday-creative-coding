@@ -2,7 +2,7 @@ import { Mesh, Object3D } from 'three'
 import { NoodleGeo } from './NoodleGeo'
 import { NoodleGeoGPGPU } from './NoodleGeoGPGPU'
 import { NoodlePhysicalMaterial } from './NoodlePhysicalMaterial'
-import { NoodleMat } from './NoodleMat'
+// import { NoodleMat } from './NoodleMat'
 
 export class NoodleEntry extends Object3D {
   constructor({ core }) {
@@ -39,5 +39,9 @@ export class NoodleEntry extends Object3D {
     this.add(mesh)
   }
 }
+
+//
+
+//
 
 //
