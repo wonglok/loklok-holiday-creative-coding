@@ -7,7 +7,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     let self = this
 
     this.transmission = 1.0
-    this.thickness = 1.1
+    this.thickness = 103.1
+    this.ior = 2.48
     this.roughness = 0.1
     this.metalness = 0.1
     this.envMapIntensity = 1.0
@@ -22,8 +23,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
       //
       shader.defines = {
         ...shader.defines,
-        lengthSegments: subdivisions.toFixed(2),
-        lineCount: lineCount.toFixed(2),
+        lengthSegments: subdivisions.toFixed(1),
+        lineCount: lineCount.toFixed(1),
       }
 
       shader.uniforms.posTexture = {
@@ -143,7 +144,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           float t = tubeInfo + 0.5;
           vT = t;
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 5.0;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 15.0;
 
           createTube(t, volume, transformed, objectNormal);
           

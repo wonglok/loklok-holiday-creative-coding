@@ -41,6 +41,7 @@ export class NoodleGeoGPGPU {
       uniform sampler2D nextSegment;
       uniform sampler2D backSegment;
       uniform float time;
+      uniform float dt;
       uniform vec3 headPosition;
       uniform vec4 headQuaternion;
       
@@ -271,7 +272,7 @@ export class NoodleGeoGPGPU {
             vec4 hairRootPosition = texture2D(txHairRootPosition, 
               vec2(
                 currentLine / lineCount,
-                0.
+                0.5
               )
             );
                 
@@ -298,7 +299,7 @@ export class NoodleGeoGPGPU {
             vec4 hairRootNormalData = texture2D(txHairRootNormal, 
               vec2(
                 currentLine / lineCount,
-                0.0
+                0.5
               )
             );
 
@@ -307,8 +308,8 @@ export class NoodleGeoGPGPU {
             vec3 sculp = normalize(qrot(headQuaternion, vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z)));
             sculp *= 0.004 * 1.5;
 
-            tPos.xyz += sculp * pow(lineE, 1.5);
-            tPos.y += -0.004 * pow(lineT * lineE, 1.5);
+            tPos.xyz += sculp * dt * 60.0 * pow(lineE, 1.5);
+            tPos.y += -0.004 * dt * 60.0 * pow(lineT * lineE, 1.5);
             tPos.y += -0.1 * pow(lineT * lineE, 1.5);
 
 
@@ -324,7 +325,7 @@ export class NoodleGeoGPGPU {
             // tPos.z += -0.01 * lineE + sin(time) * -0.005;
             
             // mouse
-            float radiusAffected = 0.5;
+            float radiusAffected = 1.0;
             vec3 mPos = mousePosition;
             float distMouseToHair = length(mPos - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
@@ -345,12 +346,12 @@ export class NoodleGeoGPGPU {
             if (distMouseToHair2 >= radiusAffected2) {
               distMouseToHair2 = radiusAffected2;
             }
-            float mouseForceSize2 = (((radiusAffected2 * 1.2 - distMouseToHair2) / maxDistMouseToHair2));
-            tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT * lineH;
+            float mouseForceSize2 = (((radiusAffected2 * 1.05 - distMouseToHair2) / maxDistMouseToHair2));
+            tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT * lineH * dt * 60.0;
 
             
             // smooth
-            sPos = lerp(sPos, tPos, lineE * 0.5 + lineT * 0.5);
+            sPos = lerp(sPos, tPos, lineE * 0.5 + lineT * 0.5 * dt * 60.0 );
 
             gl_FragColor.xyz = sPos;
           
@@ -472,6 +473,9 @@ export class NoodleGeoGPGPU {
       let dt = 1 / 60
 
       dt = clock.getDelta()
+      if (dt >= 1 / 20) {
+        dt = 1 / 20
+      }
       vaPos.material.uniforms.headQuaternion = { value: core.headQuaternion }
       vaPos.material.uniforms.headPosition = { value: core.headPosition }
       vaPos.material.uniforms.dt = { value: dt }

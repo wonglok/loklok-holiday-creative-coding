@@ -2,16 +2,17 @@ import { Mesh, Object3D } from 'three'
 import { NoodleGeo } from './NoodleGeo'
 import { NoodleGeoGPGPU } from './NoodleGeoGPGPU'
 import { NoodlePhysicalMaterial } from './NoodlePhysicalMaterial'
+import { NoodleMat } from './NoodleMat'
 
 export class NoodleEntry extends Object3D {
   constructor({ core }) {
     super()
 
-    let lineCount = core.count || 512
+    let lineCount = 256
 
     let { geometry, subdivisions, count } = new NoodleGeo({
       count: lineCount,
-      numSides: 6,
+      numSides: 4,
       subdivisions: 64,
       openEnded: false,
     })

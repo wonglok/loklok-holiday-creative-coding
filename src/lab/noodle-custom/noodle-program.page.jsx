@@ -4,6 +4,7 @@ import {
   MeshDiscardMaterial,
   OrbitControls,
   Plane,
+  Stats,
   useFBX,
   useGLTF,
   useSurfaceSampler,
@@ -31,7 +32,7 @@ export function Page() {
     <>
       {/*  */}
 
-      <Canvas shadows>
+      <Canvas shadows={false}>
         <Suspense fallback={null}>
           <Yo></Yo>
         </Suspense>
@@ -54,7 +55,6 @@ function Effects() {
   return (
     <>
       <EffectComposer disableNormalPass>
-        <N8AO intensity={1}></N8AO>
         <Bloom mipmapBlur intensity={1} luminanceThreshold={0.8}></Bloom>
       </EffectComposer>
     </>
@@ -201,11 +201,11 @@ function Yo() {
       {compos}
       <group rotation={[0.0, 0, 0]}>
         <primitive object={glb.scene}></primitive>
-        {createPortal(<></>, glb.scene)}
       </group>
 
       <gridHelper args={[10, 10, 'white', 'white']}></gridHelper>
       <Mouse mouse={mouse}></Mouse>
+      <Stats></Stats>
 
       {/*  */}
     </>
@@ -226,7 +226,7 @@ function Mouse({ mouse }) {
 
     if (ptl.current) {
       ptl.current.position.lerp(nowPt, 0.1)
-      ptl.current.color.offsetHSL(0.01, 0, 0)
+      ptl.current.color.offsetHSL(0.001, 0, 0)
     }
   })
   return (
