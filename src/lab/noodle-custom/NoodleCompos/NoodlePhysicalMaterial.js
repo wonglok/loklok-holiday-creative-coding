@@ -7,7 +7,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     let self = this
 
     this.transmission = 1.0
-    this.thickness = 0.9
+    this.thickness = 1.1
 
     this.roughness = 0.0
     this.envMapIntensity = 1.0

@@ -309,6 +309,7 @@ export class NoodleGeoGPGPU {
 
             tPos.xyz += sculp * pow(lineE, 1.5);
             tPos.y += -0.004 * pow(lineT * lineE, 1.5);
+            tPos.y += -0.1 * pow(lineT * lineE, 1.5);
 
 
             // tPos.y -= 0.01 * lineH;
@@ -334,10 +335,10 @@ export class NoodleGeoGPGPU {
             tPos += normalize(mPos - tPos.xyz) * -mouseForceSize * lineT;
 
             // // baseSculp
-            float radiusAffected2 = 0.3;
+            float radiusAffected2 = 0.2;
             vec3 mPos2 = vec3(headPosition);
-            mPos2.z += radiusAffected2 / 3.0 * lineE;
-            mPos2.y += radiusAffected2 / -3.0 * lineE;
+            mPos2.z += radiusAffected2 / 2.0 * lineE;
+            mPos2.y += radiusAffected2 / -2.0 * lineE;
             tPos.z += -0.01 * lineE;
 
             float distMouseToHair2 = length(mPos2 - tPos.xyz);
@@ -345,7 +346,7 @@ export class NoodleGeoGPGPU {
             if (distMouseToHair2 >= radiusAffected2) {
               distMouseToHair2 = radiusAffected2;
             }
-            float mouseForceSize2 = (((radiusAffected2 - distMouseToHair2) / maxDistMouseToHair2));
+            float mouseForceSize2 = (((radiusAffected2 * 1.01 - distMouseToHair2) / maxDistMouseToHair2));
             tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT;
             
             
