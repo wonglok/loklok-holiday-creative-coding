@@ -345,7 +345,7 @@ export class NoodleGeoGPGPU {
             if (distMouseToHair2 >= radiusAffected2) {
               distMouseToHair2 = radiusAffected2;
             }
-            float mouseForceSize2 = (((radiusAffected2 * 1.1 - distMouseToHair2) / maxDistMouseToHair2));
+            float mouseForceSize2 = (((radiusAffected2 * 1.2 - distMouseToHair2) / maxDistMouseToHair2));
             tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT * lineH;
 
             

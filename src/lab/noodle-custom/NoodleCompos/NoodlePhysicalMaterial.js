@@ -8,8 +8,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
 
     this.transmission = 1.0
     this.thickness = 1.1
-
-    this.roughness = 0.0
+    this.roughness = 0.1
+    this.metalness = 0.1
     this.envMapIntensity = 1.0
     this.color = new Color('#ffffff')
 
@@ -283,8 +283,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
 
           float tt = 1.0 - vT;
 
-          // vec3 colorPal = pal(time * 2.0 + rand(vMyUV) * 1.3 + tt * 5.0, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
-          // diffuseColor.rgb *= vEachColor.rgb * 0.3 + colorPal * 1.0;
+          vec3 colorPal = pal(time * 2.0 + rand(vMyUV) * 1.3 + tt * 5.0, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
+          diffuseColor.rgb *= vEachColor.rgb * 0.3 + colorPal * 1.0;
           // diffuseColor.rgb = normalize(diffuseColor.rgb);
 
           // diffuseColor.rgb = vec3(1.0, 1.0, 0.0);
