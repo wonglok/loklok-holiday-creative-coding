@@ -282,6 +282,10 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           diffuseColor.rgb *= vEachColor.rgb * 0.3 + colorPal * 1.0;
           diffuseColor.rgb = normalize(diffuseColor.rgb);
 
+          diffuseColor.r *= pow(diffuseColor.r, 0.9) * 3.0;
+          diffuseColor.g *= pow(diffuseColor.g, 0.9) * 3.0;
+          diffuseColor.b *= pow(diffuseColor.b, 0.9) * 3.0;
+          
           #include <alphamap_fragment>
           #include <alphatest_fragment>
           #include <alphahash_fragment>
