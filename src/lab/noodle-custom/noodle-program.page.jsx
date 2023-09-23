@@ -43,7 +43,7 @@ const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
   let name = 'Wolf3D_Head001'
   let mesh = glb?.scene?.getObjectByName(name)
-  let count = 512
+  let count = 1024
   let sampler = useMemo(() => {
     let iMesh = mesh
     if (!iMesh) {

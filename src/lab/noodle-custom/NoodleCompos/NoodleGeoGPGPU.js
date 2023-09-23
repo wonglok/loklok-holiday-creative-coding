@@ -262,7 +262,7 @@ export class NoodleGeoGPGPU {
             vec4 hairRootPosition = texture2D(txHairRootPosition, 
               vec2(
                 currentLine / lineCount,
-                0.5
+                0.
               )
             );
 
@@ -274,57 +274,41 @@ export class NoodleGeoGPGPU {
             vec4 thisData =  texture2D( texturePosition, uv );
             vec4 nextData =  texture2D( texturePosition, nextSegmentData.rg );
 
-            float dist = length(thisData.rgb - backData.rgb);
-            float maxDist = 0.3;
-            if (dist >= maxDist) {
-              dist = maxDist;
-            }
-
-            float sticky = 1.0 / dist;
-
-            vec3 fromPos = thisData.rgb;
+            vec3 selfPos = thisData.rgb;
             vec3 tPos = backData.rgb;
-
-
 
             // hair root normal
             vec4 hairRootPosition = texture2D(txHairRootPosition, 
               vec2(
                 currentLine / lineCount,
-                0.5
+                0.0
               )
             );
 
             vec4 hairRootNormalData = texture2D(txHairRootNormal, 
               vec2(
                 currentLine / lineCount,
-                0.5
+                0.0
               )
             );
 
+            float lineHair = pow(lineE, 1.0);
+
             // spread the hair
-            float behind = 0.5;
+            float behind = 0.8;
             vec3 sculp = normalize(vec3(hairRootNormalData.x, hairRootNormalData.y, hairRootNormalData.z - behind));
-
-            sculp *= 0.125;
-            sculp.xz *= 0.36;
             
-            tPos.xyz += sculp * pow(lineE, 6.0);
-
-            tPos.y += -0.1 * pow(lineE, 1.0);
+            sculp.y *= 1.5;
+            sculp *= 0.15 * lineHair;
+            
+            tPos.xyz += sculp * lineHair;
+            tPos.y += -0.15;
 
             // wind
-            tPos.z += -0.015 * lineE;
-            
-            // tPos.x += -0.1 * sin(time) * pow(lineE, 6.0);
-
-            // tPos.xyz += normalize(backData.rgb - thisData.rgb) * 0.001;
-
-            // previous hair
-            // tPos += (vec3(thisData.xyz - tPos.xyz)) * 0.1;
+            tPos.z += -0.015 * lineE + sin(time) * 0.015;
             
             // mouse
-            float radiusAffected = 2.0;
+            float radiusAffected = 1.0;
             vec3 mPos = mousePosition;
             float distMouseToHair = length(mPos - tPos.xyz);
             float maxDistMouseToHair = radiusAffected;
@@ -332,12 +316,12 @@ export class NoodleGeoGPGPU {
               distMouseToHair = radiusAffected;
             }
             float mouseForceSize = (((radiusAffected - distMouseToHair) / maxDistMouseToHair));
-            tPos += 0.5 * normalize(mPos - tPos.xyz) * -mouseForceSize;
+            tPos += 0.5 * normalize(mPos - tPos.xyz) * -mouseForceSize * lineT;
 
             // smooth
-            fromPos = lerp(fromPos, tPos, 0.5);
+            selfPos = lerp(selfPos, tPos, 0.25);
 
-            gl_FragColor.rgb = fromPos;
+            gl_FragColor.rgb = selfPos;
           
             gl_FragColor.a = 1.0;
           }
