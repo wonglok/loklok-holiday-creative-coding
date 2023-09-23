@@ -310,9 +310,13 @@ export class NoodleGeoGPGPU {
             tPos.xyz += sculp * pow(lineE, 1.5);
             tPos.y += -0.004 * pow(lineT * lineE, 1.5);
 
-            tPos.y -= 0.01 * lineH;
 
-            tPos.z += -0.005 * pow(lineT * lineE, 1.5);
+            // tPos.y -= 0.01 * lineH;
+            // tPos.z += -0.005 * pow(lineT * lineE, 1.5);
+
+            // tPos.y += 0.05 * lineH;
+            // tPos.z += -0.05 * lineH;
+
             // tPos.z += -0.004;
 
             // wind
