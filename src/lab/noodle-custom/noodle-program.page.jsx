@@ -42,7 +42,7 @@ export function Page() {
           <Bloom mipmapBlur intensity={1} luminanceThreshold={0.05}></Bloom>
         </EffectComposer>
 
-        <Environment files={`/hdr/shanghai.hdr`}></Environment>
+        <Environment background files={`/hdr/shanghai.hdr`}></Environment>
       </Canvas>
 
       {/*  */}
@@ -90,6 +90,9 @@ const useHairSculpPosition = () => {
     let positionTexture
     let normalTexture
 
+    if (!mesh) {
+      return { positionTexture, normalTexture }
+    }
     {
       let dataArray = new Float32Array(count * 4 * 1)
       positionTexture = new DataTexture(dataArray, count, 1, RGBAFormat, FloatType)
@@ -100,8 +103,8 @@ const useHairSculpPosition = () => {
       let o3 = new Object3D()
       let v3 = o3.position
       let n3 = new Vector3()
-      let geo = mesh.geometry
-      geo.computeBoundingSphere()
+      let geo = mesh?.geometry
+      geo && geo.computeBoundingSphere()
 
       let geoDiff = new Vector3()
       geoDiff.copy(geo.boundingSphere.center)
@@ -123,7 +126,7 @@ const useHairSculpPosition = () => {
       positionTexture.needsUpdate = true
     }
 
-    return { positionTexture, normalTexture, initPosition: mesh }
+    return { positionTexture, normalTexture }
   }, [sampler, count, mesh])
 
   return { positionTexture, normalTexture, glb, count, headPosition }

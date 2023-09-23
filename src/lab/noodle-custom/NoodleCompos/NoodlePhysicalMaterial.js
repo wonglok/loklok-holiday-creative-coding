@@ -6,7 +6,9 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
 
     let self = this
 
-    this.metalness = 1.0
+    this.transmission = 1.0
+    this.thickness = 0.9
+
     this.roughness = 0.0
     this.envMapIntensity = 1.0
     this.color = new Color('#ffffff')
@@ -141,7 +143,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           float t = tubeInfo + 0.5;
           vT = t;
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 2.0;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 5.0;
 
           createTube(t, volume, transformed, objectNormal);
           
@@ -284,6 +286,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           vec3 colorPal = pal(time * 2.0 + rand(vMyUV) * 1.3 + tt * 5.0, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
           diffuseColor.rgb *= vEachColor.rgb * 0.3 + colorPal * 1.0;
           diffuseColor.rgb = normalize(diffuseColor.rgb);
+
+          diffuseColor.rgb = vec3(1.0,1.0,0.0);
 
           // diffuseColor.r *= pow(diffuseColor.r, 0.5) * 0.5;
           // diffuseColor.g *= pow(diffuseColor.g, 0.5) * 0.5;
