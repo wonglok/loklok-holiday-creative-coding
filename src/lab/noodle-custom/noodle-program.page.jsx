@@ -82,7 +82,6 @@ const useHairSculpPosition = () => {
       if (it.name === 'Head') {
         it.getWorldPosition(headPosition)
         headPosition.y += 0.11
-        headPosition.z += 0.05
       }
     })
   })
