@@ -14,10 +14,12 @@ import { Suspense, useMemo, useRef } from 'react'
 import { NoodleEntry } from './NoodleCompos/NoodleEntry'
 import {
   AnimationMixer,
+  Color,
   DataTexture,
   FloatType,
   Group,
   Mesh,
+  MeshPhysicalMaterial,
   Object3D,
   Quaternion,
   RGBAFormat,
@@ -74,6 +76,11 @@ const useHairSculpPosition = () => {
 
   glb?.scene.traverse((it) => {
     console.log(it.name)
+    if (it && it.material) {
+      if (!it.origMat) {
+        it.origMat = it.material.clone()
+      }
+    }
   })
   let name = 'Wolf3D_Head001'
   let mesh = glb?.scene?.getObjectByName(name)
@@ -225,13 +232,13 @@ function Mouse({ mouse }) {
     mouse.position.lerp(nowPt, 0.3)
 
     if (ptl.current) {
-      ptl.current.position.lerp(nowPt, 0.1)
+      ptl.current.position.lerp(camera.position, 0.1)
       ptl.current.color.offsetHSL(0.001, 0, 0)
     }
   })
   return (
     <>
-      <pointLight castShadow ref={ptl} intensity={3.0} color={'#ff0000'}></pointLight>
+      {/* <directionalLight castShadow ref={ptl} intensity={3.0} color={'#ff0000'}></directionalLight> */}
       {createPortal(
         <Plane
           position={[0, 0, 0]}
