@@ -1,14 +1,16 @@
 import { Color, MeshPhysicalMaterial } from 'three'
 
 export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
-  constructor({ ...props }) {
+  constructor({ core, subdivisions, lineCount, ...props }) {
     super({ ...props })
 
     let self = this
 
-    this.metalness = 1.0
+    this.metalness = 0.0
     this.roughness = 0.0
     this.envMapIntensity = 1.0
+    this.transmission = 1.0
+    this.thickness = 2.0
 
     this.uniforms = {
       posTexture: { value: null },
@@ -17,8 +19,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     this.onBeforeCompile = (shader) => {
       shader.defines = {
         ...shader.defines,
-        lengthSegments: props.subdivisions.toFixed(2),
-        lineCount: props.lineCount.toFixed(2),
+        lengthSegments: subdivisions.toFixed(2),
+        lineCount: lineCount.toFixed(2),
       }
 
       shader.uniforms.posTexture = {
