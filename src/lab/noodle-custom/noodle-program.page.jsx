@@ -52,7 +52,7 @@ export function Page() {
 
 const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
-  let fbx = useFBX(`/rpm/rpm-actions-locomotion/swim-float.fbx`)
+  let fbx = useFBX(`/rpm/rpm-actions-emoji/yes.fbx`)
   let mixer = useMemo(() => {
     return new AnimationMixer(glb.scene)
   }, [glb])

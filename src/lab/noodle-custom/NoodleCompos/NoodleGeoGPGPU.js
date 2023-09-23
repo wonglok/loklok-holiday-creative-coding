@@ -303,7 +303,9 @@ export class NoodleGeoGPGPU {
 
             tPos.xyz += sculp * pow(lineE, 1.5);
             tPos.y += -0.004 * pow(lineT, 1.5);
-            tPos.z += -0.004 * pow(lineT, 1.5);
+            
+            tPos.z += -0.005 * pow(lineT, 1.5);
+            tPos.z += -0.004;
 
             // wind
             // tPos.z += -0.01 * lineE + sin(time) * -0.005;
@@ -332,7 +334,7 @@ export class NoodleGeoGPGPU {
             
             
             // smooth
-            sPos = lerp(sPos, tPos, 0.7);
+            sPos = lerp(sPos, tPos, 1.0 - 0.2);
 
             gl_FragColor.xyz = sPos;
           
