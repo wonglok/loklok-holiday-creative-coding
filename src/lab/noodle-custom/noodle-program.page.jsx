@@ -23,7 +23,7 @@ import {
   SphereGeometry,
   Vector3,
 } from 'three'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { Bloom, EffectComposer, N8AO, Autofocus, DepthOfField } from '@react-three/postprocessing'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
 export function Page() {
@@ -32,17 +32,15 @@ export function Page() {
       {/*  */}
 
       <Canvas shadows>
-        <color attach={'background'} args={['#000000']}></color>
         <Suspense fallback={null}>
           <Yo></Yo>
         </Suspense>
 
         <OrbitControls object-position={[-2, 1.68, 2]} target={[0, 1.68, 0]} makeDefault></OrbitControls>
 
-        <EffectComposer disableNormalPass>
-          <Bloom mipmapBlur intensity={1} luminanceThreshold={0.05}></Bloom>
-        </EffectComposer>
+        <Effects></Effects>
 
+        <color attach={'background'} args={['#000000']}></color>
         <Environment background files={`/hdr/shanghai.hdr`}></Environment>
       </Canvas>
 
@@ -51,9 +49,21 @@ export function Page() {
   )
 }
 
+function Effects() {
+  // let controls = useThree((state) => state.controls)
+  return (
+    <>
+      <EffectComposer disableNormalPass>
+        <N8AO intensity={1}></N8AO>
+        <Bloom mipmapBlur intensity={1} luminanceThreshold={0.8}></Bloom>
+      </EffectComposer>
+    </>
+  )
+}
+
 const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
-  let fbx = useFBX(`/rpm/dance/ymca.fbx`)
+  let fbx = useFBX(`/rpm/dance/silly.fbx`)
   let mixer = useMemo(() => {
     return new AnimationMixer(glb.scene)
   }, [glb])
