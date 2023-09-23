@@ -26,6 +26,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           return self.uniforms.posTexture.value
         },
       }
+
       shader.uniforms.time = {
         get value() {
           return performance.now() / 1000

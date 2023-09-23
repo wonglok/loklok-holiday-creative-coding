@@ -1,6 +1,5 @@
 import { Mesh, Object3D } from 'three'
 import { NoodleGeo } from './NoodleGeo'
-import { NoodleMat } from './NoodleMat'
 import { NoodleGeoGPGPU } from './NoodleGeoGPGPU'
 import { NoodlePhysicalMaterial } from './NoodlePhysicalMaterial'
 
