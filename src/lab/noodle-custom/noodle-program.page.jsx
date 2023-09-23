@@ -52,7 +52,7 @@ export function Page() {
 
 const useHairSculpPosition = () => {
   let glb = useGLTF(`/rpm/lok/lok-white-tshirt-sculp.glb`)
-  let fbx = useFBX(`/rpm/rpm-actions-emoji/mma-kick.fbx`)
+  let fbx = useFBX(`/rpm/rpm-actions-locomotion/swim-float.fbx`)
   let mixer = useMemo(() => {
     return new AnimationMixer(glb.scene)
   }, [glb])
@@ -179,11 +179,13 @@ function Yo() {
     <>
       {/*  */}
       {compos}
-      {createPortal(<></>, glb.scene)}
+      <group rotation={[0.0, 0, 0]}>
+        <primitive object={glb.scene}></primitive>
+        {createPortal(<></>, glb.scene)}
+      </group>
 
       <gridHelper args={[10, 10, 'white', 'white']}></gridHelper>
       <Mouse mouse={mouse}></Mouse>
-      <primitive object={glb.scene}></primitive>
 
       {/*  */}
     </>
