@@ -20,7 +20,6 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     }
 
     this.onBeforeCompile = (shader) => {
-      //
       shader.defines = {
         ...shader.defines,
         lengthSegments: subdivisions.toFixed(1),
@@ -72,8 +71,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
         uniform float time;
         varying vec2 vMyUV;
 
-        vec3 lerp(vec3 a, vec3 b, float w)
-        {
+        vec3 lerp(vec3 a, vec3 b, float w) {
           return a + w*(b-a);
         } 
 
