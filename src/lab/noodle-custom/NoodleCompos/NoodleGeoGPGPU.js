@@ -337,8 +337,7 @@ export class NoodleGeoGPGPU {
             // // baseSculp
             float radiusAffected2 = 0.2;
             vec3 mPos2 = vec3(headPosition);
-            mPos2.z += radiusAffected2 / 2.0 * lineE;
-            mPos2.y += radiusAffected2 / -2.0 * lineE;
+            mPos2.z += radiusAffected2 / 2.0;
             tPos.z += -0.01 * lineE;
 
             float distMouseToHair2 = length(mPos2 - tPos.xyz);
@@ -346,12 +345,12 @@ export class NoodleGeoGPGPU {
             if (distMouseToHair2 >= radiusAffected2) {
               distMouseToHair2 = radiusAffected2;
             }
-            float mouseForceSize2 = (((radiusAffected2 * 1.01 - distMouseToHair2) / maxDistMouseToHair2));
-            tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT;
-            
+            float mouseForceSize2 = (((radiusAffected2 * 1.1 - distMouseToHair2) / maxDistMouseToHair2));
+            tPos += normalize(mPos2 - tPos.xyz) * -mouseForceSize2 * lineT * lineH;
+
             
             // smooth
-            sPos = lerp(sPos, tPos, 0.5);
+            sPos = lerp(sPos, tPos, lineE * 0.5 + lineT * 0.5);
 
             gl_FragColor.xyz = sPos;
           
