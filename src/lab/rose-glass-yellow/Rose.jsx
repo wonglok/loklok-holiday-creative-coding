@@ -20,7 +20,7 @@ import {
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
 export function Rose(props) {
-  const { nodes, materials } = useGLTF('/rose/rose2.glb')
+  const { nodes, materials } = useGLTF('/rose/rose2.glb?a=2')
 
   let { envMap: envMapGlass } = useComputeEnvMap(
     /* glsl */ `
