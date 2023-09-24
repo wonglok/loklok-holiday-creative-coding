@@ -13,6 +13,7 @@ export function Rose(props) {
         name='Stem'
         castShadow
         receiveShadow
+        frustumCulled={false}
         geometry={nodes.Stem.geometry}
         material={materials.green}
         position={[0.01582, 0.18058, -0.08771]}
@@ -26,6 +27,7 @@ export function Rose(props) {
         name='petals021'
         castShadow
         receiveShadow
+        frustumCulled={false}
         geometry={nodes.petals021.geometry}
         position={[0.03869, 0.32278, -0.11959]}
         rotation={[1.92032, 0, -Math.PI / 2]}
@@ -38,6 +40,7 @@ export function Rose(props) {
         name='petals001'
         castShadow
         receiveShadow
+        frustumCulled={false}
         geometry={nodes.petals001.geometry}
         position={[0.03727, 0.30462, -0.06339]}
         rotation={[1.92032, 0, -Math.PI / 2]}
@@ -50,6 +53,7 @@ export function Rose(props) {
         name='petals013'
         castShadow
         receiveShadow
+        frustumCulled={false}
         geometry={nodes.petals013.geometry}
         position={[0.07679, 0.34146, -0.12545]}
         rotation={[1.92032, 0, -Math.PI / 2]}
