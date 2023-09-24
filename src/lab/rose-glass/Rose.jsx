@@ -10,9 +10,7 @@ import { useRef } from 'react'
 export function Rose(props) {
   const { nodes, materials } = useGLTF('/rose/rose2.glb')
 
-  let timebox = useRef({ value: 0 })
-
-  let { envMap: computeEnvMapGlass, material } = useComputeEnvMap(
+  let { envMap: envMapGlass } = useComputeEnvMap(
     /* glsl */ `
 
   const mat2 m = mat2( 0.80,  0.60, -0.60,  0.80 );
@@ -93,9 +91,6 @@ export function Rose(props) {
     true,
   )
 
-  useFrame((st, dt) => {
-    material.uniforms.time.value += dt * 0.2
-  })
   return (
     <group {...props} dispose={null}>
       <mesh
@@ -110,13 +105,7 @@ export function Rose(props) {
         scale={0.00136}
         userData={{ name: 'Stem' }}
       >
-        <meshPhysicalMaterial
-          envMap={computeEnvMapGlass}
-          transmission={1}
-          thickness={1}
-          roughness={0}
-          color={'#008800'}
-        />
+        <meshPhysicalMaterial envMap={envMapGlass} transmission={1} thickness={1} roughness={0} color={'#008800'} />
       </mesh>
       <mesh
         name='petals021'
@@ -131,7 +120,7 @@ export function Rose(props) {
       >
         <meshPhysicalMaterial
           metalness={0.1}
-          envMap={computeEnvMapGlass}
+          envMap={envMapGlass}
           transmission={1}
           thickness={1}
           roughness={0}
@@ -151,7 +140,7 @@ export function Rose(props) {
       >
         <meshPhysicalMaterial
           metalness={0.1}
-          envMap={computeEnvMapGlass}
+          envMap={envMapGlass}
           transmission={1}
           thickness={1}
           roughness={0}
@@ -171,7 +160,7 @@ export function Rose(props) {
       >
         <meshPhysicalMaterial
           metalness={0.1}
-          envMap={computeEnvMapGlass}
+          envMap={envMapGlass}
           transmission={1}
           thickness={1}
           roughness={0}

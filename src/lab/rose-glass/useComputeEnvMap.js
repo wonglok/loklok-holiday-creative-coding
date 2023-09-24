@@ -174,36 +174,23 @@ export function useComputeEnvMap(code = DefaultCode, uniforms = {}, res = 128, d
       camera.update(gl, scene)
     }
 
-    compute()
-
     cubeRtt.texture.mapping = CubeRefractionMapping
     cubeRtt.texture.mapping = CubeReflectionMapping
     cubeRtt.texture.colorSpace = SRGBColorSpace
 
     return {
       material,
-      cubeRtt,
       envMap: cubeRtt.texture,
       compute,
     }
   }, [code, gl, res, uniforms])
 
-  useEffect(() => {
-    return () => {
-      cubeRtt.dispose()
-    }
-  }, [cubeRtt])
-
-  let yo = 0
-  useFrame(() => {
-    if (doCompute || newAngle !== yo) {
-      yo = newAngle
-
-      compute()
-    }
+  useFrame((st, dt) => {
+    compute()
+    material.uniforms.time.value += dt
   })
 
-  return { envMap, material }
+  return { envMap }
 }
 
 //
