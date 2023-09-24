@@ -104,139 +104,139 @@ export function Rose(props) {
   }
 
   `,
-    { time: { value: 1 } },
+    {},
     128,
     true,
   )
 
-  let { primitiveArray, obj } = useMemo(() => {
-    if (!nodes?.petals001?.geometry) {
-      return {}
-    }
-    let o3d = []
-    let obj = []
-    let pedals = [
-      {
-        geo: nodes?.petals001?.geometry,
-        props: {
-          position: [0.03727, 0.30462, -0.06339],
-          rotation: [1.92032, 0, -Math.PI / 2],
-          scale: 0.00136,
-        },
-        amount: 512 * 256,
-      },
-      {
-        geo: nodes?.petals013?.geometry,
-        props: {
-          position: [0.07679, 0.34146, -0.12545],
-          rotation: [1.92032, 0, -Math.PI / 2],
-          scale: 0.00136,
-        },
-        amount: 512 * 256,
-      },
-      {
-        geo: nodes?.petals021?.geometry,
-        props: {
-          position: [0.03869, 0.32278, -0.11959],
-          rotation: [1.92032, 0, -Math.PI / 2],
-          scale: 0.00136,
-        },
-        amount: 256 * 256,
-      },
-    ]
+  // let { primitiveArray, obj } = useMemo(() => {
+  //   if (!nodes?.petals001?.geometry) {
+  //     return {}
+  //   }
+  //   let o3d = []
+  //   let obj = []
+  //   let pedals = [
+  //     {
+  //       geo: nodes?.petals001?.geometry,
+  //       props: {
+  //         position: [0.03727, 0.30462, -0.06339],
+  //         rotation: [1.92032, 0, -Math.PI / 2],
+  //         scale: 0.00136,
+  //       },
+  //       amount: 512 * 256,
+  //     },
+  //     {
+  //       geo: nodes?.petals013?.geometry,
+  //       props: {
+  //         position: [0.07679, 0.34146, -0.12545],
+  //         rotation: [1.92032, 0, -Math.PI / 2],
+  //         scale: 0.00136,
+  //       },
+  //       amount: 512 * 256,
+  //     },
+  //     {
+  //       geo: nodes?.petals021?.geometry,
+  //       props: {
+  //         position: [0.03869, 0.32278, -0.11959],
+  //         rotation: [1.92032, 0, -Math.PI / 2],
+  //         scale: 0.00136,
+  //       },
+  //       amount: 256 * 256,
+  //     },
+  //   ]
 
-    pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
-      let mesh = new Mesh(geo || new BoxGeometry(), new MeshBasicMaterial({ side: FrontSide }))
-      let sampler = new MeshSurfaceSampler(mesh)
-      sampler.build()
+  //   pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
+  //     let mesh = new Mesh(geo || new BoxGeometry(), new MeshBasicMaterial({ side: FrontSide }))
+  //     let sampler = new MeshSurfaceSampler(mesh)
+  //     sampler.build()
 
-      let pointCount = amount
-      let sPosition = new BufferAttribute(new Float32Array(pointCount * 4), 4)
-      let sNormal = new BufferAttribute(new Float32Array(pointCount * 4), 4)
-      let sRand = new BufferAttribute(new Float32Array(pointCount * 1), 1)
-      let pos = new Vector3()
-      let norm = new Vector3()
-      for (let i = 0; i < pointCount; i++) {
-        sampler.sample(pos, norm)
-        sPosition.setXYZW(i, pos.x, pos.y, pos.z, 1.0)
-        sNormal.setXYZW(i, norm.x, norm.y, norm.z, 1.0)
-        sRand.setX(i, Math.random())
-      }
+  //     let pointCount = amount
+  //     let sPosition = new BufferAttribute(new Float32Array(pointCount * 4), 4)
+  //     let sNormal = new BufferAttribute(new Float32Array(pointCount * 4), 4)
+  //     let sRand = new BufferAttribute(new Float32Array(pointCount * 1), 1)
+  //     let pos = new Vector3()
+  //     let norm = new Vector3()
+  //     for (let i = 0; i < pointCount; i++) {
+  //       sampler.sample(pos, norm)
+  //       sPosition.setXYZW(i, pos.x, pos.y, pos.z, 1.0)
+  //       sNormal.setXYZW(i, norm.x, norm.y, norm.z, 1.0)
+  //       sRand.setX(i, Math.random())
+  //     }
 
-      let bGeo = new BufferGeometry()
-      bGeo.setAttribute('position', sPosition)
-      bGeo.setAttribute('sPosition', sPosition)
-      bGeo.setAttribute('sNormal', sNormal)
-      bGeo.setAttribute('sRand', sRand)
-      let points = new Points(
-        bGeo,
-        new ShaderMaterial({
-          precision: 'highp',
-          transparent: true,
-          uniforms: {
-            //
-            time: { value: 0 },
-            dist: { value: 0 },
-            //
-          },
-          vertexShader: /* glsl */ `
-          attribute vec4 sPosition;
-          attribute vec4 sNormal;
-          attribute float sRand;
-          uniform float dist; 
-          uniform float time;
-            void main (void) {
-              float height = 1.333;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + sNormal.rgb * mod(time * 0.7 + sRand * height, height), 1.0);
-              
-              gl_PointSize = 1.0 / dist;
-              if (gl_PointSize >=1.0) {
-                gl_PointSize = 1.0;
-              }
-            }
-          `,
-          fragmentShader: /* glsl */ `
-            uniform float dist; 
-            void main (void) {
-              float maxAlpha = 0.3;
-              float alpha = 0.3;
+  //     let bGeo = new BufferGeometry()
+  //     bGeo.setAttribute('position', sPosition)
+  //     bGeo.setAttribute('sPosition', sPosition)
+  //     bGeo.setAttribute('sNormal', sNormal)
+  //     bGeo.setAttribute('sRand', sRand)
+  //     let points = new Points(
+  //       bGeo,
+  //       new ShaderMaterial({
+  //         precision: 'highp',
+  //         transparent: true,
+  //         uniforms: {
+  //           //
+  //           time: { value: 0 },
+  //           dist: { value: 0 },
+  //           //
+  //         },
+  //         vertexShader: /* glsl */ `
+  //         attribute vec4 sPosition;
+  //         attribute vec4 sNormal;
+  //         attribute float sRand;
+  //         uniform float dist;
+  //         uniform float time;
+  //           void main (void) {
+  //             float height = 1.333;
+  //             gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + sNormal.rgb * mod(time * 0.7 + sRand * height, height), 1.0);
 
-              alpha = alpha / pow(dist, 1.5);
-              if (alpha >= maxAlpha) {
-                alpha = maxAlpha;
-              }
+  //             gl_PointSize = 1.0 / dist;
+  //             if (gl_PointSize >=1.0) {
+  //               gl_PointSize = 1.0;
+  //             }
+  //           }
+  //         `,
+  //         fragmentShader: /* glsl */ `
+  //           uniform float dist;
+  //           void main (void) {
+  //             float maxAlpha = 0.3;
+  //             float alpha = 0.3;
 
-              gl_FragColor = vec4(0.5, 0.5, 0.0, alpha);
-            }
-          
-          `,
-        }),
-      )
+  //             alpha = alpha / pow(dist, 1.5);
+  //             if (alpha >= maxAlpha) {
+  //               alpha = maxAlpha;
+  //             }
 
-      o3d.push(
-        <group key={points.uuid} {...props}>
-          <primitive object={points}></primitive>
-        </group>,
-      )
-      obj.push(points)
-    })
+  //             gl_FragColor = vec4(0.5, 0.5, 0.0, alpha);
+  //           }
 
-    return { primitiveArray: o3d, obj: obj }
-  }, [nodes?.petals001?.geometry, nodes?.petals013?.geometry, nodes?.petals021?.geometry])
+  //         `,
+  //       }),
+  //     )
 
-  useFrame(({ controls }) => {
-    if (controls && obj?.length > 0) {
-      obj.forEach((o) => {
-        o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
-        o.material.uniforms.time.value = performance.now() / 1000
-      })
-    }
-  })
+  //     o3d.push(
+  //       <group key={points.uuid} {...props}>
+  //         <primitive object={points}></primitive>
+  //       </group>,
+  //     )
+  //     obj.push(points)
+  //   })
+
+  //   return { primitiveArray: o3d, obj: obj }
+  // }, [nodes?.petals001?.geometry, nodes?.petals013?.geometry, nodes?.petals021?.geometry])
+
+  // useFrame(({ controls }) => {
+  //   if (controls && obj?.length > 0) {
+  //     obj.forEach((o) => {
+  //       o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
+  //       o.material.uniforms.time.value = performance.now() / 1000
+  //     })
+  //   }
+  // })
 
   //
   return (
     <group {...props} dispose={null}>
-      {primitiveArray || []}
+      {/* {primitiveArray || []} */}
       <mesh
         name='Stem'
         castShadow
