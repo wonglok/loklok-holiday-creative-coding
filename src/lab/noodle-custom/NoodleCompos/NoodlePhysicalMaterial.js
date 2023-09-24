@@ -1,4 +1,4 @@
-import { Color, MeshPhysicalMaterial, TextureLoader } from 'three'
+import { AdditiveBlending, Color, MeshPhysicalMaterial, TextureLoader } from 'three'
 
 export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
   constructor({ core, subdivisions, lineCount, ...props }) {
@@ -14,6 +14,8 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
     this.envMapIntensity = 1.0
     this.color = new Color('#ffffff')
 
+    this.transparent = true
+    this.opacity = 1
     // this.map = new TextureLoader().load(``)
     this.uniforms = {
       posTexture: { value: null },
@@ -142,7 +144,7 @@ export class NoodlePhysicalMaterial extends MeshPhysicalMaterial {
           float t = tubeInfo + 0.5;
           vT = t;
 
-          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 15.0;
+          vec2 volume = vec2(t * (1.0 - t)) * 0.005 * 10.0;
 
           createTube(t, volume, transformed, objectNormal);
           
