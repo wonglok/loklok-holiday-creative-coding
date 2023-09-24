@@ -79,7 +79,7 @@ export function Rose(props) {
     float pLayout1 = pow(pattern(time * 0.5 + uv.xy * 5.0 + 0.01, 0.1 * time), 1.3);
 
     outColor.rgb = vec3(
-      pLayout1 * 0.55 + 0.05,
+      pLayout1 * 0.55 + 0.05 + 0.5,
       pLayout1 * 0.55 + 0.05,
       pLayout1 * 0.55 + 0.05
     );
@@ -135,7 +135,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#ff0000'}
+          color={'#000000'}
         />
       </mesh>
       <mesh
@@ -155,7 +155,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#ff0000'}
+          color={'#000000'}
         />
       </mesh>
       <mesh
@@ -175,7 +175,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#ff0000'}
+          color={'#000000'}
         />
       </mesh>
     </group>
