@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { Rose } from './Rose'
-import { Environment, OrbitControls } from '@react-three/drei'
+import { Environment, OrbitControls, Stats } from '@react-three/drei'
 import { Suspense } from 'react'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
@@ -26,6 +26,7 @@ function Yo() {
       <EffectComposer disableNormalPass>
         <Bloom luminanceThreshold={0.1} intensity={10} mipmapBlur></Bloom>
       </EffectComposer>
+      <Stats></Stats>
     </>
   )
 }
