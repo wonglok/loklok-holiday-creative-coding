@@ -7,12 +7,12 @@ import { useComputeEnvMap } from './useComputeEnvMap'
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import {
+  BoxGeometry,
   BufferAttribute,
   BufferGeometry,
   FrontSide,
   Mesh,
   MeshBasicMaterial,
-  Object3D,
   Points,
   ShaderMaterial,
   Vector3,
@@ -110,11 +110,14 @@ export function Rose(props) {
   )
 
   let { primitiveArray, obj } = useMemo(() => {
+    if (!nodes?.petals001?.geometry) {
+      return {}
+    }
     let o3d = []
     let obj = []
     let pedals = [
       {
-        geo: nodes.petals001.geometry,
+        geo: nodes?.petals001?.geometry,
         props: {
           position: [0.03727, 0.30462, -0.06339],
           rotation: [1.92032, 0, -Math.PI / 2],
@@ -123,7 +126,7 @@ export function Rose(props) {
         amount: 512 * 256,
       },
       {
-        geo: nodes.petals013.geometry,
+        geo: nodes?.petals013?.geometry,
         props: {
           position: [0.07679, 0.34146, -0.12545],
           rotation: [1.92032, 0, -Math.PI / 2],
@@ -132,7 +135,7 @@ export function Rose(props) {
         amount: 512 * 256,
       },
       {
-        geo: nodes.petals021.geometry,
+        geo: nodes?.petals021?.geometry,
         props: {
           position: [0.03869, 0.32278, -0.11959],
           rotation: [1.92032, 0, -Math.PI / 2],
@@ -143,7 +146,7 @@ export function Rose(props) {
     ]
 
     pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
-      let mesh = new Mesh(geo, new MeshBasicMaterial({ side: FrontSide }))
+      let mesh = new Mesh(geo || new BoxGeometry(), new MeshBasicMaterial({ side: FrontSide }))
       let sampler = new MeshSurfaceSampler(mesh)
       sampler.build()
 
@@ -168,6 +171,7 @@ export function Rose(props) {
       let points = new Points(
         bGeo,
         new ShaderMaterial({
+          precision: 'highp',
           transparent: true,
           uniforms: {
             //
@@ -209,13 +213,6 @@ export function Rose(props) {
         }),
       )
 
-      let rAFID = 0
-      let rAF = () => {
-        rAFID = requestAnimationFrame(rAF)
-        points.material.uniforms.time.value = performance.now() / 1000
-      }
-      rAFID = requestAnimationFrame(rAF)
-
       o3d.push(
         <group key={points.uuid} {...props}>
           <primitive object={points}></primitive>
@@ -225,12 +222,13 @@ export function Rose(props) {
     })
 
     return { primitiveArray: o3d, obj: obj }
-  }, [])
+  }, [nodes?.petals001?.geometry, nodes?.petals013?.geometry, nodes?.petals021?.geometry])
 
   useFrame(({ controls }) => {
     if (controls && obj?.length > 0) {
       obj.forEach((o) => {
-        o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target)
+        o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
+        o.material.uniforms.time.value = performance.now() / 1000
       })
     }
   })
@@ -238,7 +236,7 @@ export function Rose(props) {
   //
   return (
     <group {...props} dispose={null}>
-      {primitiveArray}
+      {primitiveArray || []}
       <mesh
         name='Stem'
         castShadow

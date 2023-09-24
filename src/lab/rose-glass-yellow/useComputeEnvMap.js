@@ -101,7 +101,7 @@ vec4 mainImage ()  {
 
 `
 
-export function useComputeEnvMap(code = DefaultCode, uniforms = {}, res = 128, doCompute = true, newAngle = 0) {
+export function useComputeEnvMap(code = DefaultCode, uniforms = {}, res = 128) {
   let { gl } = useThree()
 
   let { envMap, material, compute, cubeRtt } = useMemo(() => {
