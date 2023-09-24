@@ -32,7 +32,7 @@ export function Rose(props) {
         scale={0.00136}
         userData={{ name: 'petals.021' }}
       >
-        <meshPhysicalMaterial transmission={1} thickness={1} roughness={0} color={'#ff0000'} />
+        <meshPhysicalMaterial metalness={0.1} transmission={1} thickness={1} roughness={0} color={'#ff0000'} />
       </mesh>
       <mesh
         name='petals001'
@@ -44,7 +44,7 @@ export function Rose(props) {
         scale={0.00136}
         userData={{ name: 'petals.001' }}
       >
-        <meshPhysicalMaterial transmission={1} thickness={1} roughness={0} color={'#ff0000'} />
+        <meshPhysicalMaterial metalness={0.1} transmission={1} thickness={1} roughness={0} color={'#ff0000'} />
       </mesh>
       <mesh
         name='petals013'
@@ -56,7 +56,7 @@ export function Rose(props) {
         scale={0.00136}
         userData={{ name: 'petals.013' }}
       >
-        <meshPhysicalMaterial transmission={1} thickness={1} roughness={0} color={'#ff0000'} />
+        <meshPhysicalMaterial metalness={0.1} transmission={1} thickness={1} roughness={0} color={'#ff0000'} />
       </mesh>
     </group>
   )
