@@ -1,10 +1,10 @@
 import { Canvas } from '@react-three/fiber'
-import { Rose } from './Rose'
 import { Environment, OrbitControls } from '@react-three/drei'
 import { Suspense } from 'react'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { Rose3 } from './Rose3'
 
-export function RoseGlass() {
+export function RoseGlassYo() {
   return (
     <>
       <Canvas>
@@ -20,7 +20,7 @@ function Yo() {
     <>
       <OrbitControls object-position={[0, 0.5, 0.08]} makeDefault target={[0, 0.33, -0.07]}></OrbitControls>
       <Suspense fallback={null}>
-        <Rose></Rose>
+        <Rose3></Rose3>
       </Suspense>
       <Environment files={`/hdr/greenwich_park_02_1k.hdr`}></Environment>
       <EffectComposer disableNormalPass>

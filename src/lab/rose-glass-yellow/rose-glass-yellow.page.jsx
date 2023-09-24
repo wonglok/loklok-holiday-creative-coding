@@ -4,7 +4,7 @@ import { Environment, OrbitControls, Stats } from '@react-three/drei'
 import { Suspense } from 'react'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
-export function RoseGlass() {
+export function RoseGlassFA() {
   return (
     <>
       <Canvas>
