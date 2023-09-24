@@ -18,7 +18,7 @@ export function RoseGlass() {
 function Yo() {
   return (
     <>
-      <OrbitControls object-position={[0, 0.3, 0.2]} makeDefault target={[0, 0.3, -0.07]}></OrbitControls>
+      <OrbitControls object-position={[0, 0.5, 0.08]} makeDefault target={[0, 0.33, -0.07]}></OrbitControls>
       <Suspense fallback={null}>
         <Rose></Rose>
       </Suspense>
