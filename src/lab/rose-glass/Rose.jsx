@@ -20,7 +20,7 @@ export function Rose(props) {
         scale={0.00136}
         userData={{ name: 'Stem' }}
       >
-        <meshPhysicalMaterial transmission={1} thickness={1} roughness={0} color={'#00ff00'} />
+        <meshPhysicalMaterial transmission={1} thickness={1} roughness={0} color={'#008800'} />
       </mesh>
       <mesh
         name='petals021'
