@@ -275,6 +275,7 @@ function Particles({ nodes }) {
           attribute float sRand;
           uniform float dist;
           uniform float time;
+
           mat3 rotateY(float rad) {
               float c = cos(rad);
               float s = sin(rad);
@@ -311,7 +312,7 @@ function Particles({ nodes }) {
                 gl_PointSize = 1.0;
               }
 
-              float height = 1.0;
+              float height = 5.0;
               
               float loop = mod(time * 1.5 + sRand * height, height);
 
@@ -322,7 +323,9 @@ function Particles({ nodes }) {
               );
 
               float loop2 = mod(time * 1.0 / 60.0 + sRand * 1.0, 1.0);
-              diff += sPosition.rgb * rotateZ(loop2 * 3.141592 * 2.0) / 20.0;
+              diff += normalize(sPosition.rgb) * rotateX(loop2 * 3.141592 * 20.0) * 1.0;
+              diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592 * 20.0) * 1.0;
+              diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592 * 20.0) * 1.0;
 
               gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + diff, 1.0);
             }
