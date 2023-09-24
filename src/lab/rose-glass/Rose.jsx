@@ -80,8 +80,8 @@ export function Rose(props) {
 
     outColor.rgb = vec3(
       pLayout1 * 0.55 + 0.05 + 0.5,
-      pLayout1 * 0.55 + 0.05,
-      pLayout1 * 0.55 + 0.05
+      pLayout1 * 0.23 + 0.05,
+      pLayout1 * 0.23 + 0.05
     );
 
     return outColor;
