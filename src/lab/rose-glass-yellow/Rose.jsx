@@ -302,38 +302,37 @@ function Particles({ nodes }) {
                   0.0, 0.0, 1.0
               );
           }
-
-          
-            void main (void) {
-              gl_PointSize = 1.0 / dist;
-              if (gl_PointSize >=1.0) {
-                gl_PointSize = 1.0;
-              }
-
-              float height = 5.0;
-              
-              float loop = mod(time * 1.5 + sRand * height, height);
-
-              vec3 diff = vec3(
-                sNormal.r * loop,
-                sNormal.g * 3.0 * loop,
-                sNormal.b * loop
-              );
-
-              float loop2 = mod(time + sRand * 1.0, 1.0);
-
-              vec4 rNormal = modelViewMatrix * sNormal;
-              vec4 rPosition = modelViewMatrix * sPosition;
-
-              diff += normalize(rPosition.rgb) * rotateX(time * 3.141592) * 1.0;
-              diff += normalize(rPosition.rgb) * rotateY(time * 0.5 * 3.141592) * 1.0;
-              diff += normalize(rPosition.rgb) * rotateZ(time * 3.141592) * 1.0;
-
-              // diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592) * 1.0;
-              // diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592) * 1.0;
-
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + diff, 1.0);
+        
+          void main (void) {
+            gl_PointSize = 1.0 / dist;
+            if (gl_PointSize >=1.0) {
+              gl_PointSize = 1.0;
             }
+
+            float height = 5.0;
+            
+            float loop = mod(time * 1.5 + sRand * height, height);
+
+            vec3 diff = vec3(
+              sNormal.r * loop,
+              sNormal.g * 3.0 * loop,
+              sNormal.b * loop
+            );
+
+            float loop2 = mod(time + sRand * 1.0, 1.0);
+
+            vec4 rNormal = modelViewMatrix * sNormal;
+            vec4 rPosition = modelViewMatrix * sPosition;
+
+            diff += normalize(rPosition.rgb) * rotateX(time * 3.141592) * 1.0;
+            diff += normalize(rPosition.rgb) * rotateY(time * 0.5 * 3.141592) * 1.0;
+            diff += normalize(rPosition.rgb) * rotateZ(time * 3.141592) * 1.0;
+
+            // diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592) * 1.0;
+            // diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592) * 1.0;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + diff, 1.0);
+          }
           `,
           fragmentShader: /* glsl */ `
             uniform float dist;
@@ -366,10 +365,6 @@ function Particles({ nodes }) {
       obj.forEach((o) => {
         o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
         o.material.uniforms.time.value = performance.now() / 1000
-
-        if (dt >= 1.0 / 3.0) {
-          o.visible = false
-        }
       })
     }
   })
