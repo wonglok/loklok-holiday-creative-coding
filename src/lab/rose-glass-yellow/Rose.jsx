@@ -15,6 +15,7 @@ import {
   MeshBasicMaterial,
   Points,
   ShaderMaterial,
+  SubtractiveBlending,
   Vector3,
 } from 'three'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
@@ -94,7 +95,7 @@ export function Rose(props) {
       pLayout1 * 1.0
     );
 
-    outColor.r = (1.0 * outColor.r);
+    outColor.r = (2.0 * outColor.r);
     outColor.g = (0.5 * outColor.g);
     outColor.b = (0.5 * outColor.b);
 
@@ -212,7 +213,7 @@ function Particles({ nodes }) {
           rotation: [1.92032, 0, -Math.PI / 2],
           scale: 0.00136,
         },
-        amount: 512 * 256,
+        amount: 256 * 256,
       },
       {
         geo: nodes?.petals013?.geometry,
@@ -221,7 +222,7 @@ function Particles({ nodes }) {
           rotation: [1.92032, 0, -Math.PI / 2],
           scale: 0.00136,
         },
-        amount: 512 * 256,
+        amount: 256 * 256,
       },
       {
         geo: nodes?.petals021?.geometry,
@@ -259,7 +260,6 @@ function Particles({ nodes }) {
       let points = new Points(
         bGeo,
         new ShaderMaterial({
-          precision: 'highp',
           transparent: true,
           uniforms: {
             //
@@ -316,14 +316,21 @@ function Particles({ nodes }) {
 
               vec3 diff = vec3(
                 sNormal.r * loop,
-                sNormal.g * loop,
+                sNormal.g * 3.0 * loop,
                 sNormal.b * loop
               );
 
-              float loop2 = mod(time * 1.0 / 60.0 + sRand * 1.0, 1.0);
-              diff += normalize(sPosition.rgb) * rotateX(loop2 * 3.141592 * 20.0) * 1.0;
-              diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592 * 20.0) * 1.0;
-              diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592 * 20.0) * 1.0;
+              float loop2 = mod(time + sRand * 1.0, 1.0);
+
+              vec4 rNormal = modelViewMatrix * sNormal;
+              vec4 rPosition = modelViewMatrix * sPosition;
+
+              diff += normalize(rPosition.rgb) * rotateX(time * 3.141592) * 1.0;
+              diff += normalize(rPosition.rgb) * rotateY(time * 0.5 * 3.141592) * 1.0;
+              diff += normalize(rPosition.rgb) * rotateZ(time * 3.141592) * 1.0;
+
+              // diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592) * 1.0;
+              // diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592) * 1.0;
 
               gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + diff, 1.0);
             }
@@ -331,13 +338,13 @@ function Particles({ nodes }) {
           fragmentShader: /* glsl */ `
             uniform float dist;
             void main (void) {
-              float maxAlpha = 0.5;
-              float alpha = 0.5;
+              float maxAlpha = 1.0;
+              float alpha = 1.0;
               alpha = alpha / pow(dist, 1.5);
               if (alpha >= maxAlpha) {
                 alpha = maxAlpha;
               }
-              gl_FragColor = vec4(1.0, 0.15, 0.0, alpha);
+              gl_FragColor = vec4(0.8, 0.2, 0.2, alpha);
             }
           `,
         }),
@@ -353,11 +360,16 @@ function Particles({ nodes }) {
     })
     return { primitiveArray: o3d, obj: obj }
   }, [nodes?.petals001?.geometry, nodes?.petals013?.geometry, nodes?.petals021?.geometry])
-  useFrame(({ controls }) => {
+
+  useFrame(({ controls }, dt) => {
     if (controls && obj?.length > 0) {
       obj.forEach((o) => {
         o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
         o.material.uniforms.time.value = performance.now() / 1000
+
+        if (dt >= 1.0 / 3.0) {
+          o.visible = false
+        }
       })
     }
   })
