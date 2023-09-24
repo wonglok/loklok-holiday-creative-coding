@@ -16,7 +16,6 @@ export class NoodleEntry extends Object3D {
       subdivisions: 64,
       openEnded: false,
     })
-    geometry.instanceCount = count
 
     // let material = new NoodleMat({ core, subdivisions, lineCount: lineCount })
 
