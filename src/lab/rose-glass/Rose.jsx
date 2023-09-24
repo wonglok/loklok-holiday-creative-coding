@@ -135,7 +135,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#000000'}
+          color={'#330000'}
         />
       </mesh>
       <mesh
@@ -155,7 +155,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#000000'}
+          color={'#330000'}
         />
       </mesh>
       <mesh
@@ -175,7 +175,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#000000'}
+          color={'#330000'}
         />
       </mesh>
     </group>
