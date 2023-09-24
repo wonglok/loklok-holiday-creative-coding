@@ -239,7 +239,7 @@ export function Rose(props) {
   return (
     <group {...props} dispose={null}>
       {primitiveArray}
-      {/* <mesh
+      <mesh
         name='Stem'
         castShadow
         receiveShadow
@@ -258,9 +258,9 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0.0}
-          color={'#080'}
+          color={'#088'}
         />
-      </mesh> */}
+      </mesh>
       <mesh
         name='petals021'
         castShadow
@@ -273,12 +273,11 @@ export function Rose(props) {
         userData={{ name: 'petals.021' }}
       >
         <meshPhysicalMaterial
-          metalness={1.0}
+          metalness={0.5}
           envMapIntensity={1}
           envMap={envMapGlass}
-          transmission={1}
-          thickness={1}
-          roughness={0.0}
+          //
+          roughness={0.1}
           color={'#330'}
         />
       </mesh>
@@ -294,12 +293,11 @@ export function Rose(props) {
         userData={{ name: 'petals.001' }}
       >
         <meshPhysicalMaterial
-          metalness={1.0}
+          metalness={0.5}
           envMapIntensity={1}
           envMap={envMapGlass}
-          transmission={1}
-          thickness={1}
-          roughness={0.0}
+          //
+          roughness={0.1}
           color={'#330'}
         />
       </mesh>
@@ -315,12 +313,11 @@ export function Rose(props) {
         userData={{ name: 'petals.013' }}
       >
         <meshPhysicalMaterial
-          metalness={1.0}
+          metalness={0.5}
           envMapIntensity={1}
           envMap={envMapGlass}
-          transmission={1}
-          thickness={1}
-          roughness={0.0}
+          //
+          roughness={0.1}
           color={'#330'}
         />
       </mesh>
