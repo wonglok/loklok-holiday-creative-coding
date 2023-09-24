@@ -105,7 +105,7 @@ export function Rose(props) {
 
   `,
     { time: { value: 1 } },
-    512,
+    128,
     true,
   )
 
@@ -120,7 +120,7 @@ export function Rose(props) {
           rotation: [1.92032, 0, -Math.PI / 2],
           scale: 0.00136,
         },
-        amount: 512 * 512,
+        amount: 512 * 256,
       },
       {
         geo: nodes.petals013.geometry,
@@ -147,7 +147,7 @@ export function Rose(props) {
       let sampler = new MeshSurfaceSampler(mesh)
       sampler.build()
 
-      let pointCount = amount * 4
+      let pointCount = amount
       let sPosition = new BufferAttribute(new Float32Array(pointCount * 4), 4)
       let sNormal = new BufferAttribute(new Float32Array(pointCount * 4), 4)
       let sRand = new BufferAttribute(new Float32Array(pointCount * 1), 1)
