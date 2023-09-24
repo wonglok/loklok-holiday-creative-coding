@@ -13,7 +13,7 @@ export function Rose(props) {
   let timebox = useRef({ value: 0 })
 
   let { envMap: computeEnvMapGlass, material } = useComputeEnvMap(
-    `
+    /* glsl */ `
 
   const mat2 m = mat2( 0.80,  0.60, -0.60,  0.80 );
 
@@ -135,7 +135,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#330000'}
+          color={'#440000'}
         />
       </mesh>
       <mesh
@@ -155,7 +155,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#330000'}
+          color={'#440000'}
         />
       </mesh>
       <mesh
@@ -175,7 +175,7 @@ export function Rose(props) {
           transmission={1}
           thickness={1}
           roughness={0}
-          color={'#330000'}
+          color={'#440000'}
         />
       </mesh>
     </group>
