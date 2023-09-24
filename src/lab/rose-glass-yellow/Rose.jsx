@@ -337,7 +337,7 @@ function Particles({ nodes }) {
               if (alpha >= maxAlpha) {
                 alpha = maxAlpha;
               }
-              gl_FragColor = vec4(1.0, 0.0, 0.0, alpha);
+              gl_FragColor = vec4(1.0, 0.15, 0.0, alpha);
             }
           `,
         }),
