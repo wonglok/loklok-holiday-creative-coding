@@ -105,138 +105,14 @@ export function Rose(props) {
 
   `,
     {},
-    128,
+    64,
     true,
   )
-
-  // let { primitiveArray, obj } = useMemo(() => {
-  //   if (!nodes?.petals001?.geometry) {
-  //     return {}
-  //   }
-  //   let o3d = []
-  //   let obj = []
-  //   let pedals = [
-  //     {
-  //       geo: nodes?.petals001?.geometry,
-  //       props: {
-  //         position: [0.03727, 0.30462, -0.06339],
-  //         rotation: [1.92032, 0, -Math.PI / 2],
-  //         scale: 0.00136,
-  //       },
-  //       amount: 512 * 256,
-  //     },
-  //     {
-  //       geo: nodes?.petals013?.geometry,
-  //       props: {
-  //         position: [0.07679, 0.34146, -0.12545],
-  //         rotation: [1.92032, 0, -Math.PI / 2],
-  //         scale: 0.00136,
-  //       },
-  //       amount: 512 * 256,
-  //     },
-  //     {
-  //       geo: nodes?.petals021?.geometry,
-  //       props: {
-  //         position: [0.03869, 0.32278, -0.11959],
-  //         rotation: [1.92032, 0, -Math.PI / 2],
-  //         scale: 0.00136,
-  //       },
-  //       amount: 256 * 256,
-  //     },
-  //   ]
-
-  //   pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
-  //     let mesh = new Mesh(geo || new BoxGeometry(), new MeshBasicMaterial({ side: FrontSide }))
-  //     let sampler = new MeshSurfaceSampler(mesh)
-  //     sampler.build()
-
-  //     let pointCount = amount
-  //     let sPosition = new BufferAttribute(new Float32Array(pointCount * 4), 4)
-  //     let sNormal = new BufferAttribute(new Float32Array(pointCount * 4), 4)
-  //     let sRand = new BufferAttribute(new Float32Array(pointCount * 1), 1)
-  //     let pos = new Vector3()
-  //     let norm = new Vector3()
-  //     for (let i = 0; i < pointCount; i++) {
-  //       sampler.sample(pos, norm)
-  //       sPosition.setXYZW(i, pos.x, pos.y, pos.z, 1.0)
-  //       sNormal.setXYZW(i, norm.x, norm.y, norm.z, 1.0)
-  //       sRand.setX(i, Math.random())
-  //     }
-
-  //     let bGeo = new BufferGeometry()
-  //     bGeo.setAttribute('position', sPosition)
-  //     bGeo.setAttribute('sPosition', sPosition)
-  //     bGeo.setAttribute('sNormal', sNormal)
-  //     bGeo.setAttribute('sRand', sRand)
-  //     let points = new Points(
-  //       bGeo,
-  //       new ShaderMaterial({
-  //         precision: 'highp',
-  //         transparent: true,
-  //         uniforms: {
-  //           //
-  //           time: { value: 0 },
-  //           dist: { value: 0 },
-  //           //
-  //         },
-  //         vertexShader: /* glsl */ `
-  //         attribute vec4 sPosition;
-  //         attribute vec4 sNormal;
-  //         attribute float sRand;
-  //         uniform float dist;
-  //         uniform float time;
-  //           void main (void) {
-  //             float height = 1.333;
-  //             gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + sNormal.rgb * mod(time * 0.7 + sRand * height, height), 1.0);
-
-  //             gl_PointSize = 1.0 / dist;
-  //             if (gl_PointSize >=1.0) {
-  //               gl_PointSize = 1.0;
-  //             }
-  //           }
-  //         `,
-  //         fragmentShader: /* glsl */ `
-  //           uniform float dist;
-  //           void main (void) {
-  //             float maxAlpha = 0.3;
-  //             float alpha = 0.3;
-
-  //             alpha = alpha / pow(dist, 1.5);
-  //             if (alpha >= maxAlpha) {
-  //               alpha = maxAlpha;
-  //             }
-
-  //             gl_FragColor = vec4(0.5, 0.5, 0.0, alpha);
-  //           }
-
-  //         `,
-  //       }),
-  //     )
-
-  //     o3d.push(
-  //       <group key={points.uuid} {...props}>
-  //         <primitive object={points}></primitive>
-  //       </group>,
-  //     )
-  //     obj.push(points)
-  //   })
-
-  //   return { primitiveArray: o3d, obj: obj }
-  // }, [nodes?.petals001?.geometry, nodes?.petals013?.geometry, nodes?.petals021?.geometry])
-
-  // useFrame(({ controls }) => {
-  //   if (controls && obj?.length > 0) {
-  //     obj.forEach((o) => {
-  //       o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
-  //       o.material.uniforms.time.value = performance.now() / 1000
-  //     })
-  //   }
-  // })
 
   //
   return (
     <group {...props} dispose={null}>
-      {/* {primitiveArray || []} */}
+      {nodes.petals021.geometry && <Particles nodes={nodes}></Particles>}
       <mesh
         name='Stem'
         castShadow
@@ -321,4 +197,169 @@ export function Rose(props) {
       </mesh>
     </group>
   )
+}
+
+function Particles({ nodes }) {
+  let { primitiveArray, obj } = useMemo(() => {
+    if (!nodes?.petals001?.geometry) {
+      return {}
+    }
+    let o3d = []
+    let obj = []
+    let pedals = [
+      {
+        geo: nodes?.petals001?.geometry,
+        props: {
+          position: [0.03727, 0.30462, -0.06339],
+          rotation: [1.92032, 0, -Math.PI / 2],
+          scale: 0.00136,
+        },
+        amount: 512 * 256,
+      },
+      {
+        geo: nodes?.petals013?.geometry,
+        props: {
+          position: [0.07679, 0.34146, -0.12545],
+          rotation: [1.92032, 0, -Math.PI / 2],
+          scale: 0.00136,
+        },
+        amount: 512 * 256,
+      },
+      {
+        geo: nodes?.petals021?.geometry,
+        props: {
+          position: [0.03869, 0.32278, -0.11959],
+          rotation: [1.92032, 0, -Math.PI / 2],
+          scale: 0.00136,
+        },
+        amount: 256 * 256,
+      },
+    ]
+    pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
+      let mesh = new Mesh(geo || new BoxGeometry(), new MeshBasicMaterial({ side: FrontSide }))
+      let sampler = new MeshSurfaceSampler(mesh)
+      sampler.build()
+
+      let pointCount = amount // * 0.025
+      let sPosition = new BufferAttribute(new Float32Array(pointCount * 4), 4)
+      let sNormal = new BufferAttribute(new Float32Array(pointCount * 4), 4)
+      let sRand = new BufferAttribute(new Float32Array(pointCount * 1), 1)
+      let pos = new Vector3()
+      let norm = new Vector3()
+      for (let i = 0; i < pointCount; i++) {
+        sampler.sample(pos, norm)
+        sPosition.setXYZW(i, pos.x, pos.y, pos.z, 1.0)
+        sNormal.setXYZW(i, norm.x, norm.y, norm.z, 1.0)
+        sRand.setX(i, Math.random())
+      }
+
+      let bGeo = new BufferGeometry()
+      bGeo.setAttribute('position', sPosition)
+      bGeo.setAttribute('sPosition', sPosition)
+      bGeo.setAttribute('sNormal', sNormal)
+      bGeo.setAttribute('sRand', sRand)
+      let points = new Points(
+        bGeo,
+        new ShaderMaterial({
+          precision: 'highp',
+          transparent: true,
+          uniforms: {
+            //
+            time: { value: 0 },
+            dist: { value: 0 },
+            //
+          },
+          vertexShader: /* glsl */ `
+          attribute vec4 sPosition;
+          attribute vec4 sNormal;
+          attribute float sRand;
+          uniform float dist;
+          uniform float time;
+          mat3 rotateY(float rad) {
+              float c = cos(rad);
+              float s = sin(rad);
+              return mat3(
+                  c, 0.0, -s,
+                  0.0, 1.0, 0.0,
+                  s, 0.0, c
+              );
+          }
+          mat3 rotateX(float rad) {
+              float c = cos(rad);
+              float s = sin(rad);
+              return mat3(
+                  1.0, 0.0, 0.0,
+                  0.0, c, s,
+                  0.0, -s, c
+              );
+          }
+          
+          mat3 rotateZ(float rad) {
+              float c = cos(rad);
+              float s = sin(rad);
+              return mat3(
+                  c, s, 0.0,
+                  -s, c, 0.0,
+                  0.0, 0.0, 1.0
+              );
+          }
+
+          
+            void main (void) {
+              gl_PointSize = 1.0 / dist;
+              if (gl_PointSize >=1.0) {
+                gl_PointSize = 1.0;
+              }
+
+              float height = 1.0;
+              
+              float loop = mod(time * 1.5 + sRand * height, height);
+
+              vec3 diff = vec3(
+                sNormal.r * loop,
+                sNormal.g * loop,
+                sNormal.b * loop
+              );
+
+              float loop2 = mod(time * 1.0 / 60.0 + sRand * 1.0, 1.0);
+              diff += sPosition.rgb * rotateZ(loop2 * 3.141592 * 2.0) / 20.0;
+
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + diff, 1.0);
+            }
+          `,
+          fragmentShader: /* glsl */ `
+            uniform float dist;
+            void main (void) {
+              float maxAlpha = 0.7;
+              float alpha = 0.7;
+              alpha = alpha / pow(dist, 1.5);
+              if (alpha >= maxAlpha) {
+                alpha = maxAlpha;
+              }
+              gl_FragColor = vec4(0.35, 0.35, 0.0, alpha);
+            }
+          `,
+        }),
+      )
+
+      o3d.push(
+        <group key={points.uuid} {...props}>
+          <primitive object={points}></primitive>
+        </group>,
+      )
+
+      obj.push(points)
+    })
+    return { primitiveArray: o3d, obj: obj }
+  }, [nodes?.petals001?.geometry, nodes?.petals013?.geometry, nodes?.petals021?.geometry])
+  useFrame(({ controls }) => {
+    if (controls && obj?.length > 0) {
+      obj.forEach((o) => {
+        o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
+        o.material.uniforms.time.value = performance.now() / 1000
+      })
+    }
+  })
+
+  return <>{primitiveArray || []}</>
 }
