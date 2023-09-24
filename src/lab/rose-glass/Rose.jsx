@@ -66,7 +66,7 @@ export function Rose(props) {
   }
 
   vec4 mainImage ()  {
-    vec3 direction = normalize( vWorldDirection * rotateY(time * 0.05));
+    vec3 direction = normalize( vWorldDirection * rotateY(time * 0.0165));
     vec2 uv;
     uv.y = asin( clamp( direction.y, - 1.0, 1.0 ) ) * RECIPROCAL_PI + 0.5;
     uv.x = atan( direction.z, direction.x ) * RECIPROCAL_PI2 + 0.5;
