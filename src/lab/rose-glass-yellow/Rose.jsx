@@ -95,10 +95,8 @@ export function Rose(props) {
     );
 
     outColor.r = (1.0 * outColor.r);
-    outColor.g = (1.0 * outColor.g);
-    outColor.b = (1.0 * outColor.b);
-
-    outColor.rgb += vec3(0.5, 0.5, 0.0);
+    outColor.g = (0.5 * outColor.g);
+    outColor.b = (0.5 * outColor.b);
 
     return outColor;
   }
@@ -152,7 +150,7 @@ export function Rose(props) {
           envMap={envMapGlass}
           //
           roughness={0.1}
-          color={'#330'}
+          color={'#f00'}
         />
       </mesh>
       <mesh
@@ -172,7 +170,7 @@ export function Rose(props) {
           envMap={envMapGlass}
           //
           roughness={0.1}
-          color={'#330'}
+          color={'#f00'}
         />
       </mesh>
       <mesh
@@ -192,7 +190,7 @@ export function Rose(props) {
           envMap={envMapGlass}
           //
           roughness={0.1}
-          color={'#330'}
+          color={'#f00'}
         />
       </mesh>
     </group>
@@ -333,13 +331,13 @@ function Particles({ nodes }) {
           fragmentShader: /* glsl */ `
             uniform float dist;
             void main (void) {
-              float maxAlpha = 0.7;
-              float alpha = 0.7;
+              float maxAlpha = 0.5;
+              float alpha = 0.5;
               alpha = alpha / pow(dist, 1.5);
               if (alpha >= maxAlpha) {
                 alpha = maxAlpha;
               }
-              gl_FragColor = vec4(0.35, 0.35, 0.0, alpha);
+              gl_FragColor = vec4(1.0, 0.0, 0.0, alpha);
             }
           `,
         }),
