@@ -32,7 +32,7 @@ export function Rose3({ ...props }) {
                   envMapIntensity={0.56}
                   side={DoubleSide}
                   roughness={0.1}
-                  color={'#990'}
+                  color={'#900'}
                 />
               </mesh>
             )}
@@ -72,7 +72,7 @@ function Particles({ nodes }) {
           // rotation: [0, 0, 1.32211],
           // scale: 0.13645,
         },
-        amount: 512 * 512,
+        amount: 256 * 256,
       },
     ]
     pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
@@ -178,13 +178,13 @@ function Particles({ nodes }) {
           fragmentShader: /* glsl */ `
             uniform float dist;
             void main (void) {
-              float maxAlpha = 0.1;
-              float alpha = 0.1;
+              float maxAlpha = 1.0;
+              float alpha = 1.0;
               alpha = alpha / pow(dist, 1.5);
               if (alpha >= maxAlpha) {
                 alpha = maxAlpha;
               }
-              gl_FragColor = vec4(1.0, 1.0, 0.3, alpha);
+              gl_FragColor = vec4(1.0, 0.0, 0.0, alpha * 0.5);
             }
           `,
         }),
