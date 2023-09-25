@@ -21,8 +21,8 @@ function Yo() {
       <OrbitControls object-position={[0, 0.5, 0.08]} makeDefault target={[0, 0.33, -0.07]}></OrbitControls>
       <Suspense fallback={null}>
         <Rose3></Rose3>
+        <Environment files={`/hdr/greenwich_park_02_1k.hdr`}></Environment>
       </Suspense>
-      <Environment files={`/hdr/greenwich_park_02_1k.hdr`}></Environment>
       <EffectComposer disableNormalPass>
         <Bloom luminanceThreshold={0.1} intensity={10} mipmapBlur></Bloom>
       </EffectComposer>
