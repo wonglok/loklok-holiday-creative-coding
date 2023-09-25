@@ -1,5 +1,5 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import {
   WebGLCubeRenderTarget,
@@ -104,7 +104,7 @@ vec4 mainImage ()  {
 export function useComputeEnvMap(code = DefaultCode, uniforms = {}, res = 128, doCompute = true, newAngle = 0) {
   let { gl } = useThree()
 
-  let { envMap, material, compute, cubeRtt } = useMemo(() => {
+  let { envMap, material, compute } = useMemo(() => {
     console.log('compile shader')
     let scene = new Scene()
 
