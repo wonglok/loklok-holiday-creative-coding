@@ -131,11 +131,11 @@ export function Rose3({ ...props }) {
           >
             <meshPhysicalMaterial
               metalness={1.0}
-              envMapIntensity={0.7}
+              envMapIntensity={0.55}
               envMap={rose3Env}
               side={DoubleSide}
               roughness={0.1}
-              color={'#f00'}
+              color={'#ff0'}
             />
             <Particles nodes={nodes}></Particles>
           </mesh>
@@ -282,7 +282,7 @@ function Particles({ nodes }) {
               if (alpha >= maxAlpha) {
                 alpha = maxAlpha;
               }
-              gl_FragColor = vec4(0.8, 0.2, 0.2, alpha);
+              gl_FragColor = vec4(0.4, 0.4, 0.2, alpha);
             }
           `,
         }),
