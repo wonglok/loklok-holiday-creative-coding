@@ -1,12 +1,17 @@
-import React, { useRef } from 'react'
+import React, { useMemo } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useComputeEnvMap } from './useComputeEnvMap'
 import { useFrame } from '@react-three/fiber'
 import { Color, DoubleSide } from 'three'
 
-export function Rose3(props) {
+export function Rose3({ ...props }) {
   const { nodes, materials } = useGLTF('/rose/rose3.glb')
 
+  let uniforms = useMemo(() => {
+    return {
+      time: { value: 0 },
+    }
+  }, [])
   let { envMap: rose3Env } = useComputeEnvMap(
     /* glsl */ `
 
@@ -75,26 +80,27 @@ export function Rose3(props) {
 
     outColor.rgb = vec3(
       pLayout1 * 0.55 + 0.05 + 0.5,
-      pLayout1 * 0.23 + 0.05,
-      pLayout1 * 0.23 + 0.05
+      pLayout1 * 0.1 + 0.05,
+      pLayout1 * 0.1 + 0.05
     );
 
+    outColor.r = pow(outColor.r, 2.0);
+    
     return outColor;
   }
 
   `,
-    { time: { value: 0 } },
-    1024,
-    true,
+    uniforms,
+    64,
   )
 
-  useFrame((st, dt) => {
-    if (materials?.rose) {
-      materials.rose.envMap = rose3Env
-      materials.rose.color = new Color('#880000')
-      materials.rose.emissive = new Color('#220000')
-    }
-  })
+  // useFrame((_, dt) => {
+  //   if (materials?.rose) {
+  //     materials.rose.envMap = rose3Env
+  //     materials.rose.color = new Color('#880000')
+  //     materials.rose.emissive = new Color('#220000')
+  //   }
+  // })
 
   return (
     <group scale={0.1} rotation={[-0.25 * Math.PI, 0, 0]} position={[0, 0.2, 0]} {...props} dispose={null}>
@@ -108,7 +114,16 @@ export function Rose3(props) {
           position={[20.76555, 6.82571, 1.82089]}
           rotation={[0, 0, 1.32211]}
           scale={0.13645}
-        ></mesh>
+        >
+          <meshPhysicalMaterial
+            metalness={1.0}
+            envMapIntensity={0.7}
+            envMap={rose3Env}
+            side={DoubleSide}
+            roughness={0.1}
+            color={'#f00'}
+          />
+        </mesh>
         <mesh
           name='Stem'
           castShadow
