@@ -172,7 +172,7 @@ function Particles({ nodes }) {
             // diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592) * 1.0;
             // diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592) * 1.0;
 
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb - sNormal.rgb * 3.0 + diff, 1.0);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb - (sNormal.rgb * 2.0 - 1.0) * 1.0 + diff, 1.0);
           }
           `,
           fragmentShader: /* glsl */ `
