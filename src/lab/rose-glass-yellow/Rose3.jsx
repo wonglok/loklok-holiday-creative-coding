@@ -119,26 +119,27 @@ export function Rose3({ ...props }) {
     <>
       <group scale={0.1} rotation={[-0.25 * Math.PI, 0, 0]} position={[0, 0.2, 0]} {...props} dispose={null}>
         <group name='Rose' position={[0.00221, 0, 0]} rotation={[0, 1.57053, 0]} scale={0.10008}>
-          <mesh
-            name='petals'
-            castShadow
-            receiveShadow
-            geometry={nodes.petals.geometry}
-            material={materials.rose}
-            position={[20.76555, 6.82571, 1.82089]}
-            rotation={[0, 0, 1.32211]}
-            scale={0.13645}
-          >
-            <meshPhysicalMaterial
-              metalness={1.0}
-              envMapIntensity={0.55}
-              envMap={rose3Env}
-              side={DoubleSide}
-              roughness={0.1}
-              color={'#ff0'}
-            />
-            <Particles nodes={nodes}></Particles>
-          </mesh>
+          {nodes.petals && (
+            <mesh
+              name='petals'
+              castShadow
+              receiveShadow
+              geometry={nodes.petals.geometry}
+              position={[20.76555, 6.82571, 1.82089]}
+              rotation={[0, 0, 1.32211]}
+              scale={0.13645}
+            >
+              <meshPhysicalMaterial
+                metalness={1.0}
+                envMapIntensity={0.5}
+                envMap={rose3Env}
+                side={DoubleSide}
+                roughness={0.1}
+                color={'#ff0'}
+              />
+              <Particles nodes={nodes}></Particles>
+            </mesh>
+          )}
           <mesh
             name='Stem'
             castShadow
