@@ -258,10 +258,10 @@ function Particles({ nodes }) {
               sNormal.b * loop
             );
 
-            float loop2 = mod(time + sRand * 1.0, 1.0);
+            // float loop2 = mod(time + sRand * 1.0, 1.0);
 
-            vec4 rNormal = modelViewMatrix * sNormal;
-            vec4 rPosition = modelViewMatrix * sPosition;
+            // vec4 rNormal = modelViewMatrix * sNormal;
+            // vec4 rPosition = modelViewMatrix * sPosition;
 
             // diff += normalize(rPosition.rgb) * rotateX(time * 3.141592) * 1.0;
             // diff += normalize(rPosition.rgb) * rotateY(time * 0.5 * 3.141592) * 1.0;
