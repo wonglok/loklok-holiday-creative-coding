@@ -27,15 +27,13 @@ export function Rose3({ ...props }) {
           <group position={[20.76555, 6.82571, 1.82089]} rotation={[0, 0, 1.32211]} scale={0.13645}>
             {nodes.petals && (
               <mesh name='petals' castShadow receiveShadow geometry={nodes.petals.geometry}>
-                {
-                  <meshPhysicalMaterial
-                    metalness={0.8}
-                    envMapIntensity={0.56}
-                    side={DoubleSide}
-                    roughness={0.1}
-                    color={'#990'}
-                  />
-                }
+                <meshPhysicalMaterial
+                  metalness={0.8}
+                  envMapIntensity={0.56}
+                  side={DoubleSide}
+                  roughness={0.1}
+                  color={'#990'}
+                />
               </mesh>
             )}
             <Particles nodes={nodes}></Particles>
@@ -74,7 +72,7 @@ function Particles({ nodes }) {
           // rotation: [0, 0, 1.32211],
           // scale: 0.13645,
         },
-        amount: 256 * 256,
+        amount: 512 * 512,
       },
     ]
     pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
@@ -154,7 +152,7 @@ function Particles({ nodes }) {
 
             float height = 5.0;
             
-            float loop = mod(time * 1.5 + sRand * height, height);
+            float loop = mod(time + sRand * height, height);
 
             vec3 diff = vec3(
               sNormal.r * loop,
@@ -180,13 +178,13 @@ function Particles({ nodes }) {
           fragmentShader: /* glsl */ `
             uniform float dist;
             void main (void) {
-              float maxAlpha = 1.0;
-              float alpha = 1.0;
+              float maxAlpha = 0.1;
+              float alpha = 0.1;
               alpha = alpha / pow(dist, 1.5);
               if (alpha >= maxAlpha) {
                 alpha = maxAlpha;
               }
-              gl_FragColor = vec4(0.4, 0.4, 0.2, alpha);
+              gl_FragColor = vec4(1.0, 1.0, 0.3, alpha);
             }
           `,
         }),
