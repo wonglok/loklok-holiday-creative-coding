@@ -82,7 +82,7 @@ export function Rain() {
           enabled: true,
           mouse: true,
           needsUpdate: true,
-          position: { x: 10000, y: 10000, z: 10000 },
+          position: { x: 0, y: 0, z: 0 },
           radius: 1,
           force: 38,
           noise: 0,
@@ -130,10 +130,11 @@ export function Rain() {
     {
       let target = sim.influences.find((e) => e.name === 'mouse3d')
 
-      for (let [key, val] in HandJoints.entries()) {
-        target.position.x = val.position.x
-        target.position.y = val.position.y
-        target.position.z = val.position.z
+      for (let [key, val] of HandJoints.entries()) {
+        // target.position.x = val.x
+        // target.position.y = val.y
+        // target.position.z = val.z
+        console.log(val)
       }
     }
 
@@ -164,7 +165,7 @@ export function Rain() {
   //
   return (
     <group position={[0, 0, 0]}>
-      <Box
+      {/* <Box
         ref={refToucher}
         args={[100000, 100000, 0.01]}
         visible={false}
@@ -172,10 +173,12 @@ export function Rain() {
           //
           let influ = sim.influences.find((e) => e.name === 'mouse3d')
           if (influ) {
-            influ.position.x = ev.point.x
-            influ.position.y = ev.point.y
-            influ.position.z = ev.point.z
+            // influ.position.x = ev.point.x
+            // influ.position.y = ev.point.y
+            // influ.position.z = ev.point.z
             influ.needsUpdate = true
+
+            HandJoints.set(`${0}-${0}`, { x: ev.point.x, y: ev.point.y, z: ev.point.z })
           }
 
           // cursorPointer.copy(ev.point)
@@ -191,15 +194,15 @@ export function Rain() {
           }
           let influ = sim.influences.find((e) => e.name === 'mouse3d')
           if (influ) {
-            influ.position.x = ev.point.x
-            influ.position.y = ev.point.y
-            influ.position.z = ev.point.z
+            // influ.position.x = ev.point.x
+            // influ.position.y = ev.point.y
+            // influ.position.z = ev.point.z
             influ.needsUpdate = true
           }
 
           // cursorPointer.copy(ev.point)
         }}
-      ></Box>
+      ></Box> */}
       {/* <OrbitDrei /> */}
       {/* <Visualise influ={sim.influences} /> */}
 

@@ -7,7 +7,7 @@ import {
   Sphere,
   Stats,
 } from '@react-three/drei'
-import { Canvas, useThree } from '@react-three/fiber'
+import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber'
 import { Sky } from './Sky/Sky'
 // import { Bloom, EffectComposer, SSR, Vignette } from '@react-three/postprocessing'
 import { Color, SRGBColorSpace, sRGBEncoding } from 'three'
@@ -73,17 +73,19 @@ function Content() {
   return (
     <>
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
-      <group scale={[1, 1, 1]} position={[0, 1, -0.35]}>
+      <group scale={[1, 1, 1]} position={[0, 0, 0]}>
         <Rain></Rain>
       </group>
-      {/*  */}
+
       {/* <Sky></Sky> */}
       <Stats></Stats>
+
+      {/*  */}
       <XRAdapter
         before={
           <>
             <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
-            <OrbitControls maxDistance={550} target={[0, 1, 0]} object-position={[0, 1, 1.0]}></OrbitControls>
+            <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 1.0]}></OrbitControls>
           </>
         }
         after={
@@ -169,7 +171,7 @@ function JointCollider({ index, hand }) {
     if (joint === undefined) return
 
     if (tipRef.current) {
-      HandJoints.set(`${hand}-${index}`, joint)
+      HandJoints.set(`0-0`, { x: joint.position.x, y: joint.position.y, z: joint.position.z })
       tipRef.current.position.set(joint.position.x, joint.position.y, joint.position.z)
     }
     // api.position.set(joint.position.x, joint.position.y, joint.position.z)
@@ -213,13 +215,19 @@ function Cam({}) {
     if (session) {
       camera.position.z = 0.0
       camera.lookAt(0, 0, 0)
-      player.position.z = 0.0
       scene.background = null
     }
-  }, [session, player, camera])
+  }, [session, player, camera, scene])
+
+  useFrame(() => {
+    player.position.x = 0
+    player.position.z = 1
+    player.position.y = 1
+  })
   return (
     <>
       <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
+      {createPortal(<primitive object={camera}></primitive>, player)}
       <primitive object={player}></primitive>
     </>
   )

@@ -153,7 +153,7 @@ export class PhysicsInfluences {
           if (len <= radius) {
             // velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
             // velocity += vec3(rotationY(forceFilter + sin(time)) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-            velocity += vec3(rotationY(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z), 1.0));
           }
 
           // if (forceFilter >= maxV) {
@@ -166,7 +166,7 @@ export class PhysicsInfluences {
           // if( len <= radius){
           //   velocity += normalize(dif) * force;
           // } else {
-          //   velocity += normalize(dif) * force;
+          //   velocity += normalize(dif) * -force;
           // }
 
           // velocity += vec3(rotationX(force) * vec4(position, 1.0));
@@ -209,7 +209,7 @@ export class PhysicsInfluences {
             len = 0.1;
           }
 
-            velocity += normalize(dif) * -1.0;
+          velocity += normalize(dif) * -1.0;
           if (len <= radius) {
           }
 
@@ -243,15 +243,22 @@ export class PhysicsInfluences {
           // //
           // if (len <= radius) {
           //   velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-          //   velocity += vec3(rotationY(forceFilter * 100.0) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-          //   velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            // velocity += vec3(rotationZ(forceFilter) * vec4(position.rgb, 1.0));
           // }
 
           // velocity.x += 50.0;
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += jade(position * 0.01) * 8.0;
+
+          // velocity += normalize(dif) * 2.0;
+          // if (len <= radius) {
+          //   velocity += normalize(dif) * -2.0;
+          velocity += jade(vec3(position.rgb) * 2.0) * 0.1;
+          
+          velocity += vec3(rotationZ(forceFilter) * vec4(vec3(velocity * 0.1), 1.0));
+          
+            // }
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -279,7 +286,7 @@ export class PhysicsInfluences {
             float influenceType = typeInfo.x;
 
             if (influenceType == 1.0) {
-              computeSphere(index, position, velocity);
+              // computeSphere(index, position, velocity);
             }
 
             // if (influenceType == 2.0) {
