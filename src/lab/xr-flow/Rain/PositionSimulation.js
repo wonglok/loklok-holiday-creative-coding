@@ -251,7 +251,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += jade(position * 0.01) * 10.5;
+          velocity += jade(position * 0.01) * 8.0;
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -455,7 +455,7 @@ export class PositionSimulation {
               (rand(uv + 0.3 + position.z) * 2.0 - 1.0)
             );
 
-            position.z *= 0.05;
+            position.z *= 0.01;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;

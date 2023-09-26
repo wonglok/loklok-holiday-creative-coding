@@ -75,10 +75,8 @@ function Content() {
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
       <group scale={[1, 1, 1]} position={[0, 1, -0.35]}>
         <Rain></Rain>
-        {/* <Sphere scale={[1, 1, 0.5]}>
-          <MeshTransmissionMaterial thickness={1.1}></MeshTransmissionMaterial>
-        </Sphere> */}
       </group>
+      {/*  */}
       {/* <Sky></Sky> */}
       <Stats></Stats>
       <XRAdapter
