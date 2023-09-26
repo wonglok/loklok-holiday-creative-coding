@@ -105,10 +105,10 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.05, 2)
+    return new IcosahedronGeometry(0.04, 3)
   }, [])
   const renderGeo = useMemo(() => {
-    return new SphereGeometry(0.05, 25, 25)
+    return new SphereGeometry(0.04, 25, 25)
   }, [])
   selectGeo.scale(1, 1, 1)
 
