@@ -126,19 +126,20 @@ export function Rain() {
   useFrame(({ camera }) => {
     sim?.track()
 
-    // //
     // {
     //   let target = sim.influences.find((e) => e.name === 'mouse3d')
     //   for (let kn in mouse) {
     //     target[kn] = mouse[kn]
     //   }
     // }
+
     // {
     //   let target = sim.influences.find((e) => e.name === 'vortexA')
     //   for (let kn in vortex) {
     //     target[kn] = vortex[kn]
     //   }
     // }
+
     // {
     //   let target = sim.influences.find((e) => e.name === 'center')
     //   for (let kn in centerGravity) {

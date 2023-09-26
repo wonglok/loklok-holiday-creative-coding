@@ -72,7 +72,7 @@ function Content() {
   return (
     <>
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
-      <group position={[0, 1, -1]}>
+      <group position={[0, 1, -0.3]}>
         <Rain></Rain>
         {/* <Sphere scale={[1, 1, 0.5]}>
           <MeshTransmissionMaterial thickness={1.1}></MeshTransmissionMaterial>

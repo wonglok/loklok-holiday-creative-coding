@@ -653,7 +653,6 @@ export class PositionSimulation {
         return diff;
       }
 
-
       vec3 multiverse (vec3 pp) {
         vec3 p = vec3(pp);
         vec3 v = vec3(0.0);

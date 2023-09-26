@@ -365,7 +365,7 @@ export class LokLokWiggleDisplay {
           vTColor = normalize(getLineByT(0.5, lineIDXER) - getLineByT(0.6, lineIDXER));
 
           float snip =  pow(t * (1.0 - t), 0.25);
-          vec2 volume = vec2(snip) * 0.035 * 3.0;
+          vec2 volume = vec2(snip) * 0.035 * 0.5;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
 
