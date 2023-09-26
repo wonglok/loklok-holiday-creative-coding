@@ -126,7 +126,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     ...props,
     position: position,
     mass: 0.5,
-    args: 0.05 * 2.0,
+    args: 0.03,
     friction: 5,
     restitution: 1.0,
   }))
@@ -142,6 +142,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       // }
     })
   })
+
   let xRef = useRef()
   let yRef = useRef()
   let zRef = useRef()
@@ -153,11 +154,8 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     }
     if (ref.current && yRef.current) {
       yRef.current.userData.forceSize =
-        ref.current.rotation.y +
+        ref.current.rotation.y * 3.141592 +
         Math.sin(clock.getElapsedTime() * speed) * Math.cos(clock.getElapsedTime() * speed) * 3.6
-      yRef.current.userData.forceTwist =
-        ref.current.rotation.y +
-        Math.sin(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed) * 3.141592 * 2.0 * 2.8
     }
 
     if (ref.current && zRef.current) {
