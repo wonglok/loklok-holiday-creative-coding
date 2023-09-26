@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Hands, XR, XRButton, useXR } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
-import { Box, OrbitControls, Plane, Sphere, useGLTF, Environment, useTexture } from '@react-three/drei'
+import { Box, OrbitControls, Plane, Sphere, useGLTF, Environment, useTexture, Text } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
 import { joints } from './joints'
 import { IcosahedronGeometry, SRGBColorSpace, SphereGeometry } from 'three'
@@ -499,7 +499,7 @@ function Scene() {
 //   return <primitive object={glb.scene}></primitive>
 // }
 
-function Cam() {
+function Cam({ children, loader = null }) {
   let session = useXR((r) => r.session)
   let player = useXR((r) => r.player)
   let camera = useXR((r) => r.camera)
@@ -511,27 +511,38 @@ function Cam() {
   return (
     <>
       <primitive object={player}></primitive>
+
+      {session && children}
+      {!session && loader}
     </>
   )
 }
+
 export const HandXR = () => (
   <>
     <Canvas>
       <color attach='background' args={['#000']} />
       <XR>
-        <Physics
-          gravity={[0, -2, 0]}
-          iterations={20}
-          defaultContactMaterial={{
-            friction: 0.09,
-          }}
+        <Cam
+          loader={
+            <>
+              <ParticleCoreEngine key='loader'></ParticleCoreEngine>
+            </>
+          }
         >
-          <group position={[0, 0, 0]}>
-            <Scene />
-            <ParticleCoreEngine></ParticleCoreEngine>
-          </group>
-        </Physics>
-        <Cam></Cam>
+          <Physics
+            gravity={[0, -2, 0]}
+            iterations={20}
+            defaultContactMaterial={{
+              friction: 0.09,
+            }}
+          >
+            <group position={[0, 0, 0]}>
+              <Scene />
+              <ParticleCoreEngine></ParticleCoreEngine>
+            </group>
+          </Physics>
+        </Cam>
       </XR>
 
       {/*  */}
