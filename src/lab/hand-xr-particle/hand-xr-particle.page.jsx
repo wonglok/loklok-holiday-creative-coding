@@ -374,8 +374,8 @@ function Scene() {
               </Box>
             </group> */}
 
-      {[...Array(3)].map((_, i) => (
-        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[(-0.15 * 3) / 2 + 0.2 * i, 1, -0.3]}></MySphere>
+      {[...Array(2)].map((_, i) => (
+        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[(-0.15 * 2) / 2 + 0.15 * i, 1, -0.3]}></MySphere>
       ))}
 
       <Box ref={boxRef} args={[1, 0.01, 2]} receiveShadow>
