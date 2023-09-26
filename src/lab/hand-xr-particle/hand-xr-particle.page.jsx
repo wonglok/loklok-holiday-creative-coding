@@ -63,14 +63,14 @@ function Arch({ position = [0, 1.2, 0], ...props }) {
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
       <WoodMaterial></WoodMaterial>
 
-      <group
+      {/* <group
         userData={{
           forceSize: 0.5,
           forceTwist: 3.141592 * 2.0 * 2.8,
           forceType: 'attract',
           type: 'ForceField',
         }}
-      ></group>
+      ></group> */}
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
@@ -92,14 +92,14 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
       <WoodMaterial></WoodMaterial>
 
-      <group
+      {/* <group
         userData={{
           forceSize: 0.5,
           forceTwist: 3.141592 * 2.0 * 2.8,
           forceType: 'attract',
           type: 'ForceField',
         }}
-      ></group>
+      ></group> */}
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
@@ -110,7 +110,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     return new IcosahedronGeometry(0.04, 3)
   }, [])
   const renderGeo = useMemo(() => {
-    return new SphereGeometry(0.04, 32, 32)
+    return new SphereGeometry(0.04 * 2.0, 32, 32)
   }, [])
   selectGeo.scale(1, 1, 1)
 
@@ -132,8 +132,9 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
 
   useEffect(() => {
     return api.position.subscribe((value) => {
-      console.log(value)
-
+      if (value[1] <= -2) {
+        api.position.set(0, 1.5, -0.5)
+      }
       // if (ref.current.position.y <= -1.5) {
       //   api.position.set(0, 1, -0.5)
       // }
@@ -187,13 +188,13 @@ function MyLineNode({ nodeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props 
         color={'#ff0000'}
       ></meshPhysicalMaterial>
 
-      <group
+      {/* <group
         userData={{
           indexID: nodeIndex,
           lineID: 0,
           type: 'ForceCurve',
         }}
-      ></group>
+      ></group> */}
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
@@ -215,14 +216,14 @@ function Triangle({ position = [0, 1.2, 0], ...props }) {
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
       <WoodMaterial></WoodMaterial>
 
-      <group
+      {/* <group
         userData={{
           forceSize: 0.5,
           forceTwist: -3.141592 * 2.0 * 2.8,
           forceType: 'vortexY',
           type: 'ForceField',
         }}
-      ></group>
+      ></group> */}
 
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
@@ -245,14 +246,14 @@ function Cube2({ position = [0, 1.2, 0], ...props }) {
     <mesh castShadow receiveShadow ref={ref} geometry={selectGeo} {...props}>
       <WoodMaterial></WoodMaterial>
 
-      <group
+      {/* <group
         userData={{
           forceSize: 0.5,
           forceTwist: -3.141592 * 2.0 * 2.8,
           forceType: 'vortexY',
           type: 'ForceField',
         }}
-      ></group>
+      ></group> */}
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
@@ -342,18 +343,18 @@ function Scene() {
         <WaterSurfaceContent></WaterSurfaceContent>
       </group> */}
 
-      {/* {[...Array(1)].map((_, i) => (
-        <Arch key={'arch' + i} position={[0.1, 1.1 + 0.1 * i, -0.5]}></Arch>
+      {[...Array(2)].map((_, i) => (
+        <Arch key={'arch' + i} position={[0.1, 1.1 + 0.1 * i, -0.8]}></Arch>
       ))}
-      {[...Array(1)].map((_, i) => (
-        <Cube2 key={'cube' + i} position={[0.3, 1.1 + 0.1 * i, -0.5]}></Cube2>
+      {[...Array(2)].map((_, i) => (
+        <Cube2 key={'cube' + i} position={[0.3, 1.1 + 0.1 * i, -0.8]}></Cube2>
       ))}
-      {[...Array(1)].map((_, i) => (
-        <Triangle key={'Triangle' + i} position={[-0.3, 1.1 + 0.1 * i, -0.5]}></Triangle>
+      {[...Array(2)].map((_, i) => (
+        <Triangle key={'Triangle' + i} position={[-0.3, 1.1 + 0.1 * i, -0.8]}></Triangle>
       ))}
-      {[...Array(1)].map((_, i) => (
-        <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.5]}></Rectangle>
-      ))} */}
+      {[...Array(2)].map((_, i) => (
+        <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.8]}></Rectangle>
+      ))}
 
       {/* {[...Array(5)].map((_, i) => (
         <MyLineNode key={'MyLineNode' + i} forceTypeIndex={i} position={[0.1 * i, 1.1 + 0.1, -0.2]}></MyLineNode>
