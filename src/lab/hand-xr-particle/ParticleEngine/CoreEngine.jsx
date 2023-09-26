@@ -49,8 +49,9 @@ let useScore = create(() => {
 export function ParticleCoreEngine() {
   // let csgRef = useRef()
   let [surfaceMesh, setSurfaceMesh] = useState(() => {
-    return new Mesh(new SphereGeometry(5, 32, 32))
+    return new Mesh(new SphereGeometry(1, 32, 32))
   })
+  surfaceMesh.position.set(0, 0.5, -0.5)
   // let tt = useRef()
 
   // let applyEmissionGeometryChange = useCallback(() => {
@@ -1009,7 +1010,7 @@ export function CoreEngine({
             // transformed.xyz *= rotation3dY(diff.y);
             // transformed.xyz *= rotation3dZ(diff.z);
 
-            gl_PointSize = 5.5;
+            gl_PointSize = 3.5;
             transformed += fowradPosData.xyz;
 
             gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
@@ -1019,7 +1020,7 @@ export function CoreEngine({
       fragmentShader: /* glsl */ `
           void main(void) {
             if (length(gl_PointCoord.xy - 0.5) <= 0.5) {
-              gl_FragColor = vec4(0.0, 0.0, 1.0, 0.5);
+              gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
             } else {
               discard;
             }

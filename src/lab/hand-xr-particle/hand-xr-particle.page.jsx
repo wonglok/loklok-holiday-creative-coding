@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useMemo } from 'react'
+import React, { useState, useEffect, Fragment, useMemo, useRef } from 'react'
 import { Hands, XR, XRButton } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
 import { Box, OrbitControls, Plane, Sphere, useGLTF, Environment, useTexture } from '@react-three/drei'
@@ -140,6 +140,16 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       // }
     })
   })
+  let xRef = useRef()
+  let yRef = useRef()
+
+  useFrame(({ clock }) => {
+    let speed = 0.2
+    xRef.current.userData.forceSize =
+      3.6 * (Math.sin(clock.getElapsedTime() * speed) * Math.cos(clock.getElapsedTime() * speed) - 0.5)
+    yRef.current.userData.forceSize =
+      3.6 * Math.sin(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed)
+  })
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
@@ -149,11 +159,21 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       {/*  */}
       <group
         userData={{
-          forceSize: (3.6 / 8) * 2.0,
+          forceSize: 3.6 / 8 / 2,
           forceTwist: 3.141592 * 2.0 * 2.8,
-          forceType: ['vortexX', 'vortexY'][forceTypeIndex % 2],
+          forceType: 'vortexX',
           type: 'ForceField',
         }}
+        ref={xRef}
+      ></group>
+      <group
+        userData={{
+          forceSize: 3.6 / 8 / 2,
+          forceTwist: 3.141592 * 2.0 * 2.8,
+          forceType: 'vortexY',
+          type: 'ForceField',
+        }}
+        ref={yRef}
       ></group>
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
@@ -491,6 +511,7 @@ function Scene() {
 export const HandXR = () => (
   <>
     <Canvas>
+      <color attach='background' args={['#000']} />
       <XR>
         <Physics
           gravity={[0, -2, 0]}
