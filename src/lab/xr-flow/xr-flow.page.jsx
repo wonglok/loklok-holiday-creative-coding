@@ -236,6 +236,8 @@ function Cam({}) {
 
   useEffect(() => {
     if (session) {
+      camera.position.x = 0.0
+      camera.position.y = 0.0
       camera.position.z = 0.0
       camera.lookAt(0, 0, 0)
       scene.background = null

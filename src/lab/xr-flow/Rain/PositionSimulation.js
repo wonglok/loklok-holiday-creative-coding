@@ -209,10 +209,9 @@ export class PhysicsInfluences {
           // if (len <= radius) {
           //   len = radius;
           // }
-
           // velocity += vec3(rotationZ(2.0) * vec4(position, 1.0));
 
-          velocity += jade(vec3(position.rgb)) * 0.1;
+          velocity += jade(vec3(position.rgb)) * 0.1 + jade(position * len) * -0.1;
 
           // if (len <= radius) {
           //   velocity += normalize(dif) * -1.5;
@@ -428,7 +427,7 @@ export class PositionSimulation {
         #include <common>
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 2.0 || pos.w >= 0.99;
+          return length(position) >= 0.2 || pos.w >= 0.99;
         }
       `
     }
@@ -467,7 +466,7 @@ export class PositionSimulation {
               (rand(uv + 0.3 + position.z) * 2.0 - 1.0)
             );
 
-            position.z *= 0.01;
+            position.z *= 0.15;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;
