@@ -30,7 +30,9 @@ function WoodMaterial() {
     // roughnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Roughness.jpg',
     // metalnessMap: '/bricks/Wood048_1K-JPG/Wood048_1K_Displacement.jpg',
   })
-  tx.map.colorSpace = SRGBColorSpace
+  if (tx?.map) {
+    tx.map.colorSpace = SRGBColorSpace
+  }
   return (
     <meshPhysicalMaterial
       //
@@ -108,29 +110,44 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     return new IcosahedronGeometry(0.04, 3)
   }, [])
   const renderGeo = useMemo(() => {
-    return new SphereGeometry(0.04, 25, 25)
+    return new SphereGeometry(0.04, 32, 32)
   }, [])
   selectGeo.scale(1, 1, 1)
 
-  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
-  const [ref] = useConvexPolyhedron(() => ({
-    ...props,
-    position: position,
-    mass: 0.1,
-    args: geo,
-  }))
-
-  // const [ref] = useSphere(() => ({
+  // const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+  // const [ref] = useConvexPolyhedron(() => ({
   //   ...props,
   //   position: position,
-  //   mass: 1,
-  //   args: 0.05 * 2.0,
+  //   mass: 0.1,
+  //   args: geo,
   // }))
+
+  const [ref, api] = useSphere(() => ({
+    ...props,
+    position: position,
+    mass: 0.5,
+    args: 0.05 * 2.0,
+    friction: 5,
+  }))
+
+  useEffect(() => {
+    return api.position.subscribe((value) => {
+      console.log(value)
+
+      // if (ref.current.position.y <= -1.5) {
+      //   api.position.set(0, 1, -0.5)
+      // }
+    })
+  })
+
+  useFrame(() => {})
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
-      <WoodMaterial></WoodMaterial>
+      {/* <WoodMaterial></WoodMaterial> */}
 
+      <meshStandardMaterial metalness={1} roughness={0.1} color={'#0000ff'}></meshStandardMaterial>
+      {/*  */}
       <group
         userData={{
           forceSize: 3.6 / 8,
@@ -355,7 +372,7 @@ function Scene() {
             </group> */}
 
       {[...Array(2)].map((_, i) => (
-        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.1 * i, 1.1 + 0.1 * i, -0.3]}></MySphere>
+        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.2 + 0.2 * i, 1, -0.3]}></MySphere>
       ))}
 
       <Plane ref={floorRef} args={[10, 10]} receiveShadow>
