@@ -1,12 +1,13 @@
 import { Box, Environment, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { Sky } from './Sky/Sky'
 import { Bloom, EffectComposer, SSR, Vignette } from '@react-three/postprocessing'
 import { Color, SRGBColorSpace, sRGBEncoding } from 'three'
 import { Core } from './Rain/Core'
 import { Rain } from './Rain/Rain'
-import { XR, XRButton } from '@react-three/xr'
+import { XR, XRButton, useXR } from '@react-three/xr'
 import { XRAdapter } from './XRAdapter'
+import { useEffect } from 'react'
 
 export function XRFlow() {
   return (
@@ -60,24 +61,19 @@ export function XRFlow() {
 function Content() {
   return (
     <>
+      <Environment background files={`/hdr/shanghai.hdr`}></Environment>
+      <Rain></Rain>
+      <Stats></Stats>
       <XRAdapter
         before={
           <>
             <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
-
             <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 10.0]}></OrbitControls>
           </>
         }
         after={
           <>
-            <PerspectiveCamera makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
-
-            <OrbitControls
-              maxDistance={550}
-              target={[0, 0, 0]}
-              object-position={[0, 0, 10.0]}
-              makeDefault
-            ></OrbitControls>
+            <Cam></Cam>
           </>
         }
       ></XRAdapter>
@@ -86,13 +82,28 @@ function Content() {
         <Bloom luminanceThreshold={0.99} intensity={1} mipmapBlur={true}></Bloom>
       </EffectComposer> */}
 
-      <Environment background files={`/hdr/shanghai.hdr`}></Environment>
-      {/* <Sky></Sky> */}
-      <Rain></Rain>
-      <Stats></Stats>
       {/* <Box scale={[1, 2, 1]}>
         <meshBasicMaterial color={'red'}></meshBasicMaterial>
       </Box> */}
+    </>
+  )
+}
+
+function Cam({ children, loader = null }) {
+  let session = useXR((r) => r.session)
+  let player = useXR((r) => r.player)
+  let camera = useThree((r) => r.camera)
+
+  useEffect(() => {
+    if (session) {
+      camera.position.z = 5.0
+      camera.lookAt(0, 0, 0)
+    }
+  }, [session, player, camera])
+  return (
+    <>
+      <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
+      <primitive object={player}></primitive>
     </>
   )
 }

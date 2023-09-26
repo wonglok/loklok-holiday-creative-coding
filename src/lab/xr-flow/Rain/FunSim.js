@@ -447,7 +447,7 @@ export class LokLokWiggleDisplay {
     })
 
     let line0 = new Mesh(geometry, matLine0)
-
+    line0.frustumCulled = false
     this.o3d.add(line0)
     node.onClean(() => {
       this.o3d.remove(line0)
