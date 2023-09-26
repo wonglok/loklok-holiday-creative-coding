@@ -85,7 +85,7 @@ function Content() {
         before={
           <>
             <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
-            <OrbitControls maxDistance={550} target={[0, -1, 0]} object-position={[0, 0, 0.3]}></OrbitControls>
+            <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 0.3]}></OrbitControls>
           </>
         }
         after={
