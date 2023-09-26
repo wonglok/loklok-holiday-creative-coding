@@ -327,6 +327,72 @@ const HandsColliders = () =>
     </Fragment>
   ))
 
+function WallLeft() {
+  const [boxRef] = useBox(() => ({
+    args: [0.01, 0.153, 2],
+    rotation: [0, 0, 0],
+    position: [-0.5, 0.9 + 0.153 / 2, 0],
+    type: 'Static',
+  }))
+
+  return (
+    <Box ref={boxRef} args={[0.01, 0.153, 2]} receiveShadow>
+      {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
+      <meshStandardMaterial attach='material' color='#f00' transparent opacity={0.5} />
+    </Box>
+  )
+}
+
+function WallRight() {
+  const [boxRef] = useBox(() => ({
+    args: [0.01, 0.153, 2],
+    rotation: [0, 0, 0],
+    position: [0.5, 0.9 + 0.153 / 2, 0],
+    type: 'Static',
+  }))
+
+  return (
+    <Box ref={boxRef} args={[0.01, 0.153, 2]} receiveShadow>
+      {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
+      <meshStandardMaterial attach='material' color='#f00' transparent opacity={0.5} />
+    </Box>
+  )
+}
+
+function WallFront() {
+  let args = [1, 0.153, 0.01]
+  const [boxRef] = useBox(() => ({
+    args: args,
+    rotation: [0, 0, 0],
+    position: [0.0, 0.9 + 0.153 / 2, -1],
+    type: 'Static',
+  }))
+
+  return (
+    <Box ref={boxRef} args={args} receiveShadow>
+      {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
+      <meshStandardMaterial attach='material' color='#f00' transparent opacity={0.5} />
+    </Box>
+  )
+}
+
+function WallBack() {
+  let args = [1, 0.153, 0.01]
+  const [boxRef] = useBox(() => ({
+    args: args,
+    rotation: [0, 0, 0],
+    position: [0.0, 0.9 + 0.153 / 2, 1],
+    type: 'Static',
+  }))
+
+  return (
+    <Box ref={boxRef} args={args} receiveShadow>
+      {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
+      <meshStandardMaterial attach='material' color='#f00' transparent opacity={0.5} />
+    </Box>
+  )
+}
+
 function Scene() {
   const [boxRef] = useBox(() => ({
     args: [1, 0.01, 2],
@@ -337,6 +403,10 @@ function Scene() {
 
   return (
     <>
+      <WallLeft></WallLeft>
+      <WallRight></WallRight>
+      <WallFront></WallFront>
+      <WallBack></WallBack>
       {/* <group scale={1} position={[0, -0.05, -2]}>
         <Avatar></Avatar>
       </group> */}
