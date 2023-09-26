@@ -16,6 +16,7 @@ import { Rain } from './Rain/Rain'
 import { Hands, XR, XRButton, useXR } from '@react-three/xr'
 import { XRAdapter } from './XRAdapter'
 import { useEffect, useRef, useState } from 'react'
+import { HandJoints } from './Hand'
 
 export function XRFlow() {
   return (
@@ -72,7 +73,7 @@ function Content() {
   return (
     <>
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
-      <group position={[0, 1, -0.3]}>
+      <group position={[0, 1, -0.35]}>
         <Rain></Rain>
         {/* <Sphere scale={[1, 1, 0.5]}>
           <MeshTransmissionMaterial thickness={1.1}></MeshTransmissionMaterial>
@@ -96,7 +97,6 @@ function Content() {
             </HandsReady>
 
             <ambientLight></ambientLight>
-
             <directionalLight position={[0, 1, 1]}></directionalLight>
 
             <Cam></Cam>
@@ -155,17 +155,23 @@ function JointCollider({ index, hand }) {
   const { gl } = useThree()
   const handObj = gl.xr.getHand(hand)
   const joint = handObj.joints[joints[index]]
+
   let size = 0
   if (joint) {
     size = joint.jointRadius ?? 0.0001
   }
 
   let tipRef = useRef()
+
+  //
   // const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
+  //
+
   useFrame(() => {
     if (joint === undefined) return
 
     if (tipRef.current) {
+      HandJoints.set(`${hand}-${index}`, joint)
       tipRef.current.position.set(joint.position.x, joint.position.y, joint.position.z)
     }
     // api.position.set(joint.position.x, joint.position.y, joint.position.z)

@@ -148,13 +148,12 @@ export class PhysicsInfluences {
           vec3 dif = (influPosition) - position.xyz;
           float len = length( dif );
 
-          //
           float forceFilter = force;
 
           if (len <= radius) {
-            velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-            velocity += vec3(rotationY(forceFilter + sin(time)) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-            velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            // velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            // velocity += vec3(rotationY(forceFilter + sin(time)) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            velocity += vec3(rotationZ(-forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           }
 
           // if (forceFilter >= maxV) {
@@ -191,36 +190,36 @@ export class PhysicsInfluences {
 
 
         void computeSphere (float index, inout vec3 position, inout vec3 velocity) {
-        //  float uv_Y = index / ${influencerCount.toFixed(1)};
+          float uv_Y = index / ${influencerCount.toFixed(1)};
 
-        //   vec4 influPos = texture2D(${textureName}, vec2((1.0) / ${lw}, uv_Y));
-        //   vec4 influMeta = texture2D(${textureName}, vec2((2.0) / ${lw}, uv_Y));
+          vec4 influPos = texture2D(${textureName}, vec2((1.0) / ${lw}, uv_Y));
+          vec4 influMeta = texture2D(${textureName}, vec2((2.0) / ${lw}, uv_Y));
 
-        //   vec3 influPosition = influPos.xyz;
+          vec3 influPosition = influPos.xyz;
 
-        //   float radius = influMeta.x;
-        //   float force = influMeta.y;
-        //   float noiseV = influMeta.z;
+          float radius = influMeta.x;
+          float force = influMeta.y;
+          float noiseV = influMeta.z;
 
-        //   vec3 dif = influPosition - position.xyz;
+          vec3 dif = influPosition - position.xyz;
 
-        //   float len = length( dif );
+          float len = length( dif );
 
-        //   if (len <= 0.1) {
-        //     len = 0.1;
-        //   }
+          if (len <= 0.1) {
+            len = 0.1;
+          }
 
-            // velocity += normalize(dif) * -1.0;
-          // if (len <= radius) {
-          // }
+            velocity += normalize(dif) * -1.0;
+          if (len <= radius) {
+          }
 
-          // if (len <= radius) {
-          //   if (noiseV != 0.0) {
-          //     velocity += cnoise(velocity.xyz) * noiseV;
-          //   }
-          // } else {
-          //   velocity += normalize(dif) * force / len;
-          // }
+          if (len <= radius) {
+            if (noiseV != 0.0) {
+              velocity += cnoise(velocity.xyz) * noiseV;
+            }
+          } else {
+            velocity += normalize(dif) * force / len;
+          }
         }
 
         void computeCustom (float index, inout vec3 position, inout vec3 velocity) {
@@ -286,9 +285,9 @@ export class PhysicsInfluences {
             // if (influenceType == 2.0) {
             //   computeGravity(index, position, velocity);
             // }
-            // if (influenceType == 3.0) {
-            //   computeVortex(index, position, velocity);
-            // }
+            if (influenceType == 3.0) {
+              computeVortex(index, position, velocity);
+            }
 
             computeCustom(index, position, velocity);
           }

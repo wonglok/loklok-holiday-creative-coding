@@ -13,6 +13,7 @@ import {
 // import { useTweaks } from 'use-tweaks'
 import { FunSim } from './FunSim'
 import { PhysicsInfluences } from './PositionSimulation'
+import { HandJoints } from '../Hand'
 
 export function Rain() {
   // let { get } = useThree();
@@ -77,17 +78,17 @@ export function Rain() {
 
         {
           name: 'mouse3d',
-          type: `computeSphere`,
+          type: `computeVortex`,
           enabled: true,
           mouse: true,
           needsUpdate: true,
-          position: { x: 0, y: 0, z: 0 },
-          radius: 1,
+          position: { x: 10000, y: 10000, z: 10000 },
+          radius: 5,
           force: 1,
           noise: 0,
         },
       ],
-      tailLength: 128, // 512, 1024
+      tailLength: 256, // 512, 1024
       howManyTrackers: 512,
     })
   }, [mini, cursorPointer, PhysicsInfluences.key, FunSim.key])
@@ -126,12 +127,15 @@ export function Rain() {
   useFrame(({ camera }) => {
     sim?.track()
 
-    // {
-    //   let target = sim.influences.find((e) => e.name === 'mouse3d')
-    //   for (let kn in mouse) {
-    //     target[kn] = mouse[kn]
-    //   }
-    // }
+    {
+      let target = sim.influences.find((e) => e.name === 'mouse3d')
+
+      for (let [key, val] in HandJoints.entries()) {
+        target.position.x = val.position.x
+        target.position.y = val.position.y
+        target.position.z = val.position.z
+      }
+    }
 
     // {
     //   let target = sim.influences.find((e) => e.name === 'vortexA')
@@ -160,7 +164,7 @@ export function Rain() {
   //
   return (
     <group position={[0, 0, 0]}>
-      {/* <Box
+      <Box
         ref={refToucher}
         args={[100000, 100000, 0.01]}
         visible={false}
@@ -195,7 +199,7 @@ export function Rain() {
 
           // cursorPointer.copy(ev.point)
         }}
-      ></Box> */}
+      ></Box>
       {/* <OrbitDrei /> */}
       {/* <Visualise influ={sim.influences} /> */}
 
