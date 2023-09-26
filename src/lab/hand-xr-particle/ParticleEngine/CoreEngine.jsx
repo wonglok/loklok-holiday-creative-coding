@@ -27,6 +27,7 @@ import {
   CatmullRom,
   CatmullRomCurve3,
   MeshStandardMaterial,
+  ShaderMaterial,
 } from 'three'
 // import { loadGLTF } from "../world/loadGLTF";
 // import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
@@ -193,23 +194,23 @@ function ParticleRelayCore({ surfaceMesh }) {
   let scene = useThree((r) => r.scene)
   let gl = useThree((r) => r.gl)
 
-  let unitGeomtry = new SphereGeometry(0.3 / 2 / 2, 4, 3)
+  let unitGeomtry = new BoxGeometry(0.1, 0.1, 0.1)
 
   let roughness = 0.2,
     metalness = 0.2,
     transmission = 1,
     thickness = 3,
     //
-    color = '#00ffff',
-    emissive = '#000000',
-    performanceProfile = 'low',
+    color = '#000000',
+    emissive = '#ff0000',
+    performanceProfile = 'ultra',
     surfaceEmissionForce = -0.6,
     playerAttractionForce = 0,
     playerSpinningForce = 0,
     playerPropulsionForce = 0,
     shieldRadius = 0,
     unitScale = 0.03,
-    randomness = 3
+    randomness = 0.5
 
   let cursorA = useMemo(() => {
     let o3 = new Mesh(
@@ -371,7 +372,7 @@ export function CoreEngine({
   useEffect(() => {
     let size = new Vector2(128, 256)
     if (performanceProfile === 'ultra') {
-      size.x = 256
+      size.x = 512
       size.y = 256
 
       if ('ontouchstart' in window) {
@@ -939,16 +940,21 @@ export function CoreEngine({
     unitGeo.scale(1 / MY_SCALE, 1 / MY_SCALE, 1 / MY_SCALE)
 
     // unitGeo.scale(0.5, 3, 0.5)
-    geo.copy(unitGeo)
+    // geo.copy(unitGeo)
 
     // geo.copy(new IcosahedronBufferGeometry(0.05, 0.0));
 
     geo.instanceCount = size.x * size.y
 
+    geo.setAttribute('position', new BufferAttribute(new Float32Array([0, 0, 0]), 3))
+    geo.setAttribute('normal', new BufferAttribute(new Float32Array([0, 0, 0]), 3))
+    geo.setAttribute('uv', new BufferAttribute(new Float32Array([0, 0]), 2))
+
     geo.setAttribute('coords', iCoords.iAttr)
 
     let renderMaterial = new MeshPhysicalMaterial({
       color: new Color('#ffffff'),
+      emissive: new Color('#ffffff'),
       roughness: 0.0,
       metalness: 0.0,
       transmission: 0,
@@ -956,15 +962,77 @@ export function CoreEngine({
       flatShading: true,
       side: DoubleSide,
     })
+    renderMaterial = new ShaderMaterial({
+      transparent: true,
+      vertexShader: /* glsl */ `
+          attribute vec4 coords;
+          uniform sampler2D iv_position;
+          uniform sampler2D iv_previous_position;
+          // uniform sampler2D iv_velocity;
+
+          uniform float weatherNow;
+          uniform float unitScale;
+          uniform float randomness;
+          uniform float dt;
+          uniform float time;
+
+          ${getRotation()}
+
+          #include <common>
+
+          mat3 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
+            vec3 rr = vec3(sin(roll), cos(roll), 0.0);
+            vec3 ww = normalize(target - origin);
+            vec3 uu = normalize(cross(ww, rr));
+            vec3 vv = normalize(cross(uu, ww));
+
+            return mat3(uu, vv, ww);
+          }
+          
+          void main (void) {
+            vec4 fowradPosData = texture2D(iv_position, coords.xy);
+            vec4 backPosData = texture2D(iv_previous_position, coords.xy);
+            // vec4 velData = texture2D(iv_velocity, coords.xy);
+
+            vec3 geom = position;
+
+            vec3 transformed = vec3( geom * ${MY_SCALE}.0 * mix(unitScale, unitScale * (rand(coords.xy) * 2.0 - 1.0), randomness));
+
+            vec3 diff = (fowradPosData.xyz - backPosData.xyz) * dt;
+            diff = normalize(diff) * 3.141592 * 2.0;
+
+            // transformed *= calcLookAtMatrix(fowradPosData.rgb, backPosData.rgb, 0.0);
+
+            transformed.xyz *= rotation3dX(diff.x);
+            transformed.xyz *= rotation3dY(diff.y);
+            transformed.xyz *= rotation3dZ(diff.z);
+
+            gl_PointSize = 2.0;
+            transformed += fowradPosData.xyz;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+          }
+        `,
+
+      fragmentShader: /* glsl */ `
+          void main(void) {
+            if (length(gl_PointCoord.xy - 0.5) <= 0.5) {
+              gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            } else {
+              discard;
+            }
+          }
+        `,
+    })
 
     renderMaterial.onBeforeCompile = (shader, gl) => {
       let sync = () => {
-        renderMaterial.color.set(colorRef.current)
-        renderMaterial.emissive.set(emissiveRef.current)
-        renderMaterial.roughness = Number(roughnessRef.current || 0)
-        renderMaterial.metalness = Number(metalnessRef.current || 0)
-        renderMaterial.transmission = Number(transmissionRef.current || 0)
-        renderMaterial.thickness = Number(thicknessRef.current || 0)
+        // renderMaterial.color.set(colorRef.current)
+        // renderMaterial.emissive.set(emissiveRef.current)
+        // renderMaterial.roughness = Number(roughnessRef.current || 0)
+        // renderMaterial.metalness = Number(metalnessRef.current || 0)
+        // renderMaterial.transmission = Number(transmissionRef.current || 0)
+        // renderMaterial.thickness = Number(thicknessRef.current || 0)
 
         shader.uniforms.iv_position = shader.uniforms.iv_position || {
           value: null,
@@ -1073,7 +1141,7 @@ export function CoreEngine({
       )
     }
 
-    let pts = new Mesh(geo, renderMaterial)
+    let pts = new Points(geo, renderMaterial)
     pts.castShadow = true
     pts.receiveShadow = true
     pts.frustumCulled = false

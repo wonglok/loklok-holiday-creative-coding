@@ -151,9 +151,9 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       {/*  */}
       <group
         userData={{
-          forceSize: 3.6 / 8,
+          forceSize: (3.6 / 8) * 2.0,
           forceTwist: 3.141592 * 2.0 * 2.8,
-          forceType: ['vortexY', 'vortexX'][forceTypeIndex % 2],
+          forceType: ['vortexX', 'vortexY'][forceTypeIndex % 2],
           type: 'ForceField',
         }}
       ></group>
@@ -328,15 +328,16 @@ const HandsColliders = () =>
   ))
 
 function WallLeft() {
+  let args = [0.01, 0.153, 2]
   const [boxRef] = useBox(() => ({
-    args: [0.01, 0.153, 2],
+    args: args,
     rotation: [0, 0, 0],
     position: [-0.5, 0.9 + 0.153 / 2, 0],
     type: 'Static',
   }))
 
   return (
-    <Box ref={boxRef} args={[0.01, 0.153, 2]} receiveShadow>
+    <Box ref={boxRef} args={args} receiveShadow>
       {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
       <meshStandardMaterial attach='material' color='#f00' transparent opacity={0.5} />
     </Box>
@@ -344,8 +345,9 @@ function WallLeft() {
 }
 
 function WallRight() {
+  let args = [0.01, 0.153, 2]
   const [boxRef] = useBox(() => ({
-    args: [0.01, 0.153, 2],
+    args: args,
     rotation: [0, 0, 0],
     position: [0.5, 0.9 + 0.153 / 2, 0],
     type: 'Static',
@@ -444,8 +446,8 @@ function Scene() {
               </Box>
             </group> */}
 
-      {[...Array(2)].map((_, i) => (
-        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[(-0.15 * 2) / 2 + 0.15 * i, 1, -0.3]}></MySphere>
+      {[...Array(1)].map((_, i) => (
+        <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[(-0.15 * 1) / 2 + 0.15 * i, 1, -0.3]}></MySphere>
       ))}
 
       <Box ref={boxRef} args={[1, 0.01, 2]} receiveShadow>
