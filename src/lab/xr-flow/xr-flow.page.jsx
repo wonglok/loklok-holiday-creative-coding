@@ -79,12 +79,12 @@ function Content() {
 
       {/* <Sky></Sky> */}
       <Stats></Stats>
+      <PerspectiveCamera near={0.05} far={50} makeDefault></PerspectiveCamera>
 
       {/*  */}
       <XRAdapter
         before={
           <>
-            <PerspectiveCamera fov={75} near={0.05} far={50} makeDefault></PerspectiveCamera>
             <OrbitControls
               maxDistance={550}
               target={[0, 0, 0]}
@@ -236,8 +236,6 @@ function Cam({}) {
 
   useEffect(() => {
     if (session) {
-      camera.position.x = 0.0
-      camera.position.y = 0.0
       camera.position.z = 0.0
       camera.lookAt(0, 0, 0)
       scene.background = null
@@ -247,7 +245,8 @@ function Cam({}) {
   useFrame(() => {
     player.position.x = 0
     player.position.y = -1
-    player.position.z = 0.4
+    player.position.z = 0.3
+    player.updateMatrix()
 
     camera.position.x = 0
     camera.position.y = 0
@@ -255,7 +254,8 @@ function Cam({}) {
   })
   return (
     <>
-      <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.5} far={500}></PerspectiveCamera>
+      {/* <Box position={[0, 0, -1]}></Box> */}
+      {/* <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.05} far={50}></PerspectiveCamera> */}
       {createPortal(<primitive object={camera}></primitive>, player)}
       <primitive object={player}></primitive>
     </>
