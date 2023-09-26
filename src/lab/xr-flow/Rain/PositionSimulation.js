@@ -153,7 +153,7 @@ export class PhysicsInfluences {
           if (len <= radius) {
             // velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
             // velocity += vec3(rotationY(forceFilter + sin(time)) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-            velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z), 1.0));
+            // velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z), 1.0));
           }
 
           // if (forceFilter >= maxV) {
@@ -205,21 +205,26 @@ export class PhysicsInfluences {
 
           float len = length( dif );
 
-          if (len <= 0.1) {
-            len = 0.1;
-          }
+          // if (len <= radius) {
+          //   len = radius;
+          // }
 
-          velocity += normalize(dif) * -1.0;
-          if (len <= radius) {
-          }
+          velocity += vec3(rotationZ(2.0) * vec4(position, 1.0));
 
           if (len <= radius) {
-            if (noiseV != 0.0) {
-              velocity += cnoise(velocity.xyz) * noiseV;
-            }
+            velocity += normalize(dif) * -0.15;
           } else {
-            velocity += normalize(dif) * force / len;
+            velocity += normalize(dif) * 0.15;
           }
+            
+
+          // if (len <= radius) {
+          //   if (noiseV != 0.0) {
+          //     velocity += cnoise(velocity.xyz) * noiseV;
+          //   }
+          // } else {
+          //   velocity += normalize(dif) * force / len;
+          // }
         }
 
         void computeCustom (float index, inout vec3 position, inout vec3 velocity) {
@@ -254,10 +259,7 @@ export class PhysicsInfluences {
           // velocity += normalize(dif) * 2.0;
           // if (len <= radius) {
           //   velocity += normalize(dif) * -2.0;
-          velocity += jade(vec3(position.rgb) * 2.0) * 0.1;
-          
-          velocity += vec3(rotationZ(forceFilter) * vec4(vec3(velocity * 0.1), 1.0));
-          
+         
             // }
 
           // if (forceFilter >= maxV) {
@@ -286,18 +288,20 @@ export class PhysicsInfluences {
             float influenceType = typeInfo.x;
 
             if (influenceType == 1.0) {
-              // computeSphere(index, position, velocity);
+              computeSphere(index, position, velocity);
             }
 
             // if (influenceType == 2.0) {
             //   computeGravity(index, position, velocity);
             // }
-            if (influenceType == 3.0) {
-              computeVortex(index, position, velocity);
-            }
+            // if (influenceType == 3.0) {
+            //   computeVortex(index, position, velocity);
+            // }
 
-            computeCustom(index, position, velocity);
-          }
+            // computeCustom(index, position, velocity);
+          } 
+
+          // velocity += jade(vec3(position.rgb)) * 0.001;
 
           velocity = velocity * delta * 60.0;
         }
@@ -423,7 +427,7 @@ export class PositionSimulation {
         #include <common>
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 10.0 || pos.w >= 0.99;
+          return length(position) >= 2.0 || pos.w >= 0.99;
         }
       `
     }
@@ -456,7 +460,7 @@ export class PositionSimulation {
         return `
           if (phasePos == 0.0) {
 
-            position = 0.15 * vec3(
+            position = 0.05 * vec3(
               (rand(uv + 0.1 + position.x) * 2.0 - 1.0),
               (rand(uv + 0.2 + position.y) * 2.0 - 1.0),
               (rand(uv + 0.3 + position.z) * 2.0 - 1.0)

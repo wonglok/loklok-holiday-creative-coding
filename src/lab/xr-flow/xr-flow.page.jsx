@@ -85,7 +85,7 @@ function Content() {
         before={
           <>
             <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
-            <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 1.0]}></OrbitControls>
+            <OrbitControls maxDistance={550} target={[0, -1, 0]} object-position={[0, 0, 0.3]}></OrbitControls>
           </>
         }
         after={
@@ -94,6 +94,8 @@ function Content() {
 
             <HandsReady>
               <HandsColliders />
+              <HandsAssign hand={0}></HandsAssign>
+              <HandsAssign hand={1}></HandsAssign>
             </HandsReady>
 
             <ambientLight></ambientLight>
@@ -113,6 +115,23 @@ function Content() {
       </Box> */}
     </>
   )
+}
+
+function HandsAssign({ hand }) {
+  const { gl } = useThree()
+  const handObj = gl.xr.getHand(hand)
+
+  let found = false
+  handObj.traverse((it) => {
+    if (!found) {
+      if (it.position.length() !== 0) {
+        found = it
+      }
+    }
+  })
+
+  HandJoints.set(hand, found)
+  return <></>
 }
 
 const HandsColliders = () =>
@@ -171,7 +190,6 @@ function JointCollider({ index, hand }) {
     if (joint === undefined) return
 
     if (tipRef.current) {
-      HandJoints.set(`0-0`, { x: joint.position.x, y: joint.position.y, z: joint.position.z })
       tipRef.current.position.set(joint.position.x, joint.position.y, joint.position.z)
     }
     // api.position.set(joint.position.x, joint.position.y, joint.position.z)
@@ -221,8 +239,12 @@ function Cam({}) {
 
   useFrame(() => {
     player.position.x = 0
-    player.position.z = 1
-    player.position.y = 1
+    player.position.y = -1
+    player.position.z = 0.3
+
+    camera.position.x = 0
+    camera.position.y = 0
+    camera.position.z = 0
   })
   return (
     <>

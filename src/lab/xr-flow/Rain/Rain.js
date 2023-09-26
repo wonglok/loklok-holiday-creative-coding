@@ -2,7 +2,7 @@ import { Core } from './Core'
 import { Box } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
-import { SphereGeometry } from 'three'
+import { Object3D, SphereGeometry } from 'three'
 import {
   ArrowHelper,
   // AxesHelper,
@@ -77,14 +77,25 @@ export function Rain() {
         // },
 
         {
-          name: 'mouse3d',
-          type: `computeVortex`,
+          name: 'h-0',
+          type: `computeSphere`,
           enabled: true,
           mouse: true,
           needsUpdate: true,
           position: { x: 0, y: 0, z: 0 },
-          radius: 1,
-          force: 38,
+          radius: 0.5,
+          force: 3,
+          noise: 0,
+        },
+        {
+          name: 'h-1',
+          type: `computeSphere`,
+          enabled: true,
+          mouse: true,
+          needsUpdate: true,
+          position: { x: 0, y: 0, z: 0 },
+          radius: 0.5,
+          force: 3,
           noise: 0,
         },
       ],
@@ -123,19 +134,41 @@ export function Rain() {
   //   force: 500,
   //   radius: 250,
   // })
+  let v0 = new Vector3()
+  let v1 = new Vector3()
 
   useFrame(({ camera }) => {
     sim?.track()
 
     {
-      let target = sim.influences.find((e) => e.name === 'mouse3d')
+      let h0 = HandJoints.get(0)
+      let h1 = HandJoints.get(1)
 
-      for (let [key, val] of HandJoints.entries()) {
-        // target.position.x = val.x
-        // target.position.y = val.y
-        // target.position.z = val.z
-        console.log(val)
+      if (h0) {
+        h0.getWorldPosition(v0)
+        let target = sim.influences.find((e) => e.name === 'h-0')
+        target.position.x = v0.x
+        target.position.y = v0.y
+        target.position.z = v0.z
+
+        console.log(v0)
       }
+      if (h1) {
+        h1.getWorldPosition(v1)
+        let target = sim.influences.find((e) => e.name === 'h-1')
+        target.position.x = v1.x
+        target.position.y = v1.y
+        target.position.z = v1.z
+
+        console.log(v1)
+      }
+      // let target = sim.influences.find((e) => e.name === 'mouse3d')
+      // for (let [key, val] of HandJoints.entries()) {
+      //   // target.position.x = val.x
+      //   // target.position.y = val.y
+      //   // target.position.z = val.z
+      //   console.log(val)
+      // }
     }
 
     // {
@@ -171,14 +204,14 @@ export function Rain() {
         visible={false}
         onPointerMove={(ev) => {
           //
-          let influ = sim.influences.find((e) => e.name === 'mouse3d')
-          if (influ) {
-            // influ.position.x = ev.point.x
-            // influ.position.y = ev.point.y
-            // influ.position.z = ev.point.z
-            influ.needsUpdate = true
+          let target = sim.influences.find((e) => e.name === 'h-0')
+          if (target) {
+            target.position.x = ev.point.x
+            target.position.y = ev.point.y
+            target.position.z = ev.point.z
 
-            HandJoints.set(`${0}-${0}`, { x: ev.point.x, y: ev.point.y, z: ev.point.z })
+            target.needsUpdate = true
+            console.log(ev.point)
           }
 
           // cursorPointer.copy(ev.point)
@@ -192,12 +225,13 @@ export function Rain() {
           if (controls) {
             controls.enabled = false
           }
-          let influ = sim.influences.find((e) => e.name === 'mouse3d')
-          if (influ) {
-            // influ.position.x = ev.point.x
-            // influ.position.y = ev.point.y
-            // influ.position.z = ev.point.z
-            influ.needsUpdate = true
+          let target = sim.influences.find((e) => e.name === 'h-0')
+          if (target) {
+            target.position.x = ev.point.x
+            target.position.y = ev.point.y
+            target.position.z = ev.point.z
+
+            target.needsUpdate = true
           }
 
           // cursorPointer.copy(ev.point)
