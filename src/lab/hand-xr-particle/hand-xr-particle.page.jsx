@@ -128,12 +128,14 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     mass: 0.5,
     args: 0.05 * 2.0,
     friction: 5,
+    restitution: 1.0,
   }))
 
   useEffect(() => {
     return api.position.subscribe((value) => {
-      if (value[1] <= -2) {
+      if (value[1] <= -2.5) {
         api.position.set(0, 1.1, -0.3)
+        api.velocity.set(0, 0, 0)
       }
       // if (ref.current.position.y <= -1.5) {
       //   api.position.set(0, 1, -0.5)
@@ -146,6 +148,8 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     let speed = 0.2
     yRef.current.userData.forceSize =
       3.6 * Math.sin(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed)
+    yRef.current.userData.forceTwist =
+      3.141592 * 2.0 * 2.8 * Math.cos(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed)
   })
 
   return (
