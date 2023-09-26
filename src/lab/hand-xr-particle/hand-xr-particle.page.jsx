@@ -143,9 +143,11 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     })
   })
 
+  let spinRefA = useRef()
   let xRef = useRef()
-  let yRef = useRef()
   let zRef = useRef()
+
+  let method = Math.sin
 
   useFrame(({ clock }) => {
     let speed = 0.2
@@ -153,10 +155,10 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       // xRef.current.userData.forceSize = ref.current.rotation.x * 3.141592
     }
 
-    if (ref.current && yRef.current) {
-      yRef.current.userData.forceSize =
+    if (ref.current && spinRefA.current) {
+      spinRefA.current.userData.forceSize =
         // ref.current.rotation.y * 3.141592 +
-        Math.sin(clock.getElapsedTime() * speed) * Math.cos(clock.getElapsedTime() * speed) * 3.6
+        (method(clock.getElapsedTime() * speed) * 3.6) / 2 + 3.6
     }
 
     if (ref.current && zRef.current) {
@@ -184,7 +186,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
           forceType: forceType,
           type: 'ForceField',
         }}
-        ref={yRef}
+        ref={spinRefA}
       ></group>
       {/* 
       <group
