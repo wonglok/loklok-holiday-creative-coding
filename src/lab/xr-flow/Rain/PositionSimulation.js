@@ -213,9 +213,9 @@ export class PhysicsInfluences {
           velocity += vec3(rotationZ(2.0) * vec4(position, 1.0));
 
           if (len <= radius) {
-            velocity += length(dif) * normalize(dif) * -0.15;
+            velocity += normalize(dif) * -0.15;
           } else {
-            velocity += length(dif) * normalize(dif) * 0.15;
+            velocity += normalize(dif) * 0.15;
           }
             
 
