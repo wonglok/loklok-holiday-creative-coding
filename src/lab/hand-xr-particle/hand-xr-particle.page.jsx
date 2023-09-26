@@ -326,9 +326,9 @@ const HandsColliders = () =>
   ))
 
 function Scene() {
-  const [floorRef] = usePlane(() => ({
-    args: [10, 10],
-    rotation: [-Math.PI / 2, 0, 0],
+  const [boxRef] = useBox(() => ({
+    args: [1, 0.01, 2],
+    rotation: [0, 0, 0],
     position: [0, 0.9, 0],
     type: 'Static',
   }))
@@ -376,10 +376,10 @@ function Scene() {
         <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[-0.2 + 0.2 * i, 1, -0.3]}></MySphere>
       ))}
 
-      <Plane ref={floorRef} args={[10, 10]} receiveShadow>
+      <Box ref={boxRef} args={[1, 0.01, 2]} receiveShadow>
         {/* <MeshDiscardMaterial></MeshDiscardMaterial> */}
         <meshStandardMaterial attach='material' color='#fff' transparent opacity={0.5} />
-      </Plane>
+      </Box>
 
       <Hands />
       <HandsReady>
