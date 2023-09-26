@@ -370,10 +370,10 @@ function HandsReady(props) {
 
 const HandsColliders = () =>
   [...Array(25)].map((_, i) => (
-    <Fragment key={i}>
+    <Hands key={i}>
       <JointCollider index={i} hand={0} />
       <JointCollider index={i} hand={1} />
-    </Fragment>
+    </Hands>
   ))
 
 function WallLeft() {

@@ -1,13 +1,13 @@
-import { Box, Environment, OrbitControls, PerspectiveCamera, Stats } from '@react-three/drei'
+import { Box, Environment, OrbitControls, PerspectiveCamera, Sphere, Stats } from '@react-three/drei'
 import { Canvas, useThree } from '@react-three/fiber'
 import { Sky } from './Sky/Sky'
 import { Bloom, EffectComposer, SSR, Vignette } from '@react-three/postprocessing'
 import { Color, SRGBColorSpace, sRGBEncoding } from 'three'
 import { Core } from './Rain/Core'
 import { Rain } from './Rain/Rain'
-import { XR, XRButton, useXR } from '@react-three/xr'
+import { Hands, XR, XRButton, useXR } from '@react-three/xr'
 import { XRAdapter } from './XRAdapter'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function XRFlow() {
   return (
@@ -62,7 +62,9 @@ function Content() {
   return (
     <>
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
-      <Rain></Rain>
+      <group position={[0, 1, -5]}>
+        <Rain></Rain>
+      </group>
       <Stats></Stats>
       <XRAdapter
         before={
@@ -73,6 +75,12 @@ function Content() {
         }
         after={
           <>
+            <Hands />
+
+            <HandsReady>
+              <HandsColliders />
+            </HandsReady>
+
             <Cam></Cam>
           </>
         }
@@ -89,6 +97,62 @@ function Content() {
   )
 }
 
+const HandsColliders = () =>
+  [...Array(25)].map((_, i) => (
+    <Hands key={i}>
+      <JointCollider index={i} hand={0} />
+      <JointCollider index={i} hand={1} />
+    </Hands>
+  ))
+
+function JointCollider({ index, hand }) {
+  const { gl } = useThree()
+  const handObj = gl.xr.getHand(hand)
+  const joint = handObj.joints[joints[index]]
+  let size = 0
+  if (joint) {
+    size = joint.jointRadius ?? 0.0001
+  }
+
+  let tipRef = useRef()
+  // const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
+  useFrame(() => {
+    if (joint === undefined) return
+
+    if (tipRef.current) {
+      tipRef.current.position.set(joint.position.x, joint.position.y, joint.position.z)
+    }
+    // api.position.set(joint.position.x, joint.position.y, joint.position.z)
+  })
+
+  return (
+    <Sphere ref={tipRef} args={[size]}>
+      <meshBasicMaterial color={'#ff0000'} transparent opacity={0.5} attach='material' />
+    </Sphere>
+  )
+}
+
+function HandsReady(props) {
+  const [ready, setReady] = useState(false)
+  const gl = useThree((s) => s.gl)
+  useEffect(() => {
+    if (ready) return
+    const joint = gl.xr.getHand(0).joints['index-finger-tip']
+    if (joint?.jointRadius !== undefined) return
+    const id = setInterval(() => {
+      const joint = gl.xr.getHand(0).joints['index-finger-tip']
+      if (joint?.jointRadius !== undefined) {
+        setReady(true)
+      }
+    }, 500)
+    return () => {
+      clearInterval(id)
+    }
+  }, [gl, ready])
+
+  return ready ? props.children : null
+}
+
 function Cam({ children, loader = null }) {
   let session = useXR((r) => r.session)
   let player = useXR((r) => r.player)
@@ -98,6 +162,7 @@ function Cam({ children, loader = null }) {
     if (session) {
       camera.position.z = 5.0
       camera.lookAt(0, 0, 0)
+      player.position.z = 5.0
     }
   }, [session, player, camera])
   return (

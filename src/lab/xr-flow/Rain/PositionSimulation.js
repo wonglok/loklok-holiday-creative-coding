@@ -450,13 +450,13 @@ export class PositionSimulation {
         return `
           if (phasePos == 0.0) {
 
-            position = 2.0 * vec3(
+            position = 1.5 * vec3(
               (rand(uv + 0.1 + position.x) * 2.0 - 1.0),
               (rand(uv + 0.2 + position.y) * 2.0 - 1.0),
               (rand(uv + 0.3 + position.z) * 2.0 - 1.0)
             );
 
-            position.z *= 0.001;
+            position.z *= 0.1;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;
