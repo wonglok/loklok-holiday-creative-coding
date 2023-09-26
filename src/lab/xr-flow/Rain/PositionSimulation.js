@@ -153,7 +153,7 @@ export class PhysicsInfluences {
           if (len <= radius) {
             // velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
             // velocity += vec3(rotationY(forceFilter + sin(time)) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-            velocity += vec3(rotationZ(-forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           }
 
           // if (forceFilter >= maxV) {
@@ -251,7 +251,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += jade(position * 0.01) * 5.5;
+          velocity += jade(position * 0.01) * 10.5;
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
@@ -449,13 +449,13 @@ export class PositionSimulation {
         return `
           if (phasePos == 0.0) {
 
-            position = 1.5 * vec3(
+            position = 0.15 * vec3(
               (rand(uv + 0.1 + position.x) * 2.0 - 1.0),
               (rand(uv + 0.2 + position.y) * 2.0 - 1.0),
               (rand(uv + 0.3 + position.z) * 2.0 - 1.0)
             );
 
-            position.z *= 0.1;
+            position.z *= 0.05;
 
             // if (uv.y >= 0.0 && uv.y <= 0.333) {
             //   position.x += 130.0;

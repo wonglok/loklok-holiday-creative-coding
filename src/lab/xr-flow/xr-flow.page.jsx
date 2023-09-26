@@ -73,7 +73,7 @@ function Content() {
   return (
     <>
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
-      <group position={[0, 1, -0.35]}>
+      <group scale={[1, 1, 1]} position={[0, 1, -0.35]}>
         <Rain></Rain>
         {/* <Sphere scale={[1, 1, 0.5]}>
           <MeshTransmissionMaterial thickness={1.1}></MeshTransmissionMaterial>
@@ -85,7 +85,7 @@ function Content() {
         before={
           <>
             <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
-            <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 10.0]}></OrbitControls>
+            <OrbitControls maxDistance={550} target={[0, 1, 0]} object-position={[0, 1, 1.0]}></OrbitControls>
           </>
         }
         after={
