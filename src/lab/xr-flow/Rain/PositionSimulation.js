@@ -191,30 +191,29 @@ export class PhysicsInfluences {
 
 
         void computeSphere (float index, inout vec3 position, inout vec3 velocity) {
-          float uv_Y = index / ${influencerCount.toFixed(1)};
+        //  float uv_Y = index / ${influencerCount.toFixed(1)};
 
-          vec4 influPos = texture2D(${textureName}, vec2((1.0) / ${lw}, uv_Y));
-          vec4 influMeta = texture2D(${textureName}, vec2((2.0) / ${lw}, uv_Y));
+        //   vec4 influPos = texture2D(${textureName}, vec2((1.0) / ${lw}, uv_Y));
+        //   vec4 influMeta = texture2D(${textureName}, vec2((2.0) / ${lw}, uv_Y));
 
-          vec3 influPosition = influPos.xyz;
+        //   vec3 influPosition = influPos.xyz;
 
-          float radius = influMeta.x;
-          float force = influMeta.y;
-          float noiseV = influMeta.z;
+        //   float radius = influMeta.x;
+        //   float force = influMeta.y;
+        //   float noiseV = influMeta.z;
 
-          vec3 dif = (influPosition) - position.xyz;
+        //   vec3 dif = influPosition - position.xyz;
 
-          // float len = length( dif ) * 0.1;
+        //   float len = length( dif );
 
-          // if (len <= 0.05) {
-          //   len = 0.05;
+        //   if (len <= 0.1) {
+        //     len = 0.1;
+        //   }
+
+            // velocity += normalize(dif) * -1.0;
+          // if (len <= radius) {
           // }
 
-            velocity += normalize(dif) * -0.1;
-          // if (len <= radius * 0.3) {
-          // }
-
-      
           // if (len <= radius) {
           //   if (noiseV != 0.0) {
           //     velocity += cnoise(velocity.xyz) * noiseV;
