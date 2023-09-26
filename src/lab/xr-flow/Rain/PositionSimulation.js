@@ -203,8 +203,7 @@ export class PhysicsInfluences {
 
           vec3 dif = influPosition - position.xyz;
           float forceFilter = force;
-
-          // float len = length(dif);
+          float len = length(dif);
 
           // // if (len <= radius) {
           // //   len = radius;
@@ -219,15 +218,20 @@ export class PhysicsInfluences {
           //   len = 0.01;
           // }
 
-          velocity += jade(vec3(position.rgb)) * 0.3;
+          velocity += jade(vec3(position.rgb)) * 0.3 * 0.5;
 
-          velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
+          //  - influPosition.rgb
 
-          // if (len <= 0.3) {
-          //   velocity += normalize(dif) * -0.3;
-          // } else {
-          //   velocity += normalize(dif) * 0.3;
-          // }
+          // velocity += getDiff(position, normalize(influPosition) / len) * -2.3;
+          
+          // velocity += 0.3 * vec3(rotationY(1.1) * vec4(vec3(normalize(position - influPosition)), 1.0));
+
+          // velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
+
+          if (len <= 0.2) {
+            velocity += normalize(dif) * -8.5;
+          } else {
+          }
 
           // if (len <= radius) {
           //   if (noiseV != 0.0) {
