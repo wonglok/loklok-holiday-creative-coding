@@ -302,19 +302,16 @@ class TJCore {
         name: 'createAutoNode: ' + name,
       })
 
-      let tt = 0
-      let rAF = () => {
-        tt = requestAnimationFrame(rAF)
+      self.onLoop(() => {
         tj.work()
-      }
-      tt = requestAnimationFrame(rAF)
+      })
 
       tj.onClean(() => {
-        cancelAnimationFrame(tt)
         console.log('cleanupAutoNode: ' + name)
       })
 
       return {
+        tj,
         dispose: () => {
           tj.clean()
         },

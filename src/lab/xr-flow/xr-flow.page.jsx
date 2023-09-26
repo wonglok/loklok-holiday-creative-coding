@@ -60,24 +60,39 @@ export function XRFlow() {
 function Content() {
   return (
     <>
-      <XRAdapter></XRAdapter>
-      {/* <Box scale={[1, 2, 1]}>
-        <meshBasicMaterial color={'red'}></meshBasicMaterial>
-      </Box> */}
+      <XRAdapter
+        before={
+          <>
+            <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
 
-      <PerspectiveCamera makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
+            <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 10.0]}></OrbitControls>
+          </>
+        }
+        after={
+          <>
+            <PerspectiveCamera makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
 
-      <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 10.0]} makeDefault></OrbitControls>
+            <OrbitControls
+              maxDistance={550}
+              target={[0, 0, 0]}
+              object-position={[0, 0, 10.0]}
+              makeDefault
+            ></OrbitControls>
+          </>
+        }
+      ></XRAdapter>
 
-      <EffectComposer disableNormalPass multisampling={0}>
+      {/* <EffectComposer disableNormalPass multisampling={0}>
         <Bloom luminanceThreshold={0.99} intensity={1} mipmapBlur={true}></Bloom>
-        {/* <Vignette></Vignette> */}
-      </EffectComposer>
+      </EffectComposer> */}
 
       <Environment background files={`/hdr/shanghai.hdr`}></Environment>
       {/* <Sky></Sky> */}
       <Rain></Rain>
       <Stats></Stats>
+      {/* <Box scale={[1, 2, 1]}>
+        <meshBasicMaterial color={'red'}></meshBasicMaterial>
+      </Box> */}
     </>
   )
 }
