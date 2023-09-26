@@ -201,7 +201,7 @@ export function Rain() {
   //
   return (
     <group position={[0, 0, 0]}>
-      {/* <Box
+      <Box
         ref={refToucher}
         args={[100000, 100000, 0.01]}
         visible={false}
@@ -214,10 +214,7 @@ export function Rain() {
             target.position.z = ev.point.z
 
             target.needsUpdate = true
-            console.log(ev.point)
           }
-
-          // cursorPointer.copy(ev.point)
         }}
         onPointerUp={(ev) => {
           if (controls) {
@@ -236,10 +233,9 @@ export function Rain() {
 
             target.needsUpdate = true
           }
-
-          // cursorPointer.copy(ev.point)
         }}
-      ></Box> */}
+      ></Box>
+
       {/* <OrbitDrei /> */}
       {/* <Visualise influ={sim.influences} /> */}
 
