@@ -98,7 +98,7 @@ function Content() {
             <Hands />
 
             <HandsReady>
-              <HandsColliders />
+              {/* <HandsColliders /> */}
               <HandsAssign hand={0}></HandsAssign>
               <HandsAssign hand={1}></HandsAssign>
             </HandsReady>
