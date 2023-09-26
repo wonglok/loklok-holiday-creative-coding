@@ -221,7 +221,7 @@ export class PhysicsInfluences {
 
           velocity += jade(vec3(position.rgb)) * 0.3;
 
-          velocity += getDiff(position + velocity, influPosition) * -1.5;
+          velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
 
           // if (len <= 0.3) {
           //   velocity += normalize(dif) * -0.3;
@@ -335,8 +335,8 @@ export class PhysicsInfluences {
       }
       for (let idx = 0; idx < influencerCount; idx++) {
         let data = array[idx]
-        if (data && data.needsUpdate) {
-          data.needsUpdate = false
+        if (data) {
+          // data.needsUpdate = false
           setCommandBuffer({ idx, data })
         }
       }
