@@ -1149,9 +1149,8 @@ export function CoreEngine({
     pts.receiveShadow = true
     pts.frustumCulled = false
     pts.position.x = 0
-    pts.position.y = 0
+    pts.position.y = 0.01
     pts.position.z = 0
-    pts.renderOrder = -1000
 
     // let scene = await gpi.ready.scene;
     scene.add(pts)

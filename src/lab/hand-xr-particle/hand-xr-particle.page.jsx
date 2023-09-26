@@ -527,26 +527,19 @@ export const HandXR = () => (
     <Canvas>
       <color attach='background' args={['#000']} />
       <XR>
-        <Cam
-          loader={
-            <>
-              <ParticleCoreEngine key='loader'></ParticleCoreEngine>
-            </>
-          }
+        <Cam loader={<>{/* <ParticleCoreEngine key='loader'></ParticleCoreEngine> */}</>}></Cam>
+        <Physics
+          gravity={[0, -2, 0]}
+          iterations={20}
+          defaultContactMaterial={{
+            friction: 0.09,
+          }}
         >
-          <Physics
-            gravity={[0, -2, 0]}
-            iterations={20}
-            defaultContactMaterial={{
-              friction: 0.09,
-            }}
-          >
-            <group position={[0, 0, 0]}>
-              <Scene />
-              <ParticleCoreEngine></ParticleCoreEngine>
-            </group>
-          </Physics>
-        </Cam>
+          <group position={[0, 0, 0]}>
+            <Scene />
+            <ParticleCoreEngine></ParticleCoreEngine>
+          </group>
+        </Physics>
       </XR>
 
       {/*  */}
