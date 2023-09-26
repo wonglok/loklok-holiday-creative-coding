@@ -142,14 +142,27 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       // }
     })
   })
+  let xRef = useRef()
   let yRef = useRef()
+  let zRef = useRef()
 
   useFrame(({ clock }) => {
     let speed = 0.2
-    yRef.current.userData.forceSize =
-      3.6 * Math.sin(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed)
-    yRef.current.userData.forceTwist =
-      3.141592 * 2.0 * 2.8 * Math.cos(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed)
+    if (ref.current && xRef.current) {
+      xRef.current.userData.forceSize = ref.current.rotation.x * 3.141592
+    }
+    if (ref.current && yRef.current) {
+      yRef.current.userData.forceSize =
+        ref.current.rotation.y +
+        Math.sin(clock.getElapsedTime() * speed) * Math.cos(clock.getElapsedTime() * speed) * 3.6
+      yRef.current.userData.forceTwist =
+        ref.current.rotation.y +
+        Math.sin(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed) * 3.141592 * 2.0 * 2.8
+    }
+
+    if (ref.current && zRef.current) {
+      zRef.current.userData.forceSize = ref.current.rotation.z * 3.141592
+    }
   })
 
   return (
@@ -167,6 +180,26 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
           type: 'ForceField',
         }}
         ref={yRef}
+      ></group>
+
+      <group
+        userData={{
+          forceSize: 3.6 / 8 / 2,
+          forceTwist: 3.141592 * 2.0 * 2.8,
+          forceType: 'vortexX',
+          type: 'ForceField',
+        }}
+        ref={xRef}
+      ></group>
+
+      <group
+        userData={{
+          forceSize: 3.6 / 8 / 2,
+          forceTwist: 3.141592 * 2.0 * 2.8,
+          forceType: 'vortexZ',
+          type: 'ForceField',
+        }}
+        ref={zRef}
       ></group>
 
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
