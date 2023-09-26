@@ -21,14 +21,15 @@ import {
   // AdditiveBlending,
   // MathUtils,
   Object3D,
-  BackSide,
-  AdditiveBlending,
-  DoubleSide,
+  // BackSide,
+  // AdditiveBlending,
+  // DoubleSide,
   NormalBlending,
   FrontSide,
-  EquirectangularReflectionMapping,
+  // EquirectangularReflectionMapping,
   Color,
   FloatType,
+  DoubleSide,
 } from 'three'
 import { Geometry } from './Geo.js'
 import { PositionSimulation } from './PositionSimulation'
@@ -365,7 +366,8 @@ export class LokLokWiggleDisplay {
           vTColor = normalize(getLineByT(0.5, lineIDXER) - getLineByT(0.6, lineIDXER));
 
           float snip =  pow(t * (1.0 - t), 0.25);
-          vec2 volume = vec2(snip) * 0.035 * 0.05;
+
+          vec2 volume = vec2(snip) * 0.035 * 0.02;
 
           // volume *= rotate(volume, t * 3.1415 * 2.0);
 
@@ -387,6 +389,7 @@ export class LokLokWiggleDisplay {
         varying vec3 vNormal;
         varying vec3 vViewPosition;
         uniform sampler2D map;
+        uniform float time;
         varying vec3 vTColor;
         varying vec2 vUv;
 
@@ -403,6 +406,19 @@ export class LokLokWiggleDisplay {
             return vec3((2.0 * p1 - 2.0 * p2 + v0 + v1) * t3 + (-3.0 * p1 + 3.0 * p2 - 2.0 * v0 - v1) * t2 + v0 * t + p1);
         }
 
+         // A simple way to create color variation in a cheap way (yes, trigonometrics ARE cheap
+        // in the GPU, don't try to be smart and use a triangle wave instead).
+
+        // See https://iquilezles.org/articles/palettes for more information
+
+        vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d )
+        {
+            return a + b*cos( 6.28318*(c*t+d) );
+        }
+
+        #include <common>
+
+
         void main (void) {
 
 
@@ -415,23 +431,23 @@ export class LokLokWiggleDisplay {
 
           float tt = (1.0 - vT);
 
-          gl_FragColor = vec4(matcapColor.rgb * 0.0 + vEachColor.rgb * 8.0, tt * vLineCycle);
+          vec3 color = pal(tt * vT, vec3(0.21,0.55,0.63),vec3(0.2,0.5,0.33),vec3(0.2,0.18,0.75),vec3(0.06,0.16,0.65));
+          gl_FragColor = vec4(color.rgb + matcapColor.rgb * 0.0 + vEachColor.rgb * 0.0, tt * vLineCycle);
 
           // gl_FragColor.a *= tt;
-
-          if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
-            gl_FragColor.x *= 1.0 * tt;
-            gl_FragColor.y *= 1.0 * tt;
-            gl_FragColor.z *= 1.0 * tt;
-          } else if (vLineCycle >= 0.334 && vLineCycle <= 0.667) {
-            gl_FragColor.x *= 1.0 * tt;
-            gl_FragColor.y *= 1.0 * tt;
-            gl_FragColor.z *= 1.0 * tt;
-          } else if (vLineCycle >= 0.668 && vLineCycle <= 1.0) {
-            gl_FragColor.x *= 1.0 * tt;
-            gl_FragColor.y *= 1.0 * tt;
-            gl_FragColor.z *= 1.0 * tt;
-          }
+          // if (vLineCycle >= 0.0 && vLineCycle <= 0.333) {
+          //   gl_FragColor.x *= 1.0 * tt;
+          //   gl_FragColor.y *= 1.0 * tt;
+          //   gl_FragColor.z *= 1.0 * tt;
+          // } else if (vLineCycle >= 0.334 && vLineCycle <= 0.667) {
+          //   gl_FragColor.x *= 1.0 * tt;
+          //   gl_FragColor.y *= 1.0 * tt;
+          //   gl_FragColor.z *= 1.0 * tt;
+          // } else if (vLineCycle >= 0.668 && vLineCycle <= 1.0) {
+          //   gl_FragColor.x *= 1.0 * tt;
+          //   gl_FragColor.y *= 1.0 * tt;
+          //   gl_FragColor.z *= 1.0 * tt;
+          // }
 
           if (vLineCycle * tt < 0.001) {
             discard;
@@ -439,7 +455,7 @@ export class LokLokWiggleDisplay {
         }
       `,
       transparent: true,
-      side: FrontSide,
+      side: DoubleSide,
       depthTest: true,
       depthWrite: true,
       blending: NormalBlending,
@@ -536,6 +552,7 @@ class NoodleGeo {
     lineGeo.setAttribute('angle', new BufferAttribute(angleArray, 1))
     lineGeo.setAttribute('uv', new BufferAttribute(uvArray, 2))
 
+    //
     // let offset = [];
     // let ddxyz = Math.floor(Math.pow(count, 1 / 3));
     // let iii = 0;
@@ -552,6 +569,7 @@ class NoodleGeo {
     //     }
     //   }
     // }
+    //
 
     let offset = []
     for (let i = 0; i < count; i++) {
