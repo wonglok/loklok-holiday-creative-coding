@@ -247,7 +247,7 @@ function Cam({}) {
   useFrame(() => {
     player.position.x = 0
     player.position.y = -1
-    player.position.z = 0.3
+    player.position.z = 0.4
 
     camera.position.x = 0
     camera.position.y = 0
