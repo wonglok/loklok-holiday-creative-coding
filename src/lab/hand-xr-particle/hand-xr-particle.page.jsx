@@ -150,7 +150,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
   let method = Math.sin
 
   useFrame(({ clock }) => {
-    let speed = 0.2
+    let speed = 1.0
     if (ref.current && xRef.current) {
       // xRef.current.userData.forceSize = ref.current.rotation.x * 3.141592
     }
