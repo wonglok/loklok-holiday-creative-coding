@@ -210,13 +210,16 @@ export class PhysicsInfluences {
           //   len = radius;
           // }
 
-          velocity += vec3(rotationZ(2.0) * vec4(position, 1.0));
+          // velocity += vec3(rotationZ(2.0) * vec4(position, 1.0));
 
-          if (len <= radius) {
-            velocity += normalize(dif) * -0.15;
-          } else {
-            velocity += normalize(dif) * 0.15;
-          }
+          velocity += jade(vec3(position.rgb * 1.0)) * 0.1;
+
+          // if (len <= radius) {
+          //   velocity += normalize(dif) * -1.5;
+          // } else {
+          //   velocity += normalize(dif) * 0.5;
+          // }
+
             
 
           // if (len <= radius) {
@@ -302,7 +305,6 @@ export class PhysicsInfluences {
             // computeCustom(index, position, velocity);
           } 
 
-          // velocity += jade(vec3(position.rgb)) * 0.001;
 
           velocity = velocity * delta * 60.0;
         }
@@ -461,7 +463,7 @@ export class PositionSimulation {
         return `
           if (phasePos == 0.0) {
 
-            position = 0.05 * vec3(
+            position = 0.01 * vec3(
               (rand(uv + 0.1 + position.x) * 2.0 - 1.0),
               (rand(uv + 0.2 + position.y) * 2.0 - 1.0),
               (rand(uv + 0.3 + position.z) * 2.0 - 1.0)
