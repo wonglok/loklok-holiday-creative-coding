@@ -133,7 +133,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
   useEffect(() => {
     return api.position.subscribe((value) => {
       if (value[1] <= -2) {
-        api.position.set(0, 1.1, -0.5)
+        api.position.set(0, 1.1, -0.3)
       }
       // if (ref.current.position.y <= -1.5) {
       //   api.position.set(0, 1, -0.5)
@@ -162,43 +162,43 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
   )
 }
 
-function MyLineNode({ nodeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
-  const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.05, 1)
-  }, [])
-  const renderGeo = useMemo(() => {
-    return new SphereGeometry(0.05, 25, 25)
-  }, [])
-  selectGeo.scale(1, 1, 1)
-  const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
-  const [ref] = useConvexPolyhedron(() => ({
-    ...props,
-    position: position,
-    mass: 1,
-    args: geo,
-  }))
+// function MyLineNode({ nodeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
+//   const selectGeo = useMemo(() => {
+//     return new IcosahedronGeometry(0.05, 1)
+//   }, [])
+//   const renderGeo = useMemo(() => {
+//     return new SphereGeometry(0.05, 25, 25)
+//   }, [])
+//   selectGeo.scale(1, 1, 1)
+//   const geo = useMemo(() => toConvexProps(selectGeo), [selectGeo])
+//   const [ref] = useConvexPolyhedron(() => ({
+//     ...props,
+//     position: position,
+//     mass: 1,
+//     args: geo,
+//   }))
 
-  return (
-    <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
-      <meshPhysicalMaterial
-        roughness={0}
-        transmission={1}
-        metalness={0}
-        thickness={1.5}
-        color={'#ff0000'}
-      ></meshPhysicalMaterial>
+//   return (
+//     <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
+//       <meshPhysicalMaterial
+//         roughness={0}
+//         transmission={1}
+//         metalness={0}
+//         thickness={1.5}
+//         color={'#ff0000'}
+//       ></meshPhysicalMaterial>
 
-      {/* <group
-        userData={{
-          indexID: nodeIndex,
-          lineID: 0,
-          type: 'ForceCurve',
-        }}
-      ></group> */}
-      {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
-    </mesh>
-  )
-}
+//       {/* <group
+//         userData={{
+//           indexID: nodeIndex,
+//           lineID: 0,
+//           type: 'ForceCurve',
+//         }}
+//       ></group> */}
+//       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
+//     </mesh>
+//   )
+// }
 
 function Triangle({ position = [0, 1.2, 0], ...props }) {
   const { nodes } = useGLTF('/bricks/Triangle.glb')
@@ -281,6 +281,8 @@ function JointCollider({ index, hand }) {
   if (joint) {
     size = joint.jointRadius ?? 0.0001
     // size *= 1.3333
+
+    size *= 0.5
   }
 
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
@@ -291,7 +293,7 @@ function JointCollider({ index, hand }) {
 
   return (
     <Sphere ref={tipRef} args={[size]}>
-      <meshBasicMaterial color={'#ff0000'} transparent opacity={0} attach='material' />
+      <meshBasicMaterial color={'#ff0000'} transparent opacity={1} attach='material' />
     </Sphere>
   )
 }
@@ -460,7 +462,7 @@ export const HandXR = () => (
           onError={(error) => {}}
         >
           {/* Can accept regular DOM children and has an optional callback with the XR button status (unsupported, exited, entered) */}
-          {(status) => (status === 'unsupported' ? `Enter MixReality` : `Enter MixReality`)}
+          {(status) => (status === 'unsupported' ? `Enter MixedReality` : `Enter MixedReality`)}
         </XRButton>
       </div>
     </div>
