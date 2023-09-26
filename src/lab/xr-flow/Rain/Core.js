@@ -215,6 +215,7 @@ class TJCore {
       } catch (e) {
         console.error(e)
       }
+
       const end = global.performance.now()
       const duration = end - start
 

@@ -153,7 +153,7 @@ export class PhysicsInfluences {
           if (len <= radius) {
             // velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
             // velocity += vec3(rotationY(forceFilter + sin(time)) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
-            velocity += vec3(rotationZ(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
+            velocity += vec3(rotationY(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
           }
 
           // if (forceFilter >= maxV) {
