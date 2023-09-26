@@ -61,9 +61,9 @@ function Content() {
   return (
     <>
       <XRAdapter></XRAdapter>
-      <Box scale={[1, 2, 1]}>
+      {/* <Box scale={[1, 2, 1]}>
         <meshBasicMaterial color={'red'}></meshBasicMaterial>
-      </Box>
+      </Box> */}
 
       <PerspectiveCamera makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
 

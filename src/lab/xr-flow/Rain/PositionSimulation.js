@@ -252,8 +252,7 @@ export class PhysicsInfluences {
           // velocity.y += 50.0 * cos(position.x * 0.01);
           // velocity.z += 50.0 * sin(position.x * 0.02);
 
-          velocity += jade(position * 0.01) * 2.5;
-
+          velocity += jade(position * 0.01) * 5.5;
 
           // if (forceFilter >= maxV) {
           //   forceFilter = maxV;
