@@ -228,9 +228,8 @@ export class PhysicsInfluences {
 
           // velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
 
-          if (len <= 0.2) {
-            velocity += normalize(dif) * -8.5;
-          } else {
+          if (len <= 0.25) {
+            velocity += normalize(dif) * -5.5;
           }
 
           // if (len <= radius) {
@@ -441,7 +440,7 @@ export class PositionSimulation {
         #include <common>
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 1.0 || pos.w >= 0.99;
+          return length(position) >= 0.8 || pos.w >= 0.99;
         }
       `
     }
