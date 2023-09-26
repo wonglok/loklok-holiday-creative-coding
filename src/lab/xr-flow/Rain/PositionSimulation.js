@@ -229,7 +229,7 @@ export class PhysicsInfluences {
           // velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
 
           if (len <= 0.25) {
-            velocity += normalize(dif) * -5.5;
+            velocity += normalize(dif) * -5.5 * len * 2.0;
           }
 
           // if (len <= radius) {
