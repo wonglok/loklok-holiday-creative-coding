@@ -28,6 +28,7 @@ import {
   CatmullRomCurve3,
   MeshStandardMaterial,
   ShaderMaterial,
+  SubtractiveBlending,
 } from 'three'
 // import { loadGLTF } from "../world/loadGLTF";
 // import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
@@ -964,6 +965,7 @@ export function CoreEngine({
     })
     renderMaterial = new ShaderMaterial({
       transparent: true,
+      // blending: SubtractiveBlending,
       vertexShader: /* glsl */ `
           attribute vec4 coords;
           uniform sampler2D iv_position;
@@ -998,16 +1000,16 @@ export function CoreEngine({
 
             vec3 transformed = vec3( geom * ${MY_SCALE}.0 * mix(unitScale, unitScale * (rand(coords.xy) * 2.0 - 1.0), randomness));
 
-            vec3 diff = (fowradPosData.xyz - backPosData.xyz) * dt;
-            diff = normalize(diff) * 3.141592 * 2.0;
+            // vec3 diff = (fowradPosData.xyz - backPosData.xyz) * dt;
+            // diff = normalize(diff) * 3.141592 * 2.0;
 
             // transformed *= calcLookAtMatrix(fowradPosData.rgb, backPosData.rgb, 0.0);
 
-            transformed.xyz *= rotation3dX(diff.x);
-            transformed.xyz *= rotation3dY(diff.y);
-            transformed.xyz *= rotation3dZ(diff.z);
+            // transformed.xyz *= rotation3dX(diff.x);
+            // transformed.xyz *= rotation3dY(diff.y);
+            // transformed.xyz *= rotation3dZ(diff.z);
 
-            gl_PointSize = 2.0;
+            gl_PointSize = 5.5;
             transformed += fowradPosData.xyz;
 
             gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
@@ -1017,7 +1019,7 @@ export function CoreEngine({
       fragmentShader: /* glsl */ `
           void main(void) {
             if (length(gl_PointCoord.xy - 0.5) <= 0.5) {
-              gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+              gl_FragColor = vec4(0.0, 0.0, 1.0, 0.5);
             } else {
               discard;
             }
