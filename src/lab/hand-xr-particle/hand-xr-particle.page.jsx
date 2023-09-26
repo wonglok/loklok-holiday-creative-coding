@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment, useMemo, useRef } from 'react'
-import { Hands, XR, XRButton } from '@react-three/xr'
+import { Hands, XR, XRButton, useXR } from '@react-three/xr'
 import { useThree, useFrame, Canvas } from '@react-three/fiber'
 import { Box, OrbitControls, Plane, Sphere, useGLTF, Environment, useTexture } from '@react-three/drei'
 import { usePlane, useBox, Physics, useSphere, useConvexPolyhedron } from '@react-three/cannon'
@@ -140,13 +140,10 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
       // }
     })
   })
-  let xRef = useRef()
   let yRef = useRef()
 
   useFrame(({ clock }) => {
     let speed = 0.2
-    xRef.current.userData.forceSize =
-      3.6 * (Math.sin(clock.getElapsedTime() * speed) * Math.cos(clock.getElapsedTime() * speed) - 0.5)
     yRef.current.userData.forceSize =
       3.6 * Math.sin(clock.getElapsedTime() * speed) * Math.sin(clock.getElapsedTime() * speed)
   })
@@ -157,15 +154,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
 
       <meshStandardMaterial metalness={1} roughness={0.1} color={'#0000ff'}></meshStandardMaterial>
       {/*  */}
-      <group
-        userData={{
-          forceSize: 3.6 / 8 / 2,
-          forceTwist: 3.141592 * 2.0 * 2.8,
-          forceType: 'vortexX',
-          type: 'ForceField',
-        }}
-        ref={xRef}
-      ></group>
+
       <group
         userData={{
           forceSize: 3.6 / 8 / 2,
@@ -175,6 +164,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
         }}
         ref={yRef}
       ></group>
+
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
   )
@@ -435,7 +425,7 @@ function Scene() {
         <WaterSurfaceContent></WaterSurfaceContent>
       </group> */}
 
-      {[...Array(2)].map((_, i) => (
+      {/* {[...Array(2)].map((_, i) => (
         <Arch key={'arch' + i} position={[0.1, 1.1 + 0.1 * i, -0.8]}></Arch>
       ))}
       {[...Array(2)].map((_, i) => (
@@ -446,7 +436,7 @@ function Scene() {
       ))}
       {[...Array(2)].map((_, i) => (
         <Rectangle key={'Rectangle' + i} position={[-0.1, 1.1 + 0.1 * i, -0.8]}></Rectangle>
-      ))}
+      ))} */}
 
       {/* {[...Array(5)].map((_, i) => (
         <MyLineNode key={'MyLineNode' + i} forceTypeIndex={i} position={[0.1 * i, 1.1 + 0.1, -0.2]}></MyLineNode>
@@ -474,6 +464,7 @@ function Scene() {
       </Box>
 
       <Hands />
+
       <HandsReady>
         <HandsColliders />
       </HandsReady>
@@ -508,6 +499,21 @@ function Scene() {
 //   return <primitive object={glb.scene}></primitive>
 // }
 
+function Cam() {
+  let session = useXR((r) => r.session)
+  let player = useXR((r) => r.player)
+  let camera = useXR((r) => r.camera)
+
+  if (session) {
+    player.add(camera)
+    player.position.z = 0.0
+  }
+  return (
+    <>
+      <primitive object={player}></primitive>
+    </>
+  )
+}
 export const HandXR = () => (
   <>
     <Canvas>
@@ -525,6 +531,7 @@ export const HandXR = () => (
             <ParticleCoreEngine></ParticleCoreEngine>
           </group>
         </Physics>
+        <Cam></Cam>
       </XR>
 
       {/*  */}
