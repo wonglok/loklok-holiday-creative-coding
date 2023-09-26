@@ -126,7 +126,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
     ...props,
     position: position,
     mass: 0.5,
-    args: 0.03,
+    args: 0.03 * 2.0,
     friction: 5,
     restitution: 1.0,
   }))
@@ -150,18 +150,25 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
   useFrame(({ clock }) => {
     let speed = 0.2
     if (ref.current && xRef.current) {
-      xRef.current.userData.forceSize = ref.current.rotation.x * 3.141592
+      // xRef.current.userData.forceSize = ref.current.rotation.x * 3.141592
     }
+
     if (ref.current && yRef.current) {
       yRef.current.userData.forceSize =
-        ref.current.rotation.y * 3.141592 +
+        // ref.current.rotation.y * 3.141592 +
         Math.sin(clock.getElapsedTime() * speed) * Math.cos(clock.getElapsedTime() * speed) * 3.6
     }
 
     if (ref.current && zRef.current) {
-      zRef.current.userData.forceSize = ref.current.rotation.z * 3.141592
+      // zRef.current.userData.forceSize = ref.current.rotation.z * 3.141592
     }
   })
+
+  let forceType = 'vortexY'
+
+  if (forceTypeIndex % 2 === 1) {
+    forceType = 'vortexX'
+  }
 
   return (
     <mesh castShadow receiveShadow ref={ref} geometry={renderGeo} {...props}>
@@ -174,12 +181,12 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
         userData={{
           forceSize: 3.6 / 8 / 2,
           forceTwist: 3.141592 * 2.0 * 2.8,
-          forceType: 'vortexY',
+          forceType: forceType,
           type: 'ForceField',
         }}
         ref={yRef}
       ></group>
-
+      {/* 
       <group
         userData={{
           forceSize: 3.6 / 8 / 2,
@@ -198,7 +205,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
           type: 'ForceField',
         }}
         ref={zRef}
-      ></group>
+      ></group> */}
 
       {/* <meshStandardMaterial color='yellow' roughness={0} metalness={0.5} /> */}
     </mesh>
@@ -486,7 +493,7 @@ function Scene() {
               </Box>
             </group> */}
 
-      {[...Array(1)].map((_, i) => (
+      {[...Array(2)].map((_, i) => (
         <MySphere key={'MySphere' + i} forceTypeIndex={i} position={[(-0.15 * 1) / 2 + 0.15 * i, 1, -0.3]}></MySphere>
       ))}
 

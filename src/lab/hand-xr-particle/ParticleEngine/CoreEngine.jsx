@@ -565,10 +565,16 @@ export function CoreEngine({
     let syncData = () => {
       sceneObjects.clear()
 
+      for (let [key, object] of sceneObjects.entries()) {
+        sceneObjects.delete(key)
+      }
+
       scene.traverse((it) => {
+        //
         // if (it.name === 'player') {
         //   // sceneObjects.set(it.uuid, it)
         // }
+        //
         if (it.userData?.type === 'ForceField') {
           sceneObjects.set(it.uuid, it)
         }
