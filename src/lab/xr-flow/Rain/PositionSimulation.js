@@ -204,7 +204,7 @@ export class PhysicsInfluences {
           vec3 dif = influPosition - position.xyz;
           float forceFilter = force;
 
-          float len = length( dif );
+          float len = length(dif);
 
           // if (len <= radius) {
           //   len = radius;
@@ -219,8 +219,6 @@ export class PhysicsInfluences {
           // } else {
           //   velocity += normalize(dif) * 0.5;
           // }
-
-            
 
           // if (len <= radius) {
           //   if (noiseV != 0.0) {

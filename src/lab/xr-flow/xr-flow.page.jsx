@@ -84,8 +84,13 @@ function Content() {
       <XRAdapter
         before={
           <>
-            <PerspectiveCamera fov={75} near={0.1} far={500}></PerspectiveCamera>
-            <OrbitControls maxDistance={550} target={[0, 0, 0]} object-position={[0, 0, 0.3]}></OrbitControls>
+            <PerspectiveCamera fov={75} near={0.05} far={50} makeDefault></PerspectiveCamera>
+            <OrbitControls
+              maxDistance={550}
+              target={[0, 0, 0]}
+              object-position={[0, 0, 0.3]}
+              makeDefault
+            ></OrbitControls>
           </>
         }
         after={
@@ -248,7 +253,7 @@ function Cam({}) {
   })
   return (
     <>
-      <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.1} far={500}></PerspectiveCamera>
+      <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.05} far={50}></PerspectiveCamera>
       {createPortal(<primitive object={camera}></primitive>, player)}
       <primitive object={player}></primitive>
     </>
