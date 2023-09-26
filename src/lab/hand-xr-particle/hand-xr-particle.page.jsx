@@ -107,10 +107,10 @@ function Rectangle({ position = [0, 1.2, 0], ...props }) {
 
 function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...props }) {
   const selectGeo = useMemo(() => {
-    return new IcosahedronGeometry(0.04, 3)
+    return new IcosahedronGeometry(0.03, 3)
   }, [])
   const renderGeo = useMemo(() => {
-    return new SphereGeometry(0.04 * 2.0, 32, 32)
+    return new SphereGeometry(0.03 * 2.0, 32, 32)
   }, [])
   selectGeo.scale(1, 1, 1)
 
@@ -133,7 +133,7 @@ function MySphere({ forceTypeIndex = 0, flip = 1, position = [0, 1.2, 0], ...pro
   useEffect(() => {
     return api.position.subscribe((value) => {
       if (value[1] <= -2) {
-        api.position.set(0, 1.5, -0.5)
+        api.position.set(0, 1.1, -0.5)
       }
       // if (ref.current.position.y <= -1.5) {
       //   api.position.set(0, 1, -0.5)
@@ -280,7 +280,7 @@ function JointCollider({ index, hand }) {
   let size = 0
   if (joint) {
     size = joint.jointRadius ?? 0.0001
-    size *= 1.3333
+    // size *= 1.3333
   }
 
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
