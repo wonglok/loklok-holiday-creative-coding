@@ -255,7 +255,7 @@ function Cam({}) {
   })
   return (
     <>
-      <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.05} far={50}></PerspectiveCamera>
+      <PerspectiveCamera position={[0, 0, 0]} makeDefault fov={75} near={0.5} far={500}></PerspectiveCamera>
       {createPortal(<primitive object={camera}></primitive>, player)}
       <primitive object={player}></primitive>
     </>
