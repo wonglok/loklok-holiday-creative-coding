@@ -81,6 +81,10 @@ function Content() {
               <HandsColliders />
             </HandsReady>
 
+            <ambientLight></ambientLight>
+
+            <directionalLight position={[0, 1, 1]}></directionalLight>
+
             <Cam></Cam>
           </>
         }
@@ -153,7 +157,7 @@ function HandsReady(props) {
   return ready ? props.children : null
 }
 
-function Cam({ children, loader = null }) {
+function Cam({}) {
   let session = useXR((r) => r.session)
   let player = useXR((r) => r.player)
   let camera = useThree((r) => r.camera)
