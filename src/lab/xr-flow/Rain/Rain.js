@@ -151,6 +151,7 @@ export function Rain() {
         target.position.y = v0.y
         target.position.z = v0.z
 
+        target.needsUpdate = true
         console.log(v0)
       }
       if (h1) {
@@ -159,6 +160,8 @@ export function Rain() {
         target.position.x = v1.x
         target.position.y = v1.y
         target.position.z = v1.z
+
+        target.needsUpdate = true
 
         console.log(v1)
       }
