@@ -212,7 +212,7 @@ export class PhysicsInfluences {
 
           // velocity += vec3(rotationZ(2.0) * vec4(position, 1.0));
 
-          velocity += jade(vec3(position.rgb * 1.0)) * 0.1;
+          velocity += jade(vec3(position.rgb - influPosition)) * 0.5;
 
           // if (len <= radius) {
           //   velocity += normalize(dif) * -1.5;
