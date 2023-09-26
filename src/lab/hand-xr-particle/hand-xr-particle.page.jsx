@@ -292,9 +292,6 @@ function JointCollider({ index, hand }) {
   let size = 0
   if (joint) {
     size = joint.jointRadius ?? 0.0001
-    // size *= 1.3333
-
-    size *= 0.5
   }
 
   const [tipRef, api] = useSphere(() => ({ args: size, position: [-1, 0, 0] }))
@@ -515,9 +512,6 @@ function Cam({ children, loader = null }) {
   return (
     <>
       <primitive object={player}></primitive>
-
-      {session && children}
-      {!session && loader}
     </>
   )
 }
@@ -527,7 +521,6 @@ export const HandXR = () => (
     <Canvas>
       <color attach='background' args={['#000']} />
       <XR>
-        <Cam loader={<>{/* <ParticleCoreEngine key='loader'></ParticleCoreEngine> */}</>}></Cam>
         <Physics
           gravity={[0, -2, 0]}
           iterations={20}
@@ -539,6 +532,7 @@ export const HandXR = () => (
             <Scene />
             <ParticleCoreEngine></ParticleCoreEngine>
           </group>
+          <Cam loader={<>{/* <ParticleCoreEngine key='loader'></ParticleCoreEngine> */}</>}></Cam>
         </Physics>
       </XR>
 
