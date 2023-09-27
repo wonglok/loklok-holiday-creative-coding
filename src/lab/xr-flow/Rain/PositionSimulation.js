@@ -218,7 +218,7 @@ export class PhysicsInfluences {
           //   len = 0.01;
           // }
 
-          velocity += jade(vec3(position.rgb)) * 0.3 * 0.5 * min(len, 0.2) * 5.0 * 2.0;
+          velocity += jade(vec3(position.rgb)) * 0.3 * 0.5 * min(len, 0.2) * 3.0;
 
           //  - influPosition.rgb
 
@@ -229,7 +229,7 @@ export class PhysicsInfluences {
           // velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
 
           if (len <= 0.2) {
-            velocity += normalize(dif) * -5.0 * len;
+            velocity += normalize(dif) * -10.0 * len;
           }
 
           // if (len <= radius) {
