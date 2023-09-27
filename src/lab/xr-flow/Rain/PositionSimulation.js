@@ -229,7 +229,7 @@ export class PhysicsInfluences {
           // velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
 
           if (len <= 0.2) {
-            velocity += normalize(dif) * -10.0 * (0.2 - len) * 5.0;
+            velocity += normalize(dif) * -10.0 * (0.2 - len) * 8.0;
           }
 
           // if (len <= radius) {
@@ -259,7 +259,6 @@ export class PhysicsInfluences {
           //
           float forceFilter = force;
 
-          // //
           // if (len <= radius) {
           //   velocity += vec3(rotationX(forceFilter) * vec4(vec3(position.x, position.y, position.z) * 2.0, 1.0));
             // velocity += vec3(rotationZ(forceFilter) * vec4(position.rgb, 1.0));
