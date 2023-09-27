@@ -220,12 +220,8 @@ export class PhysicsInfluences {
 
           velocity += jade(vec3(position.rgb * 1.0)) / 1.0 * 0.3 * 0.5 * min(len, 0.2) * 3.0;
 
-          //  - influPosition.rgb
-
           // velocity += getDiff(position, normalize(influPosition) / len) * -2.3;
-          
           // velocity += 0.3 * vec3(rotationY(1.1) * vec4(vec3(normalize(position - influPosition)), 1.0));
-
           // velocity += ballify(influPosition.rgb + velocity * 0.1, -2.5);
 
           if (len <= 0.2) {
