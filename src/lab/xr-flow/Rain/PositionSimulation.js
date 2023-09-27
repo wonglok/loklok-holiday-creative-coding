@@ -435,7 +435,7 @@ export class PositionSimulation {
         #include <common>
 
         bool detectReset (vec3 position, vec4 pos, vec4 vel) {
-          return length(position) >= 0.8 || pos.w >= 0.99;
+          return length(position) >= 0.25 || pos.w >= 0.99;
         }
       `
     }
