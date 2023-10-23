@@ -24,7 +24,7 @@ function Yo() {
       </Suspense>
       <Environment files={`/hdr/greenwich_park_02_1k.hdr`}></Environment>
       <EffectComposer disableNormalPass>
-        <Bloom luminanceThreshold={0.1} intensity={10} mipmapBlur></Bloom>
+        {/* <Bloom luminanceThreshold={0.99} intensity={1} mipmapBlur></Bloom> */}
       </EffectComposer>
       <Stats></Stats>
     </>

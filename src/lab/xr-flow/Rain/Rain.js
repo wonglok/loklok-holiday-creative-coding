@@ -101,8 +101,8 @@ export function Rain() {
 
         //
       ],
-      tailLength: 16, // 512, 1024
-      howManyTrackers: 1024,
+      tailLength: 64, // 512, 1024
+      howManyTrackers: 2048,
     })
   }, [mini, cursorPointer, PhysicsInfluences.key, FunSim.key])
 

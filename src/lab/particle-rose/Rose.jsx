@@ -7,6 +7,7 @@ import { useComputeEnvMap } from './useComputeEnvMap'
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import {
+  AdditiveBlending,
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
@@ -213,7 +214,7 @@ function Particles({ nodes }) {
           rotation: [1.92032, 0, -Math.PI / 2],
           scale: 0.00136,
         },
-        amount: 256 * 256,
+        amount: 512,
       },
       {
         geo: nodes?.petals013?.geometry,
@@ -222,7 +223,7 @@ function Particles({ nodes }) {
           rotation: [1.92032, 0, -Math.PI / 2],
           scale: 0.00136,
         },
-        amount: 256 * 256,
+        amount: 512,
       },
       {
         geo: nodes?.petals021?.geometry,
@@ -231,10 +232,13 @@ function Particles({ nodes }) {
           rotation: [1.92032, 0, -Math.PI / 2],
           scale: 0.00136,
         },
-        amount: 256 * 256,
+        amount: 512,
       },
     ]
     pedals.forEach(({ geo, props, amount = 512 * 512 }) => {
+      // props = {}
+      // geo
+      // amount
       let mesh = new Mesh(geo || new BoxGeometry(), new MeshBasicMaterial({ side: FrontSide }))
       let sampler = new MeshSurfaceSampler(mesh)
       sampler.build()
@@ -261,8 +265,12 @@ function Particles({ nodes }) {
         bGeo,
         new ShaderMaterial({
           transparent: true,
+          blending: AdditiveBlending,
+          depthWrite: false,
+          depthTest: true,
           uniforms: {
             //
+            iTime: { value: 0 },
             time: { value: 0 },
             dist: { value: 0 },
             //
@@ -271,6 +279,7 @@ function Particles({ nodes }) {
           attribute vec4 sPosition;
           attribute vec4 sNormal;
           attribute float sRand;
+          varying float vRand; 
           uniform float dist;
           uniform float time;
 
@@ -283,6 +292,7 @@ function Particles({ nodes }) {
                   s, 0.0, c
               );
           }
+
           mat3 rotateX(float rad) {
               float c = cos(rad);
               float s = sin(rad);
@@ -304,9 +314,11 @@ function Particles({ nodes }) {
           }
         
           void main (void) {
-            gl_PointSize = 1.0 / dist;
-            if (gl_PointSize >=1.0) {
-              gl_PointSize = 1.0;
+            vRand = sRand;
+            
+            gl_PointSize =  250.0 / dist;
+            if (gl_PointSize >= 250.0) {
+              gl_PointSize =  250.0;
             }
 
             float height = 5.0;
@@ -324,26 +336,112 @@ function Particles({ nodes }) {
             vec4 rNormal = modelViewMatrix * sNormal;
             vec4 rPosition = modelViewMatrix * sPosition;
 
-            diff += normalize(rPosition.rgb) * rotateX(time * 3.141592) * 1.0;
-            diff += normalize(rPosition.rgb) * rotateY(time * 0.5 * 3.141592) * 1.0;
-            diff += normalize(rPosition.rgb) * rotateZ(time * 3.141592) * 1.0;
+            // diff += normalize(rPosition.rgb) * rotateX(time * 3.141592) * 1.0;
+            // diff += normalize(rPosition.rgb) * rotateY(time * 0.5 * 3.141592) * 1.0;
+            // diff += normalize(rPosition.rgb) * rotateZ(time * 3.141592) * 1.0;
 
             // diff += normalize(sPosition.rgb) * rotateY(loop2 * 3.141592) * 1.0;
             // diff += normalize(sPosition.rgb) * rotateZ(loop2 * 3.141592) * 1.0;
 
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb + diff, 1.0);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(sPosition.rgb, 1.0);
+
+            gl_Position.y += 0.05;
           }
           `,
           fragmentShader: /* glsl */ `
+            uniform float time;
+            uniform float iTime;
+            varying float vRand;
+            //////////////////////
+            // Fire Flame shader
+
+            // procedural noise from IQ
+            vec2 hash( vec2 p )
+            {
+              p = vec2( dot(p,vec2(127.1,311.7)),
+                  dot(p,vec2(269.5,183.3)) );
+              return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+            }
+
+            float noise( in vec2 p )
+            {
+              const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+              const float K2 = 0.211324865; // (3-sqrt(3))/6;
+              
+              vec2 i = floor( p + (p.x+p.y)*K1 );
+              
+              vec2 a = p - i + (i.x+i.y)*K2;
+              vec2 o = (a.x>a.y) ? vec2(1.0,0.0) : vec2(0.0,1.0);
+              vec2 b = a - o + K2;
+              vec2 c = a - 1.0 + 2.0*K2;
+              
+              vec3 h = max( 0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
+              
+              vec3 n = h*h*h*h*vec3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
+              
+              return dot( n, vec3(70.0) );
+            }
+
+            float fbm(vec2 uv)
+            {
+              float f;
+              mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
+              f  = 0.5000*noise( uv ); uv = m*uv;
+              f += 0.2500*noise( uv ); uv = m*uv;
+              f += 0.1250*noise( uv ); uv = m*uv;
+              f += 0.0625*noise( uv ); uv = m*uv;
+              f = 0.5 + 0.5*f;
+              return f;
+            }
+
+            // no defines, standard redish flames
+            //#define BLUE_FLAME
+            //#define GREEN_FLAME
+
+            vec4 fireImage( )
+            {
+              vec2 uv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
+              vec2 q = uv;
+              //q.x *= 2.;
+                q.y *= 2.;
+              
+                float strength = floor(q.x+1.);
+              float T3 = max(3.,1.25*strength)*(iTime + vRand);
+              q.x = mod(q.x,1.)-0.5;
+              q.y -= 0.25;
+                
+                q.x = q.x * 1.5;
+              
+              float n = fbm(strength*q - vec2(0,T3));
+              float c = 1. - 16. * pow( max( 0., length(q*vec2(1.8+q.y*1.5,.75) ) - n * max( 0., q.y+.25 ) ),1.2 );
+              float c1 = n * c * (1.5-pow(1.25*uv.y,4.));
+                
+            //	float c1 = n * c * (1.5-pow(2.50*uv.y,4.));
+              c1 = clamp(c1,0.,1.);
+
+              vec3 col = vec3(1.5*c1, 1.5*c1*c1*c1, c1*c1*c1*c1*c1*c1);
+              
+              
+              float a = c * (1.-pow(uv.y,3.)) * 1.0;
+              vec4 fireColor = vec4( mix(vec3(0.),col,a), 1.0);
+
+              float avgcoor = (fireColor.r + fireColor.g + fireColor.b) / 3.0;
+
+              return vec4(fireColor.rgb, avgcoor * 0.1);
+            }
+
             uniform float dist;
             void main (void) {
-              float maxAlpha = 1.0;
-              float alpha = 1.0;
-              alpha = alpha / pow(dist, 1.5);
-              if (alpha >= maxAlpha) {
-                alpha = maxAlpha;
-              }
-              gl_FragColor = vec4(0.8, 0.2, 0.2, alpha);
+              // float maxAlpha = 1.0;
+              // float alpha = 1.0;
+              // alpha = alpha / pow(dist, 1.5);
+              // if (alpha >= maxAlpha) {
+              //   alpha = maxAlpha;
+              // }
+
+              vec4 fire = fireImage();
+              
+              gl_FragColor = vec4(fire.rgba);
             }
           `,
         }),
@@ -365,6 +463,7 @@ function Particles({ nodes }) {
       obj.forEach((o) => {
         o.material.uniforms.dist.value = controls.object.position.distanceTo(controls.target) || 0
         o.material.uniforms.time.value = performance.now() / 1000
+        o.material.uniforms.iTime.value = performance.now() / 1000
       })
     }
   })
